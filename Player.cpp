@@ -1,24 +1,20 @@
-#include "Player.h"
+#include "Player.h"	 
 
-
-Player::Player(int screenWidth, int screenHeight, std::string textureName) : 
-	Sprite (screenWidth, screenHeight, textureName)
-{
+Player::Player(int screenWidth, int screenHeight, sf::Texture texture) : 
+	Sprite (screenWidth, screenHeight, texture)	{
 	input = std::unique_ptr<PlayerInput>(new PlayerInput());
 	groundHeight = m_screenHeight - 50.0f;
 	maxJumpHeight = m_screenHeight - 150.0f;
 	m_grav = GRAVITY;
-	std::cout << m_grav;
 	setStartPosition();
 }
  
-void Player::setStartPosition()
-{
+void Player::setStartPosition() {
 	m_sprite.setPosition(sf::Vector2f(m_screenWidth / 2, groundHeight));
+	m_sprite.setOrigin(sf::Vector2f(0, 0));
 }
-
-void Player::update(float dt)
-{
+ 
+void Player::update(float dt) {
 	m_currentDirection = input->update(dt);
 	checkMovement(dt);
 
@@ -26,11 +22,21 @@ void Player::update(float dt)
 		jump(dt, currentSpeed);
 	}
 
+	// test code
+	/*
+	float left = getCollision('l');
+	float right = getCollision('r');
+	float top = getCollision('t');
+	float bottom = getCollision('b');	
+	std::cout << "left " << left << std::endl;
+	std::cout << "Right " << right << std::endl;
+	std::cout << "Top " << top << std::endl;
+	std::cout << "Bottom " << bottom << std::endl;
+	*/						  
 }
 
-void Player::checkMovement(float dt)
-{
-	switch (m_currentDirection){
+void Player::checkMovement(float dt) {
+	switch (m_currentDirection) {
 	case 'l':
 		moveHorizontal(dt, -PLAYER_SPEED);
 		break;
@@ -48,8 +54,7 @@ void Player::checkMovement(float dt)
 	}
 }
 
-void Player::moveHorizontal(float dt, float speed)
-{
+void Player::moveHorizontal(float dt, float speed) {
 	if (!isJumping) {
 		m_sprite.move(sf::Vector2f(speed * dt, 0.0));
 		currentSpeed = speed;
@@ -57,9 +62,7 @@ void Player::moveHorizontal(float dt, float speed)
 	}
 }
 
-void Player::jump(float dt, float speed)
-{
-
+void Player::jump(float dt, float speed) {	 
 	if (!isMoving) {
 		if (!isAtMaxJumpHeight) {
 			m_sprite.move(sf::Vector2f(0.0, (-JUMP_SPEED * m_grav) * dt));
@@ -92,7 +95,5 @@ void Player::jump(float dt, float speed)
 		isAtMaxJumpHeight = false;
 		isJumping = false;
 		m_grav = GRAVITY;
-	}  
-	
-
+	}
 }
