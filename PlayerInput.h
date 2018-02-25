@@ -5,7 +5,7 @@
 class PlayerInput
 {
 private:
-	void keyboadInput(float dt);
+	void keyboadInput(const float dt);
 	char m_currentDirection;
 	const char JUMP = 'j';
 	const char LEFT = 'l';
@@ -16,7 +16,7 @@ private:
 public:
 	PlayerInput();
 	~PlayerInput();
-	char update(float dt);
+	char update(const float dt);
 
 
 };

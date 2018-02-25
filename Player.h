@@ -4,9 +4,9 @@
 class Player : public Sprite
 {
 private:
-	void checkMovement(float dt);
-	void moveHorizontal(float dt, float speed);
-	void jump(float dt, float speed);
+	void checkMovement(const float dt);
+	void moveHorizontal(const float dt, const float speed);
+	void jump(const float dt, const float speed);
 	char m_currentDirection;
 	std::unique_ptr <PlayerInput> input;
 	const float PLAYER_SPEED = 0.0001;
@@ -17,13 +17,15 @@ private:
 	bool isMoving = false;
 	bool isJumping = false;
 	bool isAtMaxJumpHeight = false;
+	const float GRAVITY = 2.0;
+	const float GRAVITY_CALCULATION = 0.04;
+	float m_grav;
 
 
 public:
 	using Sprite::Sprite;	
 	Player(int screenWidth, int screenHeight, std::string textureName);
-
-	void update(float dt);
+	void update(const float dt);
 	void setStartPosition();
 };
 

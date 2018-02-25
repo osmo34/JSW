@@ -7,6 +7,8 @@ Player::Player(int screenWidth, int screenHeight, std::string textureName) :
 	input = std::unique_ptr<PlayerInput>(new PlayerInput());
 	groundHeight = m_screenHeight - 50.0f;
 	maxJumpHeight = m_screenHeight - 150.0f;
+	m_grav = GRAVITY;
+	std::cout << m_grav;
 	setStartPosition();
 }
  
@@ -32,7 +34,7 @@ void Player::checkMovement(float dt)
 	case 'l':
 		moveHorizontal(dt, -PLAYER_SPEED);
 		break;
-	case 'r':
+	case 'r': 
 		moveHorizontal(dt, PLAYER_SPEED);
 		break;
 	case 'j':
@@ -57,33 +59,40 @@ void Player::moveHorizontal(float dt, float speed)
 
 void Player::jump(float dt, float speed)
 {
-	std::cout << maxJumpHeight << std::endl;
-	std::cout << m_sprite.getPosition().y;
+
 	if (!isMoving) {
 		if (!isAtMaxJumpHeight) {
-			m_sprite.move(sf::Vector2f(0.0, -JUMP_SPEED * dt));
+			m_sprite.move(sf::Vector2f(0.0, (-JUMP_SPEED * m_grav) * dt));
+			m_grav -= GRAVITY_CALCULATION;
 		}
 		else if (isAtMaxJumpHeight) {
-			m_sprite.move(sf::Vector2f(0.0, JUMP_SPEED * dt));
+			m_sprite.move(sf::Vector2f(0.0, (JUMP_SPEED * m_grav) * dt));
+			m_grav += GRAVITY_CALCULATION;
+		}  
+	}
+	
+	if (isMoving) {
+		if (!isAtMaxJumpHeight) {
+			m_sprite.move(sf::Vector2f(speed * dt, (-JUMP_SPEED * m_grav) * dt));
+			m_grav -= GRAVITY_CALCULATION;
 		}
-
-		if (m_sprite.getPosition().y <= maxJumpHeight) {
-			isAtMaxJumpHeight = true;					  			
+		else if (isAtMaxJumpHeight) {
+			m_sprite.move(sf::Vector2f(speed * dt, (JUMP_SPEED * m_grav) * dt));
+			m_grav += GRAVITY_CALCULATION;
 		}
-
-		if (m_sprite.getPosition().y >= groundHeight) {
-			m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, groundHeight));
-			isAtMaxJumpHeight = false;
-			isJumping = false;	
-		}				  		
 	}
 
-
-
-	/*
-	if (isMoving) {								   
-		m_sprite.move(sf::Vector2f(speed * dt, -0.0001 * dt));	
+	if (m_sprite.getPosition().y <= maxJumpHeight) {
+		isAtMaxJumpHeight = true;
+		m_grav = GRAVITY;
 	}
-	*/
+
+	if (m_sprite.getPosition().y >= groundHeight) {
+		m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, groundHeight));
+		isAtMaxJumpHeight = false;
+		isJumping = false;
+		m_grav = GRAVITY;
+	}  
+	
 
 }
