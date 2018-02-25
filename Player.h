@@ -4,10 +4,20 @@
 class Player : public Sprite
 {
 private:
-	void move(float dt);
+	void checkMovement(float dt);
+	void moveHorizontal(float dt, float speed);
+	void jump(float dt, float speed);
 	char m_currentDirection;
 	std::unique_ptr <PlayerInput> input;
-	const float m_playerSpeed = 0.001;
+	const float PLAYER_SPEED = 0.0001;
+	const float JUMP_SPEED = 0.0001;
+	float currentSpeed;
+	float groundHeight;
+	float maxJumpHeight;
+	bool isMoving = false;
+	bool isJumping = false;
+	bool isAtMaxJumpHeight = false;
+
 
 public:
 	using Sprite::Sprite;	
