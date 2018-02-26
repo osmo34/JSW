@@ -14,7 +14,7 @@ public:
 	void draw(sf::RenderWindow *window);
 	virtual void update(const float dt) = 0;
 	virtual void setStartPosition() = 0;
-	float getCollision(const char side);
+	virtual float getCollision(const char side);
 
 protected:
 	sf::Sprite m_sprite;
