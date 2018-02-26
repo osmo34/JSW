@@ -1,5 +1,7 @@
 #pragma once
 #include "Sprite.h"
+
+// for use with solid structures which cannot be passed - e.g. a wall
 class StaticObject : public Sprite
 {
 private:

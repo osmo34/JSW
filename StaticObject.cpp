@@ -14,5 +14,6 @@ void StaticObject::setStartPosition() {
 	m_sprite.setOrigin(sf::Vector2f(0, 0));
 }
 
+
 void StaticObject::update(const float dt) { }
 

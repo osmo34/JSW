@@ -5,7 +5,7 @@
 #include <SFML\Graphics.hpp>
 #include "Player.h"
 #include "StaticObject.h"
-#include <functional>
+#include "Collision.h"
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
@@ -21,26 +21,6 @@ void handlePollEvents(sf::RenderWindow *window) {
 		}
 	}			  
 } 
-
-// TODO: test function
-void getCollision(std::function<double(char c)> collision) {
-
-	const char LEFT = 'l';
-	const char RIGHT = 'r';
-	const char TOP = 't';
-	const char BOTTOM = 'b';
-
-	auto l = collision(LEFT);
-	auto r = collision(RIGHT);
-	auto t = collision(TOP);
-	auto b = collision(BOTTOM);
-	std::cout << "left: " << l << std::endl;
-	std::cout << "right: " << r << std::endl;
-	std::cout << "top: " << t << std::endl;
-	std::cout << "bottom: " << b << std::endl;
-}
-// end test function
-
 
 int main() {
 		
@@ -67,8 +47,14 @@ int main() {
 	levelStaticObjects.push_back(testObj2);
 	// end test code
 
-	
+	// create collision
+	std::unique_ptr <Collision> collision(new Collision());
 
+	// create static objects collision out of the main loop	as they are not going to move
+	for (auto &it : levelStaticObjects) {
+		auto collisionStatic = [&](char c) -> float { return it->getCollision(c); };
+		collision->updateStaticObjectPosition(collisionStatic);
+	}
 
 	while (window.isOpen()) {
 		handlePollEvents(&window);
@@ -77,16 +63,9 @@ int main() {
 
 		player->update(time.asMicroseconds());
 
-		// TODO: testing lambda's for getting collision data prior to moving it into a collision class
 		auto collisionPlayer = [&](char c) -> float { return player->getCollision(c); };
-		getCollision(collisionPlayer);
+		collision->updatePlayerPosition(collisionPlayer);
 
-		for (auto &it : levelStaticObjects) {
-			auto collisionWall = [&](char c) -> float { return it->getCollision(c); };
-			getCollision(collisionWall);
-		}
-		// end test code
-		
 		window.clear();
 		player->draw(&window);
 		
