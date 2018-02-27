@@ -41,8 +41,8 @@ int main() {
 	std::unique_ptr <Player> player(new Player(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture));
 
 	// TODO: test code - static objects
-	std::shared_ptr <StaticObject> testObj(new StaticObject(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 20, 20));
-	std::shared_ptr <StaticObject> testObj2(new StaticObject(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 40, 20));
+	std::shared_ptr <StaticObject> testObj(new StaticObject(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 50, SCREEN_HEIGHT - 100.0f));
+	std::shared_ptr <StaticObject> testObj2(new StaticObject(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 800, SCREEN_HEIGHT - 50.0f));
 	levelStaticObjects.push_back(testObj);
 	levelStaticObjects.push_back(testObj2);
 	// end test code
@@ -65,6 +65,9 @@ int main() {
 
 		auto collisionPlayer = [&](char c) -> float { return player->getCollision(c); };
 		collision->updatePlayerPosition(collisionPlayer);
+
+		auto updatePlayerCollision = [&](char c) {player->collision(c); };
+		collision->checkCollision(updatePlayerCollision);
 
 		window.clear();
 		player->draw(&window);

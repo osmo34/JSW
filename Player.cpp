@@ -7,6 +7,8 @@ Player::Player(int screenWidth, int screenHeight, sf::Texture texture) :
 	maxJumpHeight = m_screenHeight - 150.0f;
 	m_grav = GRAVITY;
 	setStartPosition();
+	collideLeft = false;
+	collideRight = false;
 }
  
 void Player::setStartPosition() {
@@ -38,10 +40,14 @@ void Player::update(float dt) {
 void Player::checkMovement(float dt) {
 	switch (m_currentDirection) {
 	case 'l':
-		moveHorizontal(dt, -PLAYER_SPEED);
+		if (!collideLeft) {
+			moveHorizontal(dt, -PLAYER_SPEED);
+		}
 		break;
 	case 'r': 
-		moveHorizontal(dt, PLAYER_SPEED);
+		if (!collideRight) {
+			moveHorizontal(dt, PLAYER_SPEED);
+		}
 		break;
 	case 'j':
 		isJumping = true;
@@ -97,3 +103,32 @@ void Player::jump(float dt, float speed) {
 		m_grav = GRAVITY;
 	}
 }
+
+void Player::collision(char c)
+{
+	switch (c) {
+	case 'l':
+		collideLeft = true;
+		collideRight = false;
+		isMoving = false;
+		break;
+	case 'r':
+		collideRight = true;
+		collideLeft = false;
+		isMoving = false;
+		break;
+	case 't':
+		break;
+	case 'b':
+		break;
+	case 'n':
+		collideLeft = false;
+		collideRight = false;
+	default:
+		break;		
+	}
+}
+
+
+
+

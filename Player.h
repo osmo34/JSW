@@ -20,6 +20,8 @@ private:
 	const float GRAVITY = 2.0;
 	const float GRAVITY_CALCULATION = 0.04f;
 	float m_grav;
+	bool collideLeft;
+	bool collideRight;
 
 
 public:
@@ -27,6 +29,7 @@ public:
 	Player(const int screenWidth, const int screenHeight, sf::Texture texture);
 	void update(const float dt);
 	void setStartPosition();
+	void collision(char c);
 	
 };
 

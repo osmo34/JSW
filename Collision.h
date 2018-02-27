@@ -22,14 +22,16 @@ private:
 	const char RIGHT = 'r';
 	const char TOP = 't';
 	const char BOTTOM = 'b';
+	const char NO_COLLISION = 'n';
 
 	std::vector<StaticObjectPositions> staticObjectPositions;
-
+	
 public:
 	Collision();
 	~Collision();
 
 	void updatePlayerPosition(std::function<double(char c)> position);
 	void updateStaticObjectPosition(std::function<double(char c)> position);
+	void checkCollision(std::function<void(char c)> playerCollision);
 };
 
