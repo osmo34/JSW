@@ -24,6 +24,9 @@ private:
 	const char BOTTOM = 'b';
 	const char NO_COLLISION = 'n';
 
+	const float COLLISION_OFFSET = 15.0f; // offset for landing
+	const float NO_CHANGE_GROUND_HEIGHT = 0.0f;
+
 	std::vector<StaticObjectPositions> staticObjectPositions;
 	
 public:
@@ -32,6 +35,6 @@ public:
 
 	void updatePlayerPosition(std::function<double(char c)> position);
 	void updateStaticObjectPosition(std::function<double(char c)> position);
-	void checkCollision(std::function<void(char c)> playerCollision);
+	void checkCollision(std::function<void(char c, float i)> playerCollision);
 };
 

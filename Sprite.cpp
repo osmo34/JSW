@@ -20,10 +20,10 @@ float Sprite::getCollision(char side) {
 		return m_sprite.getGlobalBounds().left + m_sprite.getGlobalBounds().width;
 		break;
 	case 't':
-		return m_sprite.getGlobalBounds().top;
+		return m_sprite.getGlobalBounds().top - m_sprite.getGlobalBounds().height;
 		break;
 	case 'b':
-		return m_sprite.getGlobalBounds().top - m_sprite.getGlobalBounds().height;
+		return m_sprite.getGlobalBounds().top;
 		break;
 	default:
 		return 0.0f;

@@ -7,13 +7,17 @@ private:
 	void checkMovement(const float dt);
 	void moveHorizontal(const float dt, const float speed);
 	void jump(const float dt, const float speed);
+
 	char m_currentDirection;
 	std::unique_ptr <PlayerInput> input;
 	const float PLAYER_SPEED = 0.0001f;
 	const float JUMP_SPEED = 0.0001f;
+	const float JUMP_HEIGHT = 100.0f;
 	float currentSpeed;
 	float groundHeight;
+	float groundHeightOld;
 	float maxJumpHeight;
+	float maxJumpHeightOld;
 	bool isMoving = false;
 	bool isJumping = false;
 	bool isAtMaxJumpHeight = false;
@@ -23,13 +27,16 @@ private:
 	bool collideLeft;
 	bool collideRight;
 
+	void fall(const float dt);
+	void fallCheck();
+	float deltaTime;
 
 public:
 	using Sprite::Sprite;	
 	Player(const int screenWidth, const int screenHeight, sf::Texture texture);
 	void update(const float dt);
 	void setStartPosition();
-	void collision(char c);
-	
+	void collision(char c, float gh);
+	void updateGroundHeight(float gh);	
 };
 
