@@ -1,5 +1,4 @@
-#include "Player.h"	 
-
+#include "Player.h"
 
 Player::Player(int screenWidth, int screenHeight, sf::Texture texture) :
 	Sprite (screenWidth, screenHeight, texture)	{
@@ -20,7 +19,6 @@ void Player::setStartPosition() {
 }
 
 void Player::update(float dt) {
-
 	deltaTime = dt;
 	m_currentDirection = input->update(dt);
 	checkMovement(dt);
@@ -29,35 +27,40 @@ void Player::update(float dt) {
 		jump(dt, currentSpeed);
 	}
 
-	// test code
-	/*
-	float left = getCollision('l');
-	float right = getCollision('r');
-	float top = getCollision('t');
-	float bottom = getCollision('b');	
-	std::cout << "left " << left << std::endl;
-	std::cout << "Right " << right << std::endl;
-	std::cout << "Top " << top << std::endl;
-	std::cout << "Bottom " << bottom << std::endl;
-	*/						  
+	/* test code
+	std::cout << "**********" << std::endl;
+	std::cout << std::endl;
+	std::cout << "sprite pos " << m_sprite.getPosition().y << std::endl;
+	std::cout << "groundheight " << groundHeight << std::endl;
+	std::cout << "jumpheight " << maxJumpHeight << std::endl;
+	std::cout << "grav " << m_grav << std::endl;
+	std::cout << "current speed " << currentSpeed << std::endl;
+	std::cout << "is moving " << isMoving << std::endl;
+	std::cout << "is jumping " << isJumping << std::endl;
+	std::cout << "is at max jump height " << isAtMaxJumpHeight << std::endl;
+	std::cout << "**********" << std::endl;
+	std::cout << std::endl;
+	*/
 }
 
 void Player::checkMovement(float dt) {
+	const char LEFT = 'l', RIGHT = 'r', JUMP = 'j', STATIONARY = 's';
+
 	switch (m_currentDirection) {
-	case 'l':
+	case LEFT:
 		if (!collideLeft) {
 			moveHorizontal(dt, -PLAYER_SPEED);
 		}
 		break;
-	case 'r': 
+	case RIGHT: 
 		if (!collideRight) {
 			moveHorizontal(dt, PLAYER_SPEED);
 		}
 		break;
-	case 'j':
+	case JUMP:
 		isJumping = true;
 		break;
-	case 's':
+	case STATIONARY:
 		isMoving = false;
 		break;
 	default:
@@ -110,8 +113,7 @@ void Player::fall(const float dt) {
 }
 
 void Player::fallCheck() {	
-	if (m_sprite.getPosition().y <= maxJumpHeight) {
-		isAtMaxJumpHeight = true;
+	if (m_sprite.getPosition().y <= maxJumpHeight) {		
 		m_grav = GRAVITY;
 	}
 
@@ -125,35 +127,45 @@ void Player::fallCheck() {
 } 
 
 void Player::collision(char c, float gh) {
+	const char LEFT = 'l', RIGHT = 'r', TOP = 't', BOTTOM = 'b', 
+		NO_COLLISION = 'n', ENEMY = 'e', POWER_UP = 'p';
+
 	switch (c) {
-	case 'l':
+	case LEFT:
 		collideLeft = true;
 		collideRight = false;
 		isMoving = false;
 		break;
-	case 'r':
+	case RIGHT:
 		collideRight = true;
 		collideLeft = false;
 		isMoving = false;
 		break;
-	case 't':
+	case TOP:	
 		collideLeft = false;
 		collideRight = false;
 		updateGroundHeight(gh);
+		m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, gh));
 		break;
-	case 'b':
+	case BOTTOM:
+		isJumping = false;
+		fall(deltaTime);
+		fallCheck();
 		break;
-	case 'n':		
+	case ENEMY:
+		break;
+	case POWER_UP:
+		break;
+	case NO_COLLISION:
 		collideLeft = false;
 		collideRight = false;
-
 		if (isJumping) {
 			groundHeight = groundHeightOld;
-		}	 
+		}
 		else if (!isJumping) {
 			fall(deltaTime);
 			fallCheck();
-		}
+		} 
 	default:
 		break;		
 	}	

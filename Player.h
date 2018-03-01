@@ -4,12 +4,16 @@
 class Player : public Sprite
 {
 private:
+
 	void checkMovement(const float dt);
 	void moveHorizontal(const float dt, const float speed);
 	void jump(const float dt, const float speed);
+	void fall(const float dt);
+	void fallCheck();
 
-	char m_currentDirection;
 	std::unique_ptr <PlayerInput> input;
+
+	char m_currentDirection;			
 	const float PLAYER_SPEED = 0.0001f;
 	const float JUMP_SPEED = 0.0001f;
 	const float JUMP_HEIGHT = 100.0f;
@@ -26,9 +30,6 @@ private:
 	float m_grav;
 	bool collideLeft;
 	bool collideRight;
-
-	void fall(const float dt);
-	void fallCheck();
 	float deltaTime;
 
 public:
