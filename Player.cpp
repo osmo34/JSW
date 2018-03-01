@@ -162,7 +162,7 @@ void Player::collision(char c, float gh) {
 		if (isJumping) {
 			groundHeight = groundHeightOld;
 		}
-		else if (!isJumping) {
+		else {
 			fall(deltaTime);
 			fallCheck();
 		} 

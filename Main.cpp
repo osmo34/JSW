@@ -1,3 +1,6 @@
+// Bug fixes
+// TODO: - low priority - Fix bug in player/collision whereby you can stick to the bottom of platforms by holding jump
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -6,6 +9,7 @@
 #include "Player.h"
 #include "StaticObject.h"
 #include "Collision.h"
+#include "EnemyHorizontal.h"
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
@@ -22,8 +26,7 @@ void handlePollEvents(sf::RenderWindow *window) {
 	}			  
 } 
 
-int main() {
-		
+int main() {		
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "JSW");
 	sf::Clock clock;
 	window.setFramerateLimit(FPS);
@@ -50,7 +53,10 @@ int main() {
 	levelStaticObjects.push_back(testObj3);
 	levelStaticObjects.push_back(testObj4);
 
-	// end test code
+	// TODO: test code - enemies
+	std::shared_ptr <Enemy> testEnemy(new EnemyHorizontal(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 50, SCREEN_HEIGHT - 50.0f, 0.1f, 0.0f));
+
+	// end test code //
 
 	// create collision
 	std::unique_ptr <Collision> collision(new Collision());
@@ -67,6 +73,7 @@ int main() {
 		clock.restart().asSeconds();
 
 		player->update(time.asMicroseconds());
+		testEnemy->update(time.asMilliseconds());
 
 		auto collisionPlayer = [&](char c) -> float { return player->getCollision(c); };
 		collision->updatePlayerPosition(collisionPlayer);
@@ -80,6 +87,8 @@ int main() {
 		for (auto &it : levelStaticObjects) {
 			it->draw(&window);
 		}
+
+		testEnemy->draw(&window);
 
 		window.display();
 	}

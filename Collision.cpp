@@ -27,8 +27,6 @@ void Collision::updateStaticObjectPosition(std::function<double(char c)> positio
 }
 
 void Collision::checkCollision(std::function<void(char c, float i)> playerCollision) {	
-	
-	// TODO: major bug to be fixed with higher platforms
 
 	for (auto it : staticObjectPositions) {	
 
