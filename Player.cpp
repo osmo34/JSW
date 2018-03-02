@@ -26,21 +26,6 @@ void Player::update(float dt) {
 	if (isJumping) {
 		jump(dt, currentSpeed);
 	}
-
-	/* test code
-	std::cout << "**********" << std::endl;
-	std::cout << std::endl;
-	std::cout << "sprite pos " << m_sprite.getPosition().y << std::endl;
-	std::cout << "groundheight " << groundHeight << std::endl;
-	std::cout << "jumpheight " << maxJumpHeight << std::endl;
-	std::cout << "grav " << m_grav << std::endl;
-	std::cout << "current speed " << currentSpeed << std::endl;
-	std::cout << "is moving " << isMoving << std::endl;
-	std::cout << "is jumping " << isJumping << std::endl;
-	std::cout << "is at max jump height " << isAtMaxJumpHeight << std::endl;
-	std::cout << "**********" << std::endl;
-	std::cout << std::endl;
-	*/
 }
 
 void Player::checkMovement(float dt) {
@@ -82,7 +67,7 @@ void Player::jump(float dt, float speed) {
 			m_sprite.move(sf::Vector2f(0.0, (-JUMP_SPEED * m_grav) * dt));
 			m_grav -= GRAVITY_CALCULATION;
 		}
-		else if (isAtMaxJumpHeight) {
+		else {
 			m_sprite.move(sf::Vector2f(0.0, (JUMP_SPEED * m_grav) * dt));
 			m_grav += GRAVITY_CALCULATION;
 		}  
@@ -93,7 +78,7 @@ void Player::jump(float dt, float speed) {
 			m_sprite.move(sf::Vector2f(speed * dt, (-JUMP_SPEED * m_grav) * dt));
 			m_grav -= GRAVITY_CALCULATION;
 		}
-		else if (isAtMaxJumpHeight) {
+		else {
 			m_sprite.move(sf::Vector2f(speed * dt, (JUMP_SPEED * m_grav) * dt));
 			m_grav += GRAVITY_CALCULATION;
 		}
@@ -102,11 +87,12 @@ void Player::jump(float dt, float speed) {
 } 
 
 void Player::fall(const float dt) {
+
 	if (!isMoving) {
 		m_sprite.move(sf::Vector2f(0.0, (JUMP_SPEED * m_grav) * dt));
 		m_grav += GRAVITY_CALCULATION;
 	}
-	if (isMoving) {		
+	else {		
 		m_sprite.move(sf::Vector2f(currentSpeed, (JUMP_SPEED * m_grav) * dt));
 		m_grav += GRAVITY_CALCULATION;
 	}
