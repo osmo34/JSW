@@ -1,10 +1,10 @@
 #include "Enemy.h"
 
 Enemy::Enemy(int screenWidth, int screenHeight,	sf::Texture texture,
-	float posX,  float posY, float speedX, float speedY) : 
+	float posX,  float posY, float speedX, float speedY, char objectId) : 
 	posX(posX), posY(posY), 
-	speedX(speedX), speedY(speedY), 
-	Sprite(screenWidth, screenHeight, texture) {
+	speedX(speedX), speedY(speedY), objectId(objectId),
+	Sprite(screenWidth, screenHeight, texture) {	
 	setStartPosition();
 	setUpEnemy();
 }

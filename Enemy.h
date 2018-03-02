@@ -1,7 +1,6 @@
 #pragma once
 #include "Sprite.h"
-class Enemy :
-	public Sprite
+class Enemy : public Sprite
 {
 public:
 	Enemy(const int screenWidth,
@@ -10,10 +9,12 @@ public:
 		const float posX,
 		const float posY,
 		const float speedX,
-		const float speedY);
+		const float speedY,
+		const char objectId);
 	~Enemy();
 	virtual void update(const float dt) = 0;
-	void setStartPosition();	
+	void setStartPosition();
+	char objectId;
 
 protected:
 	float posX;

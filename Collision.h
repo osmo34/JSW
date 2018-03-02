@@ -3,7 +3,7 @@
 #include <functional>
 #include <vector>
 
-struct StaticObjectPositions {
+struct ObjectPositions {
 	float top;
 	float bottom;
 	float left;
@@ -13,28 +13,29 @@ struct StaticObjectPositions {
 class Collision
 {
 private:
-	float playerLeft;
-	float playerRight;
-	float playerTop;
-	float playerBottom;
+	// used for non-player items and update accordingly
+	template <typename T>
+	void updatePositions(std::vector<T> t, ObjectPositions m_objectPosition) {
+		t.clear();
+		t.shrink_to_fit();
+		t.push_back(m_objectPosition);
+	}
 
-	const char LEFT = 'l';
-	const char RIGHT = 'r';
-	const char TOP = 't';
-	const char BOTTOM = 'b';
-	const char NO_COLLISION = 'n';
+	float playerLeft, playerRight, playerTop, playerBottom;
+
+	const char LEFT = 'l', RIGHT = 'r', TOP = 't', BOTTOM = 'b', NO_COLLISION = 'n';
 
 	const float COLLISION_OFFSET = 15.0f; // offset for landing
 	const float NO_CHANGE_GROUND_HEIGHT = 0.0f;
 
-	std::vector<StaticObjectPositions> staticObjectPositions;
+	std::vector<ObjectPositions> staticObjectPositions;
+	std::vector<ObjectPositions> movingEnemyPositions;
 	
 public:
 	Collision();
 	~Collision();
 
-	void updatePlayerPosition(std::function<double(char c)> position);
-	void updateStaticObjectPosition(std::function<double(char c)> position);
+	void updateObjectPosition(std::function<double(char c)> position, char t);
 	void checkCollision(std::function<void(char c, float i)> playerCollision);
 };
 

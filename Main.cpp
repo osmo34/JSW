@@ -1,5 +1,6 @@
 // Bug fixes
 // TODO: - low priority - Fix bug in player/collision whereby you can stick to the bottom of platforms by holding jump
+// TODO: - low priority - in player 'isAtMaxJumpHeight' is never made true. This may be causing a rare bug whereby the player flies off into the sky
 
 #include <iostream>
 #include <vector>
@@ -15,54 +16,54 @@ const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
 const int FPS = 60;
 
-// DRAWING
-// single objects
-template <typename T>
-void draw(std::shared_ptr<T> &obj, sf::RenderWindow *window) {
-	obj->draw(window);
-}
-// vectors
-template <typename T>
-void draw(std::vector<std::shared_ptr<T>> &obj, sf::RenderWindow *window) {
-	for (auto &it : obj) {
-		it->draw(window);
-	}
-}
-// ends drawing
-
 // UPDATES
 // single items and their collision - e.g. player
 template <typename T>
-void update(const std::shared_ptr<T> &obj,
+void update(const std::shared_ptr<T> &t,
 	const std::shared_ptr<Collision> &collision,
 	const float dt) {
-	obj->update(dt);
-	collision->updatePlayerPosition([&](char c) -> float { return obj->getCollision(c); });
-	collision->checkCollision([&](char c, float i) { obj->collision(c, i); });
+	t->update(dt);
+	collision->updateObjectPosition([&](char c) -> float { return t->getCollision(c); }, t->objectId);
+	collision->checkCollision([&](char c, float i) { t->collision(c, i); });
 }
 
-// objects in vector with collision
+// moving objects in vector with collision e.g. enemy
 // TODO: Untested
 template <typename T>
-void update(const std::vector<std::shared_ptr<T>> &obj, 
+void update(const std::vector<std::shared_ptr<T>> &t, 
 	const std::shared_ptr<Collision> &collision, 
 	const float dt) {
-	for (auto &it : obj) {
+	for (auto &it : t) {
 		it->update(dt);
 		// TODO: update once collision is implemented
-		//collision->updatePlayerPosition([&](char c) -> float { return it->getCollision(c); }); 
+		collision->updateObjectPosition([&](char c) -> float { return it->getCollision(c); }, it->objectId); 
 		//collision->checkCollision([&](char c, float i) { it->collision(c, i); }); // pass in T
 	}
 }
 
 // anything else in a vector with no collision - might not get used long term
 template <typename T>
-void update(const std::vector<std::shared_ptr<T>> &obj, const float dt) {
-	for (auto &it : obj) {
+void update(const std::vector<std::shared_ptr<T>> &t, const float dt) {
+	for (auto &it : t) {
 		it->update(dt);
 	}
 }
 // end updates
+
+// DRAWING
+// single objects
+template <typename T>
+void draw(const std::shared_ptr<T> &t, sf::RenderWindow *window) {
+	t->draw(window);
+}
+// vectors
+template <typename T>
+void draw(const std::vector<std::shared_ptr<T>> &t, sf::RenderWindow *window) {
+	for (auto &it : t) {
+		it->draw(window);
+	}
+}
+// ends drawing
 
 void handlePollEvents(sf::RenderWindow *window) {
 	sf::Event event;   
@@ -75,7 +76,9 @@ void handlePollEvents(sf::RenderWindow *window) {
 	}			  
 }
 			   
-int main() {		
+int main() {
+	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY_MOVING = 'e';
+
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "JSW");
 	sf::Clock clock;
 	window.setFramerateLimit(FPS);
@@ -104,8 +107,8 @@ int main() {
 	levelStaticObjects.push_back(testObj4);
 
 	// TODO: test code - enemies
-	std::shared_ptr <Enemy> testEnemy(new EnemyMoving(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 50, SCREEN_HEIGHT - 50.0f, 0.0f, 0.1f));
-	std::shared_ptr <Enemy> testEnemy2(new EnemyMoving(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 50, SCREEN_HEIGHT - 50.0f, 0.1f, 0.0f));
+	std::shared_ptr <Enemy> testEnemy(new EnemyMoving(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 50, SCREEN_HEIGHT - 50.0f, 0.0f, 0.1f, ENEMY_MOVING));
+	std::shared_ptr <Enemy> testEnemy2(new EnemyMoving(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 50, SCREEN_HEIGHT - 50.0f, 0.1f, 0.0f, ENEMY_MOVING));
 	enemies.push_back(testEnemy);
 	enemies.push_back(testEnemy2);
 	// end test code //
@@ -115,8 +118,7 @@ int main() {
 
 	// create static objects collision out of the main loop	as they are not going to move
 	for (auto it : levelStaticObjects) {
-		auto collisionStatic = [&](char c) -> float { return it->getCollision(c); };
-		collision->updateStaticObjectPosition(collisionStatic);
+		collision->updateObjectPosition([&](char c) -> float { return it->getCollision(c); }, it->objectId);
 	}
 
 	while (window.isOpen()) {

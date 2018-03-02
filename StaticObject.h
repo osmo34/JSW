@@ -18,5 +18,6 @@ public:
 
 	void update(const float dt);
 	void setStartPosition();
+	const char objectId = 's';
 };
 

@@ -33,6 +33,7 @@ private:
 	float deltaTime;
 
 public:
+	const char objectId = 'p';
 	using Sprite::Sprite;	
 	Player(const int screenWidth, const int screenHeight, sf::Texture texture);
 	void update(const float dt);

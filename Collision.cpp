@@ -9,22 +9,32 @@ Collision::Collision() {
 
 Collision::~Collision()	{ }
 
-void Collision::updatePlayerPosition(std::function<double(char c)> position) {
-	playerLeft = position(LEFT);
-	playerRight = position(RIGHT);
-	playerTop = position(TOP);
-	playerBottom = position(BOTTOM);	 	
+// essentially a fake template, uses an object id to update position (if an update is required). 
+void Collision::updateObjectPosition(std::function<double(char c)> position, char t) {
+	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY_MOVING = 'e';
+	ObjectPositions m_objectPosition;
+	m_objectPosition.top = position(TOP);
+	m_objectPosition.bottom = position(BOTTOM);
+	m_objectPosition.left = position(LEFT);
+	m_objectPosition.right = position(RIGHT);
+
+	switch (t) {
+	case PLAYER:
+		playerLeft = m_objectPosition.left, playerRight = m_objectPosition.right;
+		playerTop = m_objectPosition.top, playerBottom = m_objectPosition.bottom;
+		break;
+	case STATIC_OBJECT:
+		staticObjectPositions.push_back(m_objectPosition);
+		break;
+	case ENEMY_MOVING:
+		updatePositions(movingEnemyPositions, m_objectPosition);
+		break;
+	default: // This should never happen!
+		std::cout << "broke";
+		break;
+	}
 }
 
-// only call once as static objects don't move
-void Collision::updateStaticObjectPosition(std::function<double(char c)> position) {								
-	StaticObjectPositions m_staticObjectPosition;
-	m_staticObjectPosition.top = position(TOP);
-	m_staticObjectPosition.bottom = position(BOTTOM);
-	m_staticObjectPosition.left = position(LEFT);
-	m_staticObjectPosition.right = position(RIGHT);
-	staticObjectPositions.push_back(m_staticObjectPosition);
-}
 
 void Collision::checkCollision(std::function<void(char c, float i)> playerCollision) {	
 
