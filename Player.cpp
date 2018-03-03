@@ -168,5 +168,9 @@ void Player::updateGroundHeight(float gh) {
 	}
 }
 
+void Player::killPlayer() {
+	//setStartPosition(); // TODO: test code, commented out for now
+}
+
 
 

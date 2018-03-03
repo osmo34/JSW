@@ -1,5 +1,6 @@
 #pragma once
 #include "Enemy.h"
+// used for moving enemies, in either direction or diagonally if desired
 class EnemyMoving :	public Enemy
 {
 public:

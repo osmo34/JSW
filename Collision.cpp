@@ -6,7 +6,7 @@ Collision::Collision() {
 
 Collision::~Collision()	{ }
 
-// player
+// anything that moves, except the player
 sf::RectangleShape Collision::updatePositions(std::vector<ObjectPositions> &t, ObjectPositions &m_objectPosition, sf::RectangleShape collisionBox) {
 	t.clear();
 	t.shrink_to_fit();
@@ -19,7 +19,7 @@ sf::RectangleShape Collision::updatePositions(std::vector<ObjectPositions> &t, O
 	return collisionBox;
 }
 
-// anything that moves, except the player
+// player
 void Collision::updatePositions(ObjectPositions m_objectPositions) {
 	playerLeft = m_objectPositions.left, playerRight = m_objectPositions.right;
 	playerTop = m_objectPositions.top, playerBottom = m_objectPositions.bottom;

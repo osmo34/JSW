@@ -11,13 +11,14 @@
 #include "StaticObject.h"
 #include "Collision.h"
 #include "EnemyMoving.h"
+#include "EnemyStatic.h"
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
 const int FPS = 60;
 
 // UPDATES
-// single items and their collision - e.g. player
+// single items and their collision - in reality this is for the player
 template <typename T>
 void update(const std::shared_ptr<T> &t,
 	const std::shared_ptr<Collision> &collision,
@@ -27,23 +28,23 @@ void update(const std::shared_ptr<T> &t,
 	collision->checkCollision([&](char c, float i) { t->collision(c, i); });
 }
 
-// moving objects in vector with collision e.g. enemy
-// TODO: Untested
+// moving objects that kill our player - e.g. enemies
 template <typename T>
-bool update(const std::vector<std::shared_ptr<T>> &t, const std::shared_ptr<Collision> &collision, 
+bool update(const std::vector<std::shared_ptr<T>> &t, const std::shared_ptr<Collision> &collision, const std::shared_ptr<Player> &player,  
 	const float dt) {
 	for (auto &it : t) {
 		it->update(dt);
 		// TODO: update once collision is implemented
 		collision->updateObjectPosition([&](char c) -> float { return it->getCollision(c); }, it->objectId); 
 		if (collision->checkCollision()) {
-			return true;
+			player->killPlayer();
+			return true; // as well as the player, the rest of the game needs to know we are dead
 		}
 	}
 	return false;
 }
 
-// anything else in a vector with no collision - might not get used long term
+// anything else in a vector with no collision e.g. background animations - TODO: currently unused
 template <typename T>
 void update(const std::vector<std::shared_ptr<T>> &t, const float dt) {
 	for (auto &it : t) {
@@ -79,7 +80,7 @@ void handlePollEvents(sf::RenderWindow *window) {
 }
 			   
 int main() {
-	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY_MOVING = 'e';
+	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY = 'e';
 
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "JSW");
 	sf::Clock clock;
@@ -109,10 +110,15 @@ int main() {
 	levelStaticObjects.push_back(testObj4);
 
 	// TODO: test code - enemies
-	std::shared_ptr <Enemy> testEnemy(new EnemyMoving(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 50, SCREEN_HEIGHT - 50.0f, 0.0f, 0.1f, ENEMY_MOVING));
-	std::shared_ptr <Enemy> testEnemy2(new EnemyMoving(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 50, SCREEN_HEIGHT - 50.0f, 0.1f, 0.0f, ENEMY_MOVING));
+	std::shared_ptr <Enemy> testEnemy(new EnemyMoving(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 50, SCREEN_HEIGHT - 50.0f, 0.0f, 0.1f, ENEMY));
+	std::shared_ptr <Enemy> testEnemy2(new EnemyMoving(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 50, SCREEN_HEIGHT - 50.0f, 0.1f, 0.0f, ENEMY));
 	enemies.push_back(testEnemy);
 	enemies.push_back(testEnemy2);
+
+	// TODO: test code - static enemies
+	std::shared_ptr <Enemy> testEnemy3(new EnemyStatic(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 60, SCREEN_HEIGHT - 50.0f, 0.0f, 0.0f, ENEMY));
+	enemies.push_back(testEnemy3);
+
 	// end test code //
 
 	// create collision
@@ -129,9 +135,9 @@ int main() {
 		clock.restart().asSeconds();
 
 		update(player, collision, time.asMicroseconds());
-		bool dead = update(enemies, collision, time.asMilliseconds());
+		bool dead = update(enemies, collision, player, time.asMilliseconds());
 		if (dead) {
-			std::cout << "dead";
+			std::cout << "dead"; // TODO: for testing only
 		}
 
 		window.clear();
