@@ -168,8 +168,13 @@ void Player::updateGroundHeight(float gh) {
 	}
 }
 
-void Player::killPlayer() {
-	//setStartPosition(); // TODO: test code, commented out for now
+void Player::collisionEntity(bool isHarmful) {
+	if (isHarmful) {
+		setStartPosition(); // TODO: test code, commented out for now
+	}
+	else {
+		std::cout << "pick up";
+	}
 }
 
 

@@ -40,6 +40,6 @@ public:
 	void setStartPosition();
 	void collision(char c, float gh);
 	void updateGroundHeight(float gh);
-	void killPlayer();
+	void collisionEntity(bool isHarmful);
 };
 

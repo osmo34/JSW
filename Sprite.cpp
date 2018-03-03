@@ -30,6 +30,10 @@ float Sprite::getCollision(char side) {
 	}
 }
 
+bool Sprite::isHarmful() {
+	return false;
+}
+
 void Sprite::draw(sf::RenderWindow * window) {
 	window->draw(m_sprite);
 }

@@ -14,6 +14,7 @@ public:
 	~Enemy();
 	virtual void update(const float dt) = 0;
 	void setStartPosition();
+	bool isHarmful();
 	char objectId;
 
 protected:

@@ -16,6 +16,10 @@ void Enemy::setStartPosition() {
 	m_sprite.setOrigin(sf::Vector2f(0, 0));
 }
 
+bool Enemy::isHarmful() {
+	return true;
+}
+
 // default behaviour
 void Enemy::setUpEnemy() {
 	movementSpeed.x = speedX;

@@ -30,18 +30,16 @@ void update(const std::shared_ptr<T> &t,
 
 // moving objects that kill our player - e.g. enemies
 template <typename T>
-bool update(const std::vector<std::shared_ptr<T>> &t, const std::shared_ptr<Collision> &collision, const std::shared_ptr<Player> &player,  
+void update(const std::vector<std::shared_ptr<T>> &t, const std::shared_ptr<Collision> &collision, const std::shared_ptr<Player> &player,  
 	const float dt) {
 	for (auto &it : t) {
 		it->update(dt);
 		// TODO: update once collision is implemented
 		collision->updateObjectPosition([&](char c) -> float { return it->getCollision(c); }, it->objectId); 
 		if (collision->checkCollision()) {
-			player->killPlayer();
-			return true; // as well as the player, the rest of the game needs to know we are dead
+			player->collisionEntity(it->isHarmful());
 		}
 	}
-	return false;
 }
 
 // anything else in a vector with no collision e.g. background animations - TODO: currently unused
@@ -135,11 +133,8 @@ int main() {
 		clock.restart().asSeconds();
 
 		update(player, collision, time.asMicroseconds());
-		bool dead = update(enemies, collision, player, time.asMilliseconds());
-		if (dead) {
-			std::cout << "dead"; // TODO: for testing only
-		}
-
+		update(enemies, collision, player, time.asMilliseconds());
+		
 		window.clear();
 
 		draw(player, &window);		   
