@@ -30,15 +30,17 @@ void update(const std::shared_ptr<T> &t,
 // moving objects in vector with collision e.g. enemy
 // TODO: Untested
 template <typename T>
-void update(const std::vector<std::shared_ptr<T>> &t, 
-	const std::shared_ptr<Collision> &collision, 
+bool update(const std::vector<std::shared_ptr<T>> &t, const std::shared_ptr<Collision> &collision, 
 	const float dt) {
 	for (auto &it : t) {
 		it->update(dt);
 		// TODO: update once collision is implemented
 		collision->updateObjectPosition([&](char c) -> float { return it->getCollision(c); }, it->objectId); 
-		//collision->checkCollision([&](char c, float i) { it->collision(c, i); }); // pass in T
+		if (collision->checkCollision()) {
+			return true;
+		}
 	}
+	return false;
 }
 
 // anything else in a vector with no collision - might not get used long term
@@ -127,12 +129,16 @@ int main() {
 		clock.restart().asSeconds();
 
 		update(player, collision, time.asMicroseconds());
-		update(enemies, collision, time.asMilliseconds());
+		bool dead = update(enemies, collision, time.asMilliseconds());
+		if (dead) {
+			std::cout << "dead";
+		}
 
 		window.clear();
+
 		draw(player, &window);		   
 		draw(levelStaticObjects, &window);
-		draw(enemies, &window);	
+		draw(enemies, &window);
 
 		window.display();
 	}
