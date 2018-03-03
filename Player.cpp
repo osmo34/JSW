@@ -3,6 +3,7 @@
 Player::Player(int screenWidth, int screenHeight, sf::Texture texture) :
 	Sprite (screenWidth, screenHeight, texture)	{
 	input = std::unique_ptr<PlayerInput>(new PlayerInput());
+	state = std::unique_ptr<PlayerState>(new PlayerState());
 	groundHeight = m_screenHeight - 50.0f;
 	groundHeightOld = groundHeight;
 	maxJumpHeight = groundHeight - JUMP_HEIGHT;
@@ -22,6 +23,8 @@ void Player::update(float dt) {
 	deltaTime = dt;
 	m_currentDirection = input->update(dt);
 	checkMovement(dt);
+	checkState();
+	state->updateState(NONE);
 
 	if (isJumping) {
 		jump(dt, currentSpeed);
@@ -110,7 +113,7 @@ void Player::fallCheck() {
 		isAtMaxJumpHeight = false;
 		isJumping = false;
 	}
-} 
+}
 
 void Player::collision(char c, float gh) {
 	const char LEFT = 'l', RIGHT = 'r', TOP = 't', BOTTOM = 'b', 
@@ -138,16 +141,13 @@ void Player::collision(char c, float gh) {
 		fall(deltaTime);
 		fallCheck();
 		break;
-	case ENEMY:
-		break;
-	case POWER_UP:
-		break;
 	case NO_COLLISION:
 		collideLeft = false;
 		collideRight = false;
+
 		if (isJumping) {
 			groundHeight = groundHeightOld;
-		}
+		} 
 		else {
 			fall(deltaTime);
 			fallCheck();
@@ -168,13 +168,26 @@ void Player::updateGroundHeight(float gh) {
 	}
 }
 
-void Player::collisionEntity(bool isHarmful) {
-	if (isHarmful) {
-		setStartPosition(); // TODO: test code, commented out for now
+void Player::checkState() {
+	const char DEAD = 'd', PICK_UP = 'u', NONE = 'n';
+	char c = state->getState();
+
+	switch (c) {
+	case DEAD:
+		std::cout << "dead" << std::endl;
+		setStartPosition();
+		break;
+	case PICK_UP:
+		std::cout << "pick up" << std::endl;
+		break;
+	case NONE:
+	default:
+		break;
 	}
-	else {
-		std::cout << "pick up ";
-	}
+}
+
+void Player::collisionEntity(bool isHarmful) {	
+	(isHarmful) ? state->updateState(DEAD) : state->updateState(PICK_UP);
 }
 
 

@@ -1,6 +1,7 @@
 #pragma once
 #include "Sprite.h"
 #include "PlayerInput.h"
+#include "PlayerState.h"
 class Player : public Sprite
 {
 private:
@@ -10,8 +11,11 @@ private:
 	void jump(const float dt, const float speed);
 	void fall(const float dt);
 	void fallCheck();
+	void checkState();
 
-	std::unique_ptr <PlayerInput> input;
+	std::unique_ptr <PlayerInput> input = nullptr;
+	std::unique_ptr <PlayerState> state = nullptr;
+	const char DEAD = 'd', PICK_UP = 'u', NONE = 'n';
 
 	char m_currentDirection;			
 	const float PLAYER_SPEED = 0.0001f;

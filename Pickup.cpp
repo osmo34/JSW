@@ -11,10 +11,6 @@ Pickup::Pickup(const int screenWidth,
 
 Pickup::~Pickup() {}
 
-bool Pickup::isPickup() {
-	return true;
-}
-
 void Pickup::setStartPosition() {
 	m_sprite.setPosition(sf::Vector2f(posX, posY));
 	m_sprite.setOrigin(sf::Vector2f(0, 0));

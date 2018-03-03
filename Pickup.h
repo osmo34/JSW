@@ -12,7 +12,6 @@ public:
 	~Pickup();
 
 	char objectId;
-	bool isPickup();
 	void update(const float dt);
 
 private:							
