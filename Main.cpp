@@ -12,6 +12,7 @@
 #include "Collision.h"
 #include "EnemyMoving.h"
 #include "EnemyStatic.h"
+#include "Pickup.h"
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
@@ -34,7 +35,6 @@ void update(const std::vector<std::shared_ptr<T>> &t, const std::shared_ptr<Coll
 	const float dt) {
 	for (auto &it : t) {
 		it->update(dt);
-		// TODO: update once collision is implemented
 		collision->updateObjectPosition([&](char c) -> float { return it->getCollision(c); }, it->objectId); 
 		if (collision->checkCollision()) {
 			player->collisionEntity(it->isHarmful());
@@ -78,7 +78,7 @@ void handlePollEvents(sf::RenderWindow *window) {
 }
 			   
 int main() {
-	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY = 'e';
+	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY = 'e', PICK_UP = 'u';
 
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "JSW");
 	sf::Clock clock;
@@ -87,6 +87,7 @@ int main() {
 
 	std::vector<std::shared_ptr<StaticObject>> levelStaticObjects;
 	std::vector<std::shared_ptr<Enemy>> enemies;
+	std::vector<std::shared_ptr<Pickup>> pickups;
 
 	// load textures
 	std::string playerTexture = "Ball.png";	
@@ -117,6 +118,9 @@ int main() {
 	std::shared_ptr <Enemy> testEnemy3(new EnemyStatic(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 60, SCREEN_HEIGHT - 50.0f, 0.0f, 0.0f, ENEMY));
 	enemies.push_back(testEnemy3);
 
+	// TODO: test code - pickups
+	std::shared_ptr <Pickup> testPickup(new Pickup(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 100, SCREEN_HEIGHT - 55.0f, PICK_UP));
+	pickups.push_back(testPickup);
 	// end test code //
 
 	// create collision
@@ -134,15 +138,16 @@ int main() {
 
 		update(player, collision, time.asMicroseconds());
 		update(enemies, collision, player, time.asMilliseconds());
+		update(pickups, collision, player, time.asMilliseconds());
 		
 		window.clear();
 
 		draw(player, &window);		   
 		draw(levelStaticObjects, &window);
 		draw(enemies, &window);
+		draw(pickups, &window);
 
 		window.display();
 	}
-
 	return 0;
 }

@@ -26,20 +26,16 @@ private:
 	float playerLeft, playerRight, playerTop, playerBottom;
 
 	std::vector<ObjectPositions> staticObjectPositions;
-	std::vector<ObjectPositions> movingEnemyPositions;
+	std::vector<ObjectPositions> entityPositions;
 
 	sf::RectangleShape playerRectangle;
-	sf::RectangleShape enemyRectangle;
-
-
+	sf::RectangleShape collisionRectangle;
 	
 public:
 	Collision();
 	~Collision();
-
 	void updateObjectPosition(std::function<double(char c)> position, char t);
 	void checkCollision(std::function<void(char c, float i)> playerCollision);
-
 	bool checkCollision();
 
 	// temp

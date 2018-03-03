@@ -6,7 +6,7 @@ Collision::Collision() {
 
 Collision::~Collision()	{ }
 
-// anything that moves, except the player
+// entities - enemies, pickups.
 sf::RectangleShape Collision::updatePositions(std::vector<ObjectPositions> &t, ObjectPositions &m_objectPosition, sf::RectangleShape collisionBox) {
 	t.clear();
 	t.shrink_to_fit();
@@ -29,7 +29,7 @@ void Collision::updatePositions(ObjectPositions m_objectPositions) {
 
 // essentially a fake template, uses an object id to update position (if an update is required). 
 void Collision::updateObjectPosition(std::function<double(char c)> position, char t) {
-	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY_MOVING = 'e';
+	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY_MOVING = 'e', PICK_UP = 'u';
 	ObjectPositions m_objectPosition;
 	m_objectPosition.top = position(TOP);
 	m_objectPosition.bottom = position(BOTTOM);
@@ -44,7 +44,10 @@ void Collision::updateObjectPosition(std::function<double(char c)> position, cha
 		staticObjectPositions.push_back(m_objectPosition);
 		break;
 	case ENEMY_MOVING:
-		enemyRectangle = updatePositions(movingEnemyPositions, m_objectPosition, enemyRectangle);
+		collisionRectangle = updatePositions(entityPositions, m_objectPosition, collisionRectangle);
+		break;
+	case PICK_UP:
+		collisionRectangle = updatePositions(entityPositions, m_objectPosition, collisionRectangle);
 		break;
 	default: // This should never happen!
 		std::cout << "broke";
@@ -52,9 +55,9 @@ void Collision::updateObjectPosition(std::function<double(char c)> position, cha
 	}
 }
 
-// dead
+// detects collision with an entity
 bool Collision::checkCollision() {
-	return (playerRectangle.getGlobalBounds().intersects(enemyRectangle.getGlobalBounds())) ? true : false;
+	return (playerRectangle.getGlobalBounds().intersects(collisionRectangle.getGlobalBounds())) ? true : false;
 }
 
 // check static blocks
@@ -72,6 +75,7 @@ void Collision::checkCollision(std::function<void(char c, float i)> playerCollis
 		} else if (playerTop <= it.bottom && playerTop >= it.bottom - COLLISION_OFFSET &&
 			playerLeft <= it.right && playerRight >= it.left) {
 			playerCollision(BOTTOM, 0.0);
+			return;
 		}
 		if (playerTop >= it.top) {
 			if (playerLeft <= it.right && playerRight >= it.right) {

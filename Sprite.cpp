@@ -34,6 +34,10 @@ bool Sprite::isHarmful() {
 	return false;
 }
 
+bool Sprite::isPickup() {
+	return false;
+}
+
 void Sprite::draw(sf::RenderWindow * window) {
 	window->draw(m_sprite);
 }

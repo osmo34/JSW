@@ -173,7 +173,7 @@ void Player::collisionEntity(bool isHarmful) {
 		setStartPosition(); // TODO: test code, commented out for now
 	}
 	else {
-		std::cout << "pick up";
+		std::cout << "pick up ";
 	}
 }
 

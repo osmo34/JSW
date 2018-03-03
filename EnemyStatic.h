@@ -4,11 +4,11 @@
 class EnemyStatic : public Enemy
 {
 public:
-	using Enemy::Enemy;
-	void update(const float dt);
+	using Enemy::Enemy;	
 	~EnemyStatic();
 
 private:
+	void update(const float dt);
 	void setUpEnemy();
 	void reverseDirection();
 };
