@@ -7,6 +7,7 @@
 #include <string>
 #include <memory>
 #include <SFML\Graphics.hpp>
+#include <cstdint>
 #include "Player.h"
 #include "StaticObject.h"
 #include "Collision.h"
@@ -17,6 +18,30 @@
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
 const int FPS = 60;
+
+#pragma pack(push, 2)
+struct LevelData {
+	std::uint8_t objectType;
+	std::uint8_t textureId;
+	float positionX;
+	float positionY;
+};
+#pragma pack(pop)
+
+#pragma pack(push, 2)
+struct Level {
+	std::uint32_t levelNumber;
+	LevelData levelData[256];
+};
+#pragma pack(pop)
+
+// TODO: likely use this when we have more levels
+#pragma pack(push, 2)
+struct World {
+	Level levels[256];
+};
+#pragma pack(pop)
+
 
 // UPDATES
 // single items and their collision - in reality this is for the player
@@ -79,6 +104,7 @@ void handlePollEvents(sf::RenderWindow *window) {
 			   
 int main() {
 	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY = 'e', PICK_UP = 'u';
+	const char TEST_TEXTURE = 't';
 
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "JSW");
 	sf::Clock clock;
@@ -98,15 +124,59 @@ int main() {
 	// create player
 	std::shared_ptr <Player> player(new Player(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture));
 
+
+
+	// TODO: test code - eventually refactor elsewhere
+
+	Level level;
+	level.levelNumber = 0;
+
+	// create level objects
+	LevelData levelData;
+	levelData.objectType = STATIC_OBJECT;
+	levelData.textureId = TEST_TEXTURE;
+	levelData.positionX = 600.0f;
+	levelData.positionY = SCREEN_HEIGHT - 50.0f;
+
+	LevelData levelData1;
+	levelData1.objectType = STATIC_OBJECT;
+	levelData1.textureId = TEST_TEXTURE;
+	levelData1.positionX = 800.0f;
+	levelData1.positionY = SCREEN_HEIGHT - 50.0f;
+
+	// end create objects
+	
+	level.levelData[0] = levelData;
+	level.levelData[1] = levelData1;
+
+	for (int i = 0; i < 2; i++) {
+		sf::Texture texture;
+		switch (level.levelData[i].textureId) {
+		case TEST_TEXTURE:
+			texture = pTexture;
+			break;
+		}
+		switch (level.levelData[i].objectType) {
+		case STATIC_OBJECT:
+			std::shared_ptr <StaticObject> testObj(new StaticObject(SCREEN_WIDTH, SCREEN_HEIGHT, texture, level.levelData[i].positionX, level.levelData[i].positionY));
+			levelStaticObjects.push_back(testObj);
+			break;
+		}
+	}
+
+
+
+
+
 	// TODO: test code - static objects
-	std::shared_ptr <StaticObject> testObj(new StaticObject(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 600, SCREEN_HEIGHT - 50.0f));
-	std::shared_ptr <StaticObject> testObj2(new StaticObject(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 800, SCREEN_HEIGHT - 50.0f));
-	std::shared_ptr <StaticObject> testObj3(new StaticObject(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 900, SCREEN_HEIGHT - 110.0f));
-	std::shared_ptr <StaticObject> testObj4(new StaticObject(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 1000, SCREEN_HEIGHT - 170.0f));
-	levelStaticObjects.push_back(testObj);
-	levelStaticObjects.push_back(testObj2);
-	levelStaticObjects.push_back(testObj3);
-	levelStaticObjects.push_back(testObj4);
+	//std::shared_ptr <StaticObject> testObj(new StaticObject(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 600, SCREEN_HEIGHT - 50.0f));
+	//std::shared_ptr <StaticObject> testObj2(new StaticObject(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 800, SCREEN_HEIGHT - 50.0f));
+	//std::shared_ptr <StaticObject> testObj3(new StaticObject(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 900, SCREEN_HEIGHT - 110.0f));
+	//std::shared_ptr <StaticObject> testObj4(new StaticObject(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 1000, SCREEN_HEIGHT - 170.0f));
+	//levelStaticObjects.push_back(testObj);
+	//levelStaticObjects.push_back(testObj2);
+	//levelStaticObjects.push_back(testObj3);
+	//levelStaticObjects.push_back(testObj4);
 
 	// TODO: test code - enemies
 	std::shared_ptr <Enemy> testEnemy(new EnemyMoving(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 50, SCREEN_HEIGHT - 50.0f, 0.0f, 0.1f, ENEMY));
