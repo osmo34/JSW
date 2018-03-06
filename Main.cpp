@@ -20,25 +20,27 @@ const int SCREEN_HEIGHT = 720;
 const int FPS = 60;
 
 #pragma pack(push, 2)
-struct LevelData {
+struct RoomData {
 	std::uint8_t objectType;
 	std::uint8_t textureId;
 	float positionX;
 	float positionY;
+	float speedX;
+	float speedY;
 };
 #pragma pack(pop)
 
 #pragma pack(push, 2)
-struct Level {
-	std::uint32_t levelNumber;
-	LevelData levelData[256];
+struct Room {
+	std::uint32_t roomNumber;
+	RoomData roomData[256];
 };
 #pragma pack(pop)
 
 // TODO: likely use this when we have more levels
 #pragma pack(push, 2)
 struct World {
-	Level levels[256];
+	Room rooms[256];
 };
 #pragma pack(pop)
 
@@ -103,7 +105,8 @@ void handlePollEvents(sf::RenderWindow *window) {
 }
 			   
 int main() {
-	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY = 'e', PICK_UP = 'u';
+	// TODO: enum
+	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY = 'e', ENEMY_MOVING = 'm', ENEMY_STATIC = 'n', PICK_UP = 'u';
 	const char TEST_TEXTURE = 't';
 
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "JSW");
@@ -128,70 +131,122 @@ int main() {
 
 	// TODO: test code - eventually refactor elsewhere
 
-	Level level;
-	level.levelNumber = 0;
+	Room room;
+	room.roomNumber = 0;
 
 	// create level objects
-	LevelData levelData;
-	levelData.objectType = STATIC_OBJECT;
-	levelData.textureId = TEST_TEXTURE;
-	levelData.positionX = 600.0f;
-	levelData.positionY = SCREEN_HEIGHT - 50.0f;
+	RoomData roomData;
+	roomData.objectType = STATIC_OBJECT;
+	roomData.textureId = TEST_TEXTURE;
+	roomData.positionX = 600.0f;
+	roomData.positionY = SCREEN_HEIGHT - 50.0f;
+	roomData.speedX = 0.0f;
+	roomData.speedY = 0.0f;
 
-	LevelData levelData1;
-	levelData1.objectType = STATIC_OBJECT;
-	levelData1.textureId = TEST_TEXTURE;
-	levelData1.positionX = 800.0f;
-	levelData1.positionY = SCREEN_HEIGHT - 50.0f;
+	RoomData roomData1;
+	roomData1.objectType = STATIC_OBJECT;
+	roomData1.textureId = TEST_TEXTURE;
+	roomData1.positionX = 800.0f;
+	roomData1.positionY = SCREEN_HEIGHT - 50.0f;
+	roomData1.speedX = 0.0f;
+	roomData1.speedY = 0.0f;
+
+	RoomData roomData2;
+	roomData2.objectType = STATIC_OBJECT;
+	roomData2.textureId = TEST_TEXTURE;
+	roomData2.positionX = 900.0f;
+	roomData2.positionY = SCREEN_HEIGHT - 110.0f;
+	roomData2.speedX = 0.0f;
+	roomData2.speedY = 0.0f;
+
+	RoomData roomData3;
+	roomData3.objectType = STATIC_OBJECT;
+	roomData3.textureId = TEST_TEXTURE;
+	roomData3.positionX = 1000.0f;
+	roomData3.positionY = SCREEN_HEIGHT - 170.0f;
+	roomData3.speedX = 0.0f;
+	roomData3.speedY = 0.0f;
+
+	RoomData enemy1;
+	enemy1.objectType = ENEMY_MOVING;
+	enemy1.textureId = TEST_TEXTURE;
+	enemy1.positionX = 50.0f;
+	enemy1.positionY = SCREEN_HEIGHT - 50.0f;
+	enemy1.speedX = 0.0f;
+	enemy1.speedY = 0.1f;
+
+	RoomData enemy2;
+	enemy2.objectType = ENEMY_MOVING;
+	enemy2.textureId = TEST_TEXTURE;
+	enemy2.positionX = 50.0f;
+	enemy2.positionY = SCREEN_HEIGHT - 50.0f;
+	enemy2.speedX = 0.1f;
+	enemy2.speedY = 0.0f;
+
+	RoomData enemy3;
+	enemy3.objectType = ENEMY_STATIC;
+	enemy3.textureId = TEST_TEXTURE;
+	enemy3.positionX = 60.0f;
+	enemy3.positionY = SCREEN_HEIGHT - 50.0f;
+	enemy3.speedX = 0.0f;
+	enemy3.speedY = 0.0f;
+
+	RoomData pickup;
+	pickup.objectType = PICK_UP;
+	pickup.textureId = TEST_TEXTURE;
+	pickup.positionX = 100;
+	pickup.positionY = SCREEN_HEIGHT - 55.0f;
+	pickup.speedX = 0.0f;
+	pickup.speedY = 0.0f; 
 
 	// end create objects
 	
-	level.levelData[0] = levelData;
-	level.levelData[1] = levelData1;
+	room.roomData[0] = roomData;
+	room.roomData[1] = roomData1;
+	room.roomData[2] = roomData2;
+	room.roomData[3] = roomData3;
+	room.roomData[4] = enemy1;
+	room.roomData[5] = enemy2;
+	room.roomData[6] = enemy3;
+	room.roomData[7] = pickup;
 
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < 8; i++) {
 		sf::Texture texture;
-		switch (level.levelData[i].textureId) {
+		switch (room.roomData[i].textureId) {
 		case TEST_TEXTURE:
 			texture = pTexture;
 			break;
 		}
-		switch (level.levelData[i].objectType) {
+
+		switch (room.roomData[i].objectType) {
 		case STATIC_OBJECT:
-			std::shared_ptr <StaticObject> testObj(new StaticObject(SCREEN_WIDTH, SCREEN_HEIGHT, texture, level.levelData[i].positionX, level.levelData[i].positionY));
-			levelStaticObjects.push_back(testObj);
-			break;
+		{
+			std::shared_ptr <StaticObject> staticObject(new StaticObject(SCREEN_WIDTH, SCREEN_HEIGHT, texture, room.roomData[i].positionX, room.roomData[i].positionY));
+			levelStaticObjects.push_back(staticObject);
+		}
+		break;
+		case ENEMY_MOVING:
+		{
+			std::shared_ptr <Enemy> enemy(new EnemyMoving(SCREEN_WIDTH, SCREEN_HEIGHT, texture, room.roomData[i].positionX, room.roomData[i].positionY, room.roomData[i].speedX, room.roomData[i].speedY, ENEMY));
+			enemies.push_back(enemy);
+		}
+		break;
+		case ENEMY_STATIC:
+		{
+			std::shared_ptr <Enemy> enemy(new EnemyStatic(SCREEN_WIDTH, SCREEN_HEIGHT, texture, room.roomData[i].positionX, room.roomData[i].positionY, room.roomData[i].speedX, room.roomData[i].speedY, ENEMY));
+			enemies.push_back(enemy);
+		}
+		break;
+		case PICK_UP:
+		{
+			std::shared_ptr <Pickup> pickup(new Pickup(SCREEN_WIDTH, SCREEN_HEIGHT, texture, room.roomData[i].positionX, room.roomData[i].positionY, PICK_UP));
+			pickups.push_back(pickup);
+		}
+		break;
 		}
 	}
 
-
-
-
-
-	// TODO: test code - static objects
-	//std::shared_ptr <StaticObject> testObj(new StaticObject(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 600, SCREEN_HEIGHT - 50.0f));
-	//std::shared_ptr <StaticObject> testObj2(new StaticObject(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 800, SCREEN_HEIGHT - 50.0f));
-	//std::shared_ptr <StaticObject> testObj3(new StaticObject(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 900, SCREEN_HEIGHT - 110.0f));
-	//std::shared_ptr <StaticObject> testObj4(new StaticObject(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 1000, SCREEN_HEIGHT - 170.0f));
-	//levelStaticObjects.push_back(testObj);
-	//levelStaticObjects.push_back(testObj2);
-	//levelStaticObjects.push_back(testObj3);
-	//levelStaticObjects.push_back(testObj4);
-
-	// TODO: test code - enemies
-	std::shared_ptr <Enemy> testEnemy(new EnemyMoving(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 50, SCREEN_HEIGHT - 50.0f, 0.0f, 0.1f, ENEMY));
-	std::shared_ptr <Enemy> testEnemy2(new EnemyMoving(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 50, SCREEN_HEIGHT - 50.0f, 0.1f, 0.0f, ENEMY));
-	enemies.push_back(testEnemy);
-	enemies.push_back(testEnemy2);
-
-	// TODO: test code - static enemies
-	std::shared_ptr <Enemy> testEnemy3(new EnemyStatic(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 60, SCREEN_HEIGHT - 50.0f, 0.0f, 0.0f, ENEMY));
-	enemies.push_back(testEnemy3);
-
-	// TODO: test code - pickups
-	std::shared_ptr <Pickup> testPickup(new Pickup(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture, 100, SCREEN_HEIGHT - 55.0f, PICK_UP));
-	pickups.push_back(testPickup);
-	// end test code //
+	// TODO: end test code
 
 	// create collision
 	std::shared_ptr <Collision> collision(new Collision());
