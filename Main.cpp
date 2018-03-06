@@ -8,6 +8,7 @@
 #include <memory>
 #include <SFML\Graphics.hpp>
 #include <cstdint>
+#include <fstream>
 #include "Player.h"
 #include "StaticObject.h"
 #include "Collision.h"
@@ -131,7 +132,8 @@ int main() {
 
 	// TODO: test code - eventually refactor elsewhere
 
-	Room room;
+	/*
+	Room room;		  
 	room.roomNumber = 0;
 
 	// create level objects
@@ -209,6 +211,36 @@ int main() {
 	room.roomData[5] = enemy2;
 	room.roomData[6] = enemy3;
 	room.roomData[7] = pickup;
+
+
+	
+	std::ofstream outputFile;
+	std::string fileName = "test.jsb";
+
+	outputFile.open(fileName, std::ios::binary);
+
+	if (outputFile.is_open()) {
+		outputFile.write(reinterpret_cast<char*>(&room), sizeof(room));
+		outputFile.close();
+	}
+	else {
+		std::cout << "write failed";
+	}
+	*/
+
+	std::string fileName = "test.jsb";
+
+	Room room{};
+	std::ifstream inFile;
+	inFile.open(fileName, std::ios::binary);
+
+	if (inFile.is_open()) {
+		inFile.read(reinterpret_cast<char*>(&room), sizeof(Room));
+		inFile.close();
+	}
+	else {
+		std::cout << "read failed";
+	}							 
 
 	for (int i = 0; i < 8; i++) {
 		sf::Texture texture;
