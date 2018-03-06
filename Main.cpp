@@ -25,9 +25,9 @@ const int FPS = 60;
 
 // create object in their vectors
 template <typename T>
-void createObject(std::vector<std::shared_ptr<T>> &t,   
-	sf::Texture &texture, float posX, float posY, char objectId, float speedX, float speedY) {
-	t.push_back(std::shared_ptr<T>(new T(SCREEN_WIDTH, SCREEN_HEIGHT, texture, posX, posY, objectId, speedX, speedY)));
+void createObject(std::vector<std::shared_ptr<T>> &t, const RoomData &room,    
+	const sf::Texture &texture, const char objectId) {
+	t.push_back(std::shared_ptr<T>(new T(SCREEN_WIDTH, SCREEN_HEIGHT, texture, room.positionX, room.positionY, objectId, room.speedX, room.speedY)));
 }
 
 // UPDATES
@@ -138,23 +138,23 @@ int main() {
 
 		switch (room.roomData[i].objectType) {
 		case STATIC_OBJECT:
-		{
-			createObject(levelStaticObjects, texture, room.roomData[i].positionX, room.roomData[i].positionY, NULL, NULL, NULL);
+		{				
+			createObject(levelStaticObjects, room.roomData[i], texture, NULL);
 		}
 		break;
 		case ENEMY_MOVING:
-		{
-			createObject(enemiesMoving, texture, room.roomData[i].positionX, room.roomData[i].positionY, ENEMY, room.roomData[i].speedX, room.roomData[i].speedY);			
+		{				
+			createObject(enemiesMoving, room.roomData[i], texture, ENEMY);
 		}
 		break;
 		case ENEMY_STATIC:
-		{				
-			createObject(enemiesStatic, texture, room.roomData[i].positionX, room.roomData[i].positionY, ENEMY, room.roomData[i].speedX, room.roomData[i].speedY);
+		{	
+			createObject(enemiesStatic, room.roomData[i], texture, ENEMY);
 		}
 		break;
 		case PICK_UP:
-		{
-			createObject(pickups, texture, room.roomData[i].positionX, room.roomData[i].positionY, PICK_UP, NULL, NULL);
+		{				
+			createObject(pickups, room.roomData[i], texture, PICK_UP);
 		}
 		break;
 		}
