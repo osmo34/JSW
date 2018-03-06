@@ -6,9 +6,9 @@ class EnemyStatic : public Enemy
 public:
 	using Enemy::Enemy;	
 	~EnemyStatic();
-
-private:
 	void update(const float dt);
+
+private: 	
 	void setUpEnemy();
 	void reverseDirection();
 };

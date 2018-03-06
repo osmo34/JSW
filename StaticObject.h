@@ -9,11 +9,13 @@ private:
 	float posY;
 
 public:
-	StaticObject(const int screenWidth, 
-		const int screenHeight, 
-		sf::Texture texture, 
-		const float posX, 
-		const float posY);
+	StaticObject(const int screenWidth,
+		const int screenHeight,
+		sf::Texture texture,
+		const float posX,
+		const float posY,
+		const char, const float, const float
+		);
 	~StaticObject();
 
 	void update(const float dt);

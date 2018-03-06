@@ -1,6 +1,6 @@
 #include "StaticObject.h"
 
-StaticObject::StaticObject(int screenWidth,	int screenHeight, sf::Texture texture, float posX, float posY) 
+StaticObject::StaticObject(int screenWidth,	int screenHeight, sf::Texture texture, float posX, float posY, char, float, float)
 	: posX(posX), posY(posY), Sprite(screenWidth, screenHeight, texture) {
 	setStartPosition();
 }							   

@@ -8,7 +8,8 @@ public:
 		sf::Texture texture,
 		const float posX,
 		const float posY,
-		const char objectId);
+		const char objectId, 
+		const float, const float);
 	~Pickup();
 
 	char objectId;

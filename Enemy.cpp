@@ -1,7 +1,7 @@
 #include "Enemy.h"
 
 Enemy::Enemy(int screenWidth, int screenHeight,	sf::Texture texture,
-	float posX,  float posY, float speedX, float speedY, char objectId) : 
+	float posX,  float posY, char objectId, float speedX, float speedY) :
 	posX(posX), posY(posY), 
 	speedX(speedX), speedY(speedY), objectId(objectId),
 	Sprite(screenWidth, screenHeight, texture) {	
