@@ -171,6 +171,7 @@ int main() {
 	// create static objects collision out of the main loop	as they are not going to move
 	update(levelStaticObjects, collision);
 
+	
 	while (window.isOpen()) {
 		handlePollEvents(&window);
 		sf::Time time = clock.getElapsedTime();
@@ -180,7 +181,9 @@ int main() {
 		update(enemiesMoving, collision, player, time.asMilliseconds());
 		update(enemiesStatic, collision, player, time.asMilliseconds());
 		update(pickups, collision, player, time.asMilliseconds());
-		
+
+		player->test(&clock);
+
 		window.clear();
 
 		draw(player, &window);		   
