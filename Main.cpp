@@ -123,6 +123,11 @@ int main() {
 	// create player
 	std::shared_ptr <Player> player(new Player(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture));
 
+	// TODO: Only call this if we want to compile. It is only here for testing
+	std::shared_ptr <WriteRoom> writeRoom(new WriteRoom);
+	writeRoom->createRoom(fileName, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+
 	// load the room from file
 	Room room{};
 	std::shared_ptr<LoadRoom> loadLevel(new LoadRoom);

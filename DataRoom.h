@@ -3,8 +3,8 @@
 
 #pragma pack(push, 2)
 struct RoomData {
-	std::uint8_t objectType;
-	std::uint8_t textureId;
+	char objectType;
+	char textureId;
 	float positionX;
 	float positionY;
 	float speedX;
