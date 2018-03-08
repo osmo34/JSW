@@ -18,8 +18,8 @@ private:
 	const char DEAD = 'd', PICK_UP = 'u', NONE = 'n';
 
 	char m_currentDirection;			
-	const float PLAYER_SPEED = 0.0001f;
-	const float JUMP_SPEED = 0.0001f;
+	const float PLAYER_SPEED = 0.1f;
+	const float JUMP_SPEED = 0.1f;
 	const float JUMP_HEIGHT = 100.0f;
 	float currentSpeed;
 	float groundHeight;

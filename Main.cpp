@@ -7,8 +7,6 @@
 #include <string>
 #include <memory>
 #include <SFML\Graphics.hpp>
-#include <cstdint>
-#include <fstream>
 #include "Player.h"
 #include "StaticObject.h"
 #include "Collision.h"
@@ -143,25 +141,19 @@ int main() {
 
 		switch (room.roomData[i].objectType) {
 		case STATIC_OBJECT:
-		{				
 			createObject(levelStaticObjects, room.roomData[i], texture, NULL);
-		}
-		break;
-		case ENEMY_MOVING:
-		{				
+			break;
+		case ENEMY_MOVING:		
 			createObject(enemiesMoving, room.roomData[i], texture, ENEMY);
-		}
-		break;
+			break;
 		case ENEMY_STATIC:
-		{	
-			createObject(enemiesStatic, room.roomData[i], texture, ENEMY);
-		}
-		break;
+		createObject(enemiesStatic, room.roomData[i], texture, ENEMY);
+			break;
 		case PICK_UP:
-		{				
-			createObject(pickups, room.roomData[i], texture, PICK_UP);
-		}
-		break;
+		createObject(pickups, room.roomData[i], texture, PICK_UP);
+			break;
+		default:
+			std::cout << "error in room data";
 		}
 	}
 
@@ -177,12 +169,10 @@ int main() {
 		sf::Time time = clock.getElapsedTime();
 		clock.restart().asSeconds();
 
-		update(player, collision, time.asMicroseconds());
+		update(player, collision, time.asMilliseconds());
 		update(enemiesMoving, collision, player, time.asMilliseconds());
 		update(enemiesStatic, collision, player, time.asMilliseconds());
 		update(pickups, collision, player, time.asMilliseconds());
-
-		player->test(&clock);
 
 		window.clear();
 

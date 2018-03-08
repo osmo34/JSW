@@ -2,13 +2,13 @@
 #include <SFML\Graphics.hpp>
 #include <iostream>
 #include <memory>
+#include "Animation.h"
+#include <memory>
 
 class Sprite {
 private:
 	const int TEXTURE_SIZE_X = 32;
 	const int TEXTURE_SIZE_Y = 32;
-
-
 
 public:
 	Sprite();
@@ -20,9 +20,9 @@ public:
 	virtual float getCollision(const char side);
 	virtual bool isHarmful();
 	char objectId;
-	void test(sf::Clock *clock);
 
 protected:
+	std::unique_ptr<Animation> animation = nullptr;
 	sf::Sprite createSprite();
 	sf::IntRect createSourceRect();
 	sf::IntRect m_sourceRect;

@@ -29,6 +29,7 @@ void Player::update(float dt) {
 	if (isJumping) {
 		jump(dt, currentSpeed);
 	}
+	animation->updateAnimation(dt, m_sourceRect, &m_sprite);
 }
 
 void Player::checkMovement(float dt) {
