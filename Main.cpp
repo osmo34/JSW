@@ -113,9 +113,15 @@ int main() {
 	std::vector<std::shared_ptr<Pickup>> pickups;
 
 	// load textures
-	std::string playerTexture = "Ball.png";	
+	std::string testTexture = "ball.png";	
+	sf::Texture tTexture;
+	if (!tTexture.loadFromFile(testTexture)) { std::cout << "texture load failure"; }
+	
+	std::string playerTexture = "Hat_man_spriteSheet.png";
 	sf::Texture pTexture;
 	if (!pTexture.loadFromFile(playerTexture)) { std::cout << "texture load failure"; }
+
+
 	// end load textures
 
 	// create player
@@ -135,7 +141,7 @@ int main() {
 		sf::Texture texture;
 		switch (room.roomData[i].textureId) {
 		case TEST_TEXTURE:
-			texture = pTexture;
+			texture = tTexture;
 			break;
 		}
 

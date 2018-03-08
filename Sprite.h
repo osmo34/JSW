@@ -29,7 +29,8 @@ protected:
 	sf::Sprite m_sprite;
 	sf::Texture m_texture;
 	int m_screenHeight;
-	int m_screenWidth;	
+	int m_screenWidth;
+	void flipSprite(bool isFlipLeft);
 
 
 };

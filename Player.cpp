@@ -29,7 +29,7 @@ void Player::update(float dt) {
 	if (isJumping) {
 		jump(dt, currentSpeed);
 	}
-	animation->updateAnimation(dt, m_sourceRect, &m_sprite);
+	//animation->updateAnimation(dt, m_sourceRect, &m_sprite);
 }
 
 void Player::checkMovement(float dt) {
@@ -39,11 +39,13 @@ void Player::checkMovement(float dt) {
 	case LEFT:
 		if (!collideLeft) {
 			moveHorizontal(dt, -PLAYER_SPEED);
+			flipSprite(true);			
 		}
 		break;
 	case RIGHT: 
 		if (!collideRight) {
-			moveHorizontal(dt, PLAYER_SPEED);
+			moveHorizontal(dt, PLAYER_SPEED);						
+			flipSprite(false);
 		}
 		break;
 	case JUMP:
@@ -59,7 +61,7 @@ void Player::checkMovement(float dt) {
 
 void Player::moveHorizontal(float dt, float speed) {
 	if (!isJumping) {
-		m_sprite.move(sf::Vector2f(speed * dt, 0.0));
+		m_sprite.move(sf::Vector2f(speed * dt, 0.0));		
 		currentSpeed = speed;
 		isMoving = true;
 	}
