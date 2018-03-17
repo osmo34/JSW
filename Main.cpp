@@ -17,6 +17,7 @@
 #include "DataRoom.h"
 #include "LoadRoom.h"
 #include "WriteRoom.h"
+#include "LoadTextures.h"
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
@@ -135,12 +136,13 @@ Room createRoom(std::vector<std::shared_ptr<StaticObject>> &levelStaticObjects,
 
 void loadTexture(std::map<int, sf::Texture> &textures, std::string fileName, int id) {
 	sf::Texture texture;
-	if (!texture.loadFromFile(fileName)){ std::cout << "texture load failure"; }
+	if (!texture.loadFromFile(fileName)){ std::cout << "texture load failure - " << fileName ; }
 	textures[id] = texture;	
 }
 			   
 int main() {
 	std::string fileName = "test.jsb";
+	std::string texturesFileName = "textures.txt";
 
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "JSW");
 	sf::Clock clock;
@@ -151,16 +153,16 @@ int main() {
 	std::vector<std::shared_ptr<EnemyStatic>> enemiesStatic;
 	std::vector<std::shared_ptr<EnemyMoving>> enemiesMoving;
 	std::vector<std::shared_ptr<Pickup>> pickups;
-	std::map<int, sf::Texture> textures;
 	std::vector<std::string> textureList;
+	std::map<int, sf::Texture> textures;
 
-	// load textures 
-	textureList.push_back("Hat_man_spriteSheet.png");
-	textureList.push_back("ball.png");
+	// load textures
+	std::shared_ptr <LoadTextures> loadTextures(new LoadTextures(texturesFileName));
+	loadTextures->loadTextures(textureList);
 
 	for (int i = 0; i < textureList.size(); i++) {
-		loadTexture(textures, textureList[i], i);
-	}				 
+		loadTexture(textures, textureList[i], i);		
+	}
 	// end load textures
 
 	// create player
@@ -170,6 +172,7 @@ int main() {
 	std::shared_ptr <WriteRoom> writeRoom(new WriteRoom);
 	writeRoom->createRoom(fileName, SCREEN_WIDTH, SCREEN_HEIGHT);
 
+	// create room
 	Room room{};
 	room = createRoom(levelStaticObjects, enemiesStatic, enemiesMoving, pickups, textures);
 
@@ -178,7 +181,6 @@ int main() {
 
 	// create static objects collision out of the main loop	as they are not going to move
 	update(levelStaticObjects, collision);
-
 	
 	while (window.isOpen()) {
 		handlePollEvents(&window);
