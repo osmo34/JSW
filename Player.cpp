@@ -25,11 +25,12 @@ void Player::update(float dt) {
 	checkMovement(dt);
 	checkState();
 	state->updateState(NONE);
+	animation->update(dt);
 
 	if (isJumping) {
 		jump(dt, currentSpeed);
 	}
-	//animation->updateAnimation(dt, m_sourceRect, &m_sprite);
+	
 }
 
 void Player::checkMovement(float dt) {
@@ -40,19 +41,23 @@ void Player::checkMovement(float dt) {
 		if (!collideLeft) {
 			moveHorizontal(dt, -PLAYER_SPEED);
 			flipSprite(true);			
+			animation->updateAnimation(dt, m_sourceRect, &m_sprite);
 		}
 		break;
 	case RIGHT: 
 		if (!collideRight) {
-			moveHorizontal(dt, PLAYER_SPEED);						
+			moveHorizontal(dt, PLAYER_SPEED);			
 			flipSprite(false);
+			animation->updateAnimation(dt, m_sourceRect, &m_sprite);
 		}
 		break;
 	case JUMP:
 		isJumping = true;
+		animation->updateAnimation(dt, m_sourceRect, &m_sprite);
 		break;
 	case STATIONARY:
 		isMoving = false;
+		animation->updateAnimation(dt, m_sourceRect, &m_sprite);
 		break;
 	default:
 		break;

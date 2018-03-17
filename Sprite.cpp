@@ -50,11 +50,11 @@ sf::IntRect Sprite::createSourceRect() {
 }
 
 void Sprite::flipSprite(bool isflipLeft) {
-	(isflipLeft) ? 
-		m_sprite.setTextureRect(sf::IntRect(m_sprite.getGlobalBounds().width, 0, 
-			m_sprite.getGlobalBounds().width * -1, m_sprite.getGlobalBounds().height)) : 
-		m_sprite.setTextureRect(sf::IntRect(m_sprite.getGlobalBounds().width, 0, 
-			m_sprite.getGlobalBounds().width, m_sprite.getGlobalBounds().height));	
+	
+	(isflipLeft) ?
+		m_sourceRect.width = -TEXTURE_SIZE_X :
+		m_sourceRect.width = TEXTURE_SIZE_X;
+	m_sprite.setTextureRect(m_sourceRect);
 }
 
 void Sprite::draw(sf::RenderWindow * window) {
