@@ -101,7 +101,7 @@ Room createRoom(std::vector<std::shared_ptr<StaticObject>> &levelStaticObjects,
 				std::vector<std::shared_ptr<EnemyStatic>> &enemiesStatic,
 				std::vector<std::shared_ptr<EnemyMoving>> &enemiesMoving,
 				std::vector<std::shared_ptr<Pickup>> &pickups, 
-				std::map<int, sf::Texture> textures) {
+				std::map<int, sf::Texture> &textures) {
 	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY = 'e', ENEMY_MOVING = 'm', ENEMY_STATIC = 'n', PICK_UP = 'u';
 	std::string fileName = "test.jsb";
 	Room room{};
