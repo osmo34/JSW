@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <vector>
+#include <map>
 #include <string>
 #include <memory>
 #include <SFML\Graphics.hpp>
@@ -95,11 +96,50 @@ void handlePollEvents(sf::RenderWindow *window) {
 		}
 	}			  
 }
-			   
-int main() {	
-	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY = 'e', ENEMY_MOVING = 'm', ENEMY_STATIC = 'n', PICK_UP = 'u';
-	const char TEST_TEXTURE = 't';
 
+Room createRoom(std::vector<std::shared_ptr<StaticObject>> &levelStaticObjects, 
+				std::vector<std::shared_ptr<EnemyStatic>> &enemiesStatic,
+				std::vector<std::shared_ptr<EnemyMoving>> &enemiesMoving,
+				std::vector<std::shared_ptr<Pickup>> &pickups, 
+				std::map<int, sf::Texture> textures) {
+	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY = 'e', ENEMY_MOVING = 'm', ENEMY_STATIC = 'n', PICK_UP = 'u';
+	std::string fileName = "test.jsb";
+	Room room{};
+	
+	std::shared_ptr<LoadRoom> loadLevel(new LoadRoom);
+	room = loadLevel->loadRoom(fileName);
+
+	for (int i = 0; i < room.numObjects; i++) {
+		sf::Texture texture;
+		texture = textures.find(room.roomData[i].textureId)->second;
+
+		switch (room.roomData[i].objectType) {
+		case STATIC_OBJECT:
+			createObject(levelStaticObjects, room.roomData[i], texture, NULL);
+			break;
+		case ENEMY_MOVING:
+			createObject(enemiesMoving, room.roomData[i], texture, ENEMY);
+			break;
+		case ENEMY_STATIC:
+			createObject(enemiesStatic, room.roomData[i], texture, ENEMY);
+			break;
+		case PICK_UP:
+			createObject(pickups, room.roomData[i], texture, PICK_UP);
+			break;
+		default:
+			std::cout << "error in room data";
+		}
+	}
+	return room; 		
+}
+
+void loadTexture(std::map<int, sf::Texture> &textures, std::string fileName, int id) {
+	sf::Texture texture;
+	if (!texture.loadFromFile(fileName)){ std::cout << "texture load failure"; }
+	textures[id] = texture;	
+}
+			   
+int main() {
 	std::string fileName = "test.jsb";
 
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "JSW");
@@ -111,57 +151,27 @@ int main() {
 	std::vector<std::shared_ptr<EnemyStatic>> enemiesStatic;
 	std::vector<std::shared_ptr<EnemyMoving>> enemiesMoving;
 	std::vector<std::shared_ptr<Pickup>> pickups;
+	std::map<int, sf::Texture> textures;
+	std::vector<std::string> textureList;
 
-	// load textures
-	std::string testTexture = "ball.png";	
-	sf::Texture tTexture;
-	if (!tTexture.loadFromFile(testTexture)) { std::cout << "texture load failure"; }
-	
-	std::string playerTexture = "Hat_man_spriteSheet.png";
-	sf::Texture pTexture;
-	if (!pTexture.loadFromFile(playerTexture)) { std::cout << "texture load failure"; }
+	// load textures 
+	textureList.push_back("Hat_man_spriteSheet.png");
+	textureList.push_back("ball.png");
 
-
+	for (int i = 0; i < textureList.size(); i++) {
+		loadTexture(textures, textureList[i], i);
+	}				 
 	// end load textures
 
 	// create player
-	std::shared_ptr <Player> player(new Player(SCREEN_WIDTH, SCREEN_HEIGHT, pTexture));
+	std::shared_ptr <Player> player(new Player(SCREEN_WIDTH, SCREEN_HEIGHT, textures[0]));
 
 	// TODO: Only call this if we want to compile. It is only here for testing
 	std::shared_ptr <WriteRoom> writeRoom(new WriteRoom);
 	writeRoom->createRoom(fileName, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-
-	// load the room from file
 	Room room{};
-	std::shared_ptr<LoadRoom> loadLevel(new LoadRoom);
-	room = loadLevel->loadRoom(fileName);
-
-	for (int i = 0; i < room.numObjects; i++) {
-		sf::Texture texture;
-		switch (room.roomData[i].textureId) {
-		case TEST_TEXTURE:
-			texture = tTexture;
-			break;
-		}
-
-		switch (room.roomData[i].objectType) {
-		case STATIC_OBJECT:
-			createObject(levelStaticObjects, room.roomData[i], texture, NULL);
-			break;
-		case ENEMY_MOVING:		
-			createObject(enemiesMoving, room.roomData[i], texture, ENEMY);
-			break;
-		case ENEMY_STATIC:
-		createObject(enemiesStatic, room.roomData[i], texture, ENEMY);
-			break;
-		case PICK_UP:
-		createObject(pickups, room.roomData[i], texture, PICK_UP);
-			break;
-		default:
-			std::cout << "error in room data";
-		}
-	}
+	room = createRoom(levelStaticObjects, enemiesStatic, enemiesMoving, pickups, textures);
 
 	// create collision
 	std::shared_ptr <Collision> collision(new Collision());

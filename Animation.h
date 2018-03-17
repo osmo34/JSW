@@ -8,7 +8,6 @@ public:
 	Animation();
 	~Animation();
 	void updateAnimation(float dt, sf::IntRect &rect, sf::Sprite *sprite);
-	int getLeftPosition();
 	void update(float dt);
 
 private:

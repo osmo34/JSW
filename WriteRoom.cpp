@@ -35,10 +35,11 @@ Room WriteRoom::createRoomData()
 			delete c;
 		}
 		else if (type == "texture") {
-			char *c = new char[value.length() + 1];
-			strcpy(c, value.c_str());
-			roomData.textureId = *c;
-			delete c;
+			//char *c = new char[value.length() + 1];
+			//strcpy(c, value.c_str());
+			//roomData.textureId = *c;
+			//delete c;
+			roomData.textureId = std::stoi(value);
 		}
 		else if (type == "px") {
 			roomData.positionX = std::stof(value);

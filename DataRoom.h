@@ -4,7 +4,7 @@
 #pragma pack(push, 2)
 struct RoomData {
 	char objectType;
-	char textureId;
+	std::uint32_t textureId;
 	float positionX;
 	float positionY;
 	float speedX;
