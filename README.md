@@ -12,7 +12,7 @@ Currently supports: <br>
 <p>
 <p>
 Current TODO: <p>
-* Platforms which can be jumped through from the underside and walked on <br>
+* <del>Platforms which can be jumped through from the underside and walked on</del> done <br>
 * Stairs <br>
 * Loading multiple rooms <br>
 * Ropes <br>
