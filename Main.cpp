@@ -10,6 +10,7 @@
 #include <SFML\Graphics.hpp>
 #include "Player.h"
 #include "StaticObject.h"
+#include "StaticPlatform.h"
 #include "Collision.h"
 #include "EnemyMoving.h"
 #include "EnemyStatic.h"
@@ -98,12 +99,13 @@ void handlePollEvents(sf::RenderWindow *window) {
 	}			  
 }
 
-Room createRoom(std::vector<std::shared_ptr<StaticObject>> &levelStaticObjects, 
+Room createRoom(std::vector<std::shared_ptr<StaticObject>> &levelStaticObjects,
+				std::vector<std::shared_ptr<StaticPlatform>> &levelStaticPlatforms,
 				std::vector<std::shared_ptr<EnemyStatic>> &enemiesStatic,
 				std::vector<std::shared_ptr<EnemyMoving>> &enemiesMoving,
-				std::vector<std::shared_ptr<Pickup>> &pickups, 
+				std::vector<std::shared_ptr<Pickup>> &pickups,				
 				std::map<int, sf::Texture> &textures) {
-	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY = 'e', ENEMY_MOVING = 'm', ENEMY_STATIC = 'n', PICK_UP = 'u';
+	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY = 'e', STATIC_PLATFORM = 't', ENEMY_MOVING = 'm', ENEMY_STATIC = 'n', PICK_UP = 'u';
 	std::string fileName = "test.jsb";
 	Room room{};
 	
@@ -117,6 +119,9 @@ Room createRoom(std::vector<std::shared_ptr<StaticObject>> &levelStaticObjects,
 		switch (room.roomData[i].objectType) {
 		case STATIC_OBJECT:
 			createObject(levelStaticObjects, room.roomData[i], texture, NULL);
+			break;
+		case STATIC_PLATFORM:
+			createObject(levelStaticPlatforms, room.roomData[i], texture, NULL);
 			break;
 		case ENEMY_MOVING:
 			createObject(enemiesMoving, room.roomData[i], texture, ENEMY);
@@ -150,7 +155,8 @@ int main() {
 	window.setVerticalSyncEnabled(true);
 
 	std::vector<std::shared_ptr<StaticObject>> levelStaticObjects;
-	std::vector<std::shared_ptr<EnemyStatic>> enemiesStatic;
+	std::vector<std::shared_ptr<StaticPlatform>> levelStaticPlatforms;
+	std::vector<std::shared_ptr<EnemyStatic>> enemiesStatic;	
 	std::vector<std::shared_ptr<EnemyMoving>> enemiesMoving;
 	std::vector<std::shared_ptr<Pickup>> pickups;
 	std::vector<std::string> textureList;
@@ -174,13 +180,14 @@ int main() {
 
 	// create room
 	Room room{};
-	room = createRoom(levelStaticObjects, enemiesStatic, enemiesMoving, pickups, textures);
+	room = createRoom(levelStaticObjects, levelStaticPlatforms, enemiesStatic, enemiesMoving, pickups, textures);
 
 	// create collision
 	std::shared_ptr <Collision> collision(new Collision());
 
 	// create static objects collision out of the main loop	as they are not going to move
 	update(levelStaticObjects, collision);
+	update(levelStaticPlatforms, collision);
 	
 	while (window.isOpen()) {
 		handlePollEvents(&window);
@@ -192,13 +199,14 @@ int main() {
 		update(enemiesStatic, collision, player, time.asMilliseconds());
 		update(pickups, collision, player, time.asMilliseconds());
 
-		window.clear();
-
-		draw(player, &window);		   
+		window.clear();	
+	
 		draw(levelStaticObjects, &window);
+		draw(levelStaticPlatforms, &window);
 		draw(enemiesMoving, &window);
-		draw(enemiesStatic, &window);
+		draw(enemiesStatic, &window);		
 		draw(pickups, &window);
+		draw(player, &window);
 
 		window.display();
 	}

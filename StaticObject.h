@@ -18,8 +18,10 @@ public:
 		);
 	~StaticObject();
 
-	void update(const float dt);
-	void setStartPosition();
+	void update(const float dt);	
 	const char objectId = 's';
+
+protected:
+	void setStartPosition();
 };
 

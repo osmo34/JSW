@@ -26,6 +26,7 @@ private:
 	float playerLeft, playerRight, playerTop, playerBottom;
 
 	std::vector<ObjectPositions> staticObjectPositions;
+	std::vector<ObjectPositions> staticPlatformPositions;
 	std::vector<ObjectPositions> entityPositions;
 
 	sf::RectangleShape playerRectangle;

@@ -1,2 +1,5 @@
 Hat_man_spriteSheet.png;
+brick.png;
 ball.png;
+collect.png;
+platform.png;

@@ -3,7 +3,6 @@
 LoadTextures::LoadTextures(std::string fileName) : fileName(fileName) {}
 LoadTextures::~LoadTextures(){}
 
-
 void LoadTextures::loadTextures(std::vector<std::string> &textures)
 {
 	std::ifstream inFile;
@@ -14,6 +13,7 @@ void LoadTextures::loadTextures(std::vector<std::string> &textures)
 		std::string textureName;
 		std::getline(inFile, textureName, ';');	
 		inFile >> std::ws;
+		if (textureName == "") return; 
 		textures.push_back(textureName);		
 	}
 }

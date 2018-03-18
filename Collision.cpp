@@ -29,7 +29,7 @@ void Collision::updatePositions(ObjectPositions m_objectPositions) {
 
 // essentially a fake template, uses an object id to update position (if an update is required). 
 void Collision::updateObjectPosition(std::function<double(char c)> position, char t) {
-	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY_MOVING = 'e', PICK_UP = 'u';
+	const char PLAYER = 'p', STATIC_OBJECT = 's', STATIC_PLATFORM = 't', ENEMY_MOVING = 'e', PICK_UP = 'u';
 	ObjectPositions m_objectPosition;
 	m_objectPosition.top = position(TOP);
 	m_objectPosition.bottom = position(BOTTOM);
@@ -43,6 +43,9 @@ void Collision::updateObjectPosition(std::function<double(char c)> position, cha
 	case STATIC_OBJECT:
 		staticObjectPositions.push_back(m_objectPosition);
 		break;
+	case STATIC_PLATFORM:
+		staticPlatformPositions.push_back(m_objectPosition);
+		break;												
 	case ENEMY_MOVING:
 		collisionRectangle = updatePositions(entityPositions, m_objectPosition, collisionRectangle);
 		break;
@@ -63,8 +66,15 @@ bool Collision::checkCollision() {
 // check static blocks
 void Collision::checkCollision(std::function<void(char c, float i)> playerCollision) {
 	
+	for (auto it : staticPlatformPositions) {
+		if (playerBottom >= it.top && playerBottom < it.top + COLLISION_OFFSET &&
+			playerLeft <= it.right && playerRight >= it.left) {
+			playerCollision(TOP, it.top);
+			return;
+		}
+	}
+
 	for (auto it : staticObjectPositions) {
-		
 		if (playerTop >= it.bottom && playerBottom >= it.top) {
 			playerCollision(NO_COLLISION, NO_CHANGE_GROUND_HEIGHT);
 			return;
@@ -89,7 +99,7 @@ void Collision::checkCollision(std::function<void(char c, float i)> playerCollis
 		else {
 			playerCollision(NO_COLLISION, NO_CHANGE_GROUND_HEIGHT);
 		}
-	}	
+	} 	
 }
 
 // debugging purposes
