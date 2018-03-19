@@ -5,17 +5,24 @@
 #include <math.h>
 #include <SFML\Graphics.hpp>
 
+// macros for collision
+#define COLLISION_TOP playerBottom >= it.top && playerBottom < it.top + COLLISION_OFFSET && playerLeft <= it.right && playerRight >= it.left
+#define COLLISION_NONE playerTop >= it.bottom && playerBottom >= it.top
+#define COLLISION_BOTTOM playerTop <= it.bottom && playerTop >= it.bottom - COLLISION_OFFSET && playerLeft <= it.right && playerRight >= it.left
+#define COLLISION_LEFT playerLeft <= it.right && playerRight >= it.right
+#define COLLISION_RIGHT playerRight >= it.left && playerLeft <= it.left
+
 struct ObjectPositions {
 	float top;
 	float bottom;
 	float left;
 	float right;
+	bool isAngleRight;
 };
 
 class Collision
 {
-private:
-	
+private:	
 	sf::RectangleShape updatePositions(std::vector<ObjectPositions> &t, ObjectPositions &m_objectPosition, sf::RectangleShape collisionBox);
 	void updatePositions(ObjectPositions m_objectPositions);
 
@@ -27,6 +34,7 @@ private:
 
 	std::vector<ObjectPositions> staticObjectPositions;
 	std::vector<ObjectPositions> staticPlatformPositions;
+	std::vector<ObjectPositions> stairs;
 	std::vector<ObjectPositions> entityPositions;
 
 	sf::RectangleShape playerRectangle;
@@ -36,10 +44,8 @@ public:
 	Collision();
 	~Collision();
 	void updateObjectPosition(std::function<double(char c)> position, char t);
+	void updateObjectPosition(std::function<double(char c)> position, bool isRightAngle);
 	void checkCollision(std::function<void(char c, float i)> playerCollision);
-	bool checkCollision();
-
-	// temp
-	void draw(sf::RenderWindow *window);
+	bool checkCollision();	
 };
 

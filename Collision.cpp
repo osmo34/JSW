@@ -27,7 +27,7 @@ void Collision::updatePositions(ObjectPositions m_objectPositions) {
 	playerRectangle.setPosition(playerLeft, playerBottom);	
 }
 
-// essentially a fake template, uses an object id to update position (if an update is required). 
+// Update position (can be live or set prior to main loop)
 void Collision::updateObjectPosition(std::function<double(char c)> position, char t) {
 	const char PLAYER = 'p', STATIC_OBJECT = 's', STATIC_PLATFORM = 't', ENEMY_MOVING = 'e', PICK_UP = 'u';
 	ObjectPositions m_objectPosition;
@@ -53,9 +53,17 @@ void Collision::updateObjectPosition(std::function<double(char c)> position, cha
 		collisionRectangle = updatePositions(entityPositions, m_objectPosition, collisionRectangle);
 		break;
 	default: // This should never happen!
-		std::cout << "broke";
+		std::cout << "error in update object position, check object id";
 		break;
 	}
+}
+// update position for stairs, overridden as we need to know which direction they are facing
+void Collision::updateObjectPosition(std::function<double(char c)> position, bool isRightAngle) {
+	ObjectPositions m_objectPosition;
+	m_objectPosition.left = position(LEFT);
+	m_objectPosition.right = position(RIGHT);
+	(isRightAngle) ? m_objectPosition.isAngleRight = true : m_objectPosition.isAngleRight = false;
+	stairs.push_back(m_objectPosition);
 }
 
 // detects collision with an entity
@@ -65,33 +73,47 @@ bool Collision::checkCollision() {
 
 // check static blocks
 void Collision::checkCollision(std::function<void(char c, float i)> playerCollision) {
-	
+	// TODO: Refactor
 	for (auto it : staticPlatformPositions) {
-		if (playerBottom >= it.top && playerBottom < it.top + COLLISION_OFFSET &&
-			playerLeft <= it.right && playerRight >= it.left) {
+		if (COLLISION_TOP) {
 			playerCollision(TOP, it.top);
 			return;
 		}
 	}
+	// TODO: implement after player class is updated for stairs
+	for (auto it : stairs) {
+		if (playerTop >= it.top) {
+			if (COLLISION_LEFT) {
+				if (it.isAngleRight) {
+					std::cout << "collision left";
+				}
+				else return;
+			}
+			else if (COLLISION_RIGHT) {
+				if (!it.isAngleRight) {
+					std::cout << "collision right";
+				}
+				else return;
+			}
+		}
+	}
 
 	for (auto it : staticObjectPositions) {
-		if (playerTop >= it.bottom && playerBottom >= it.top) {
+		if (COLLISION_NONE) {
 			playerCollision(NO_COLLISION, NO_CHANGE_GROUND_HEIGHT);
 			return;
-		} else if (playerBottom >= it.top && playerBottom < it.top + COLLISION_OFFSET &&
-			playerLeft <= it.right && playerRight >= it.left) {
+		} else if (COLLISION_TOP) {
 			playerCollision(TOP, it.top);
 			return;
-		} else if (playerTop <= it.bottom && playerTop >= it.bottom - COLLISION_OFFSET &&
-			playerLeft <= it.right && playerRight >= it.left) {
+		} else if (COLLISION_BOTTOM) {
 			playerCollision(BOTTOM, 0.0);
 			return;
 		}
 		if (playerTop >= it.top) {
-			if (playerLeft <= it.right && playerRight >= it.right) {
+			if (COLLISION_LEFT) {
 				playerCollision(LEFT, NO_CHANGE_GROUND_HEIGHT);
 				return;
-			} else if (playerRight >= it.left && playerLeft <= it.left) {
+			} else if (COLLISION_RIGHT) {
 				playerCollision(RIGHT, NO_CHANGE_GROUND_HEIGHT);
 				return;
 			}
@@ -101,13 +123,6 @@ void Collision::checkCollision(std::function<void(char c, float i)> playerCollis
 		}
 	} 	
 }
-
-// debugging purposes
-void Collision::draw(sf::RenderWindow * window)
-{
-	window->draw(playerRectangle);
-}
-
 
 
 

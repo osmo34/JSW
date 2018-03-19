@@ -1,4 +1,18 @@
-num: 13
+num: 14
+type:r
+texture:5
+px:210.0
+py:670.0
+sx:0.0
+sy:0.0
+end:0.0
+type:r
+texture:5
+px:178.0
+py:638.0
+sx:0.0
+sy:0.0
+end:0.0
 type:s
 texture:1
 px:600.0

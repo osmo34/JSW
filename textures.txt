@@ -3,3 +3,4 @@ brick.png;
 ball.png;
 collect.png;
 platform.png;
+stair_left.png

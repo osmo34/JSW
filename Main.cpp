@@ -2,7 +2,6 @@
 // TODO: - low priority - Fix bug in player/collision whereby you can stick to the bottom of platforms by holding jump
 // TODO: - low priority - in player 'isAtMaxJumpHeight' is never made true. This may be causing a rare bug whereby the player flies off into the sky
 
-#include <iostream>
 #include <vector>
 #include <map>
 #include <string>
@@ -19,6 +18,7 @@
 #include "LoadRoom.h"
 #include "WriteRoom.h"
 #include "LoadTextures.h"
+#include "StaticStairs.h"
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
@@ -70,6 +70,13 @@ void update(const std::vector<std::shared_ptr<T>> &t, std::shared_ptr<Collision>
 		collision->updateObjectPosition([&](char c) -> float { return it->getCollision(c); }, it->objectId);
 	}
 }
+// stairs, char is a hack to override
+template <typename T>
+void update(const std::vector<std::shared_ptr<T>> &t, std::shared_ptr<Collision> &collision, const char) {
+	for (auto it : t) {
+		collision->updateObjectPosition([&](char c) -> float { return it->getCollision(c); }, it->isRightAngle);
+	}
+}
 
 // end updates
 
@@ -101,11 +108,12 @@ void handlePollEvents(sf::RenderWindow *window) {
 
 Room createRoom(std::vector<std::shared_ptr<StaticObject>> &levelStaticObjects,
 				std::vector<std::shared_ptr<StaticPlatform>> &levelStaticPlatforms,
+				std::vector<std::shared_ptr<StaticStairs>> &levelStaticStairs,
 				std::vector<std::shared_ptr<EnemyStatic>> &enemiesStatic,
 				std::vector<std::shared_ptr<EnemyMoving>> &enemiesMoving,
 				std::vector<std::shared_ptr<Pickup>> &pickups,				
 				std::map<int, sf::Texture> &textures) {
-	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY = 'e', STATIC_PLATFORM = 't', ENEMY_MOVING = 'm', ENEMY_STATIC = 'n', PICK_UP = 'u';
+	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY = 'e', STATIC_PLATFORM = 't', STATIC_STAIR_RIGHT = 'l', STATIC_STAIR_LEFT = 'r', ENEMY_MOVING = 'm', ENEMY_STATIC = 'n', PICK_UP = 'u';
 	std::string fileName = "test.jsb";
 	Room room{};
 	
@@ -122,6 +130,12 @@ Room createRoom(std::vector<std::shared_ptr<StaticObject>> &levelStaticObjects,
 			break;
 		case STATIC_PLATFORM:
 			createObject(levelStaticPlatforms, room.roomData[i], texture, NULL);
+			break;
+		case STATIC_STAIR_RIGHT:
+			createObject(levelStaticStairs, room.roomData[i], texture, STATIC_STAIR_RIGHT);
+			break;
+		case STATIC_STAIR_LEFT:
+			createObject(levelStaticStairs, room.roomData[i], texture, STATIC_STAIR_LEFT);
 			break;
 		case ENEMY_MOVING:
 			createObject(enemiesMoving, room.roomData[i], texture, ENEMY);
@@ -156,6 +170,7 @@ int main() {
 
 	std::vector<std::shared_ptr<StaticObject>> levelStaticObjects;
 	std::vector<std::shared_ptr<StaticPlatform>> levelStaticPlatforms;
+	std::vector<std::shared_ptr<StaticStairs>> levelStaticStairs;
 	std::vector<std::shared_ptr<EnemyStatic>> enemiesStatic;	
 	std::vector<std::shared_ptr<EnemyMoving>> enemiesMoving;
 	std::vector<std::shared_ptr<Pickup>> pickups;
@@ -180,7 +195,7 @@ int main() {
 
 	// create room
 	Room room{};
-	room = createRoom(levelStaticObjects, levelStaticPlatforms, enemiesStatic, enemiesMoving, pickups, textures);
+	room = createRoom(levelStaticObjects, levelStaticPlatforms, levelStaticStairs, enemiesStatic, enemiesMoving, pickups, textures);
 
 	// create collision
 	std::shared_ptr <Collision> collision(new Collision());
@@ -188,6 +203,7 @@ int main() {
 	// create static objects collision out of the main loop	as they are not going to move
 	update(levelStaticObjects, collision);
 	update(levelStaticPlatforms, collision);
+	update(levelStaticStairs, collision, NULL);
 	
 	while (window.isOpen()) {
 		handlePollEvents(&window);
@@ -203,6 +219,7 @@ int main() {
 	
 		draw(levelStaticObjects, &window);
 		draw(levelStaticPlatforms, &window);
+		draw(levelStaticStairs, &window);
 		draw(enemiesMoving, &window);
 		draw(enemiesStatic, &window);		
 		draw(pickups, &window);
