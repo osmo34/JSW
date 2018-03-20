@@ -19,6 +19,9 @@ private:
 
 	char m_currentDirection;			
 	const float PLAYER_SPEED = 0.1f;
+	bool onStairsLeft = false;
+	float verticalSpeed = 0.0f;
+	float currentHeight;
 	const float JUMP_SPEED = 0.1f;
 	const float JUMP_HEIGHT = 100.0f;
 	float currentSpeed;

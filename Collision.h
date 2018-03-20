@@ -26,11 +26,12 @@ private:
 	sf::RectangleShape updatePositions(std::vector<ObjectPositions> &t, ObjectPositions &m_objectPosition, sf::RectangleShape collisionBox);
 	void updatePositions(ObjectPositions m_objectPositions);
 
-	const char LEFT = 'l', RIGHT = 'r', TOP = 't', BOTTOM = 'b', NO_COLLISION = 'n';
+	const char LEFT = 'l', RIGHT = 'r', TOP = 't', BOTTOM = 'b', NO_COLLISION = 'n', STAIR_LEFT = 'z', STAIR_RIGHT = 'x', STAIR_NONE = 'c';
 	const float COLLISION_OFFSET = 15.0f; // offset for landing
 	const float NO_CHANGE_GROUND_HEIGHT = 0.0f;
 
 	float playerLeft, playerRight, playerTop, playerBottom;
+	float maxStairHeight = 0;
 
 	std::vector<ObjectPositions> staticObjectPositions;
 	std::vector<ObjectPositions> staticPlatformPositions;

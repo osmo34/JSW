@@ -62,6 +62,8 @@ void Collision::updateObjectPosition(std::function<double(char c)> position, boo
 	ObjectPositions m_objectPosition;
 	m_objectPosition.left = position(LEFT);
 	m_objectPosition.right = position(RIGHT);
+	m_objectPosition.top = position(TOP);
+	maxStairHeight = m_objectPosition.top; // TODO: currently only supports one set of stairs
 	(isRightAngle) ? m_objectPosition.isAngleRight = true : m_objectPosition.isAngleRight = false;
 	stairs.push_back(m_objectPosition);
 }
@@ -81,21 +83,25 @@ void Collision::checkCollision(std::function<void(char c, float i)> playerCollis
 		}
 	}
 	// TODO: implement after player class is updated for stairs
-	for (auto it : stairs) {
-		if (playerTop >= it.top) {
-			if (COLLISION_LEFT) {
-				if (it.isAngleRight) {
-					std::cout << "collision left";
-				}
-				else return;
+	// TODO: Fix jumping glitch
+	for (auto it : stairs) {		
+		if (COLLISION_LEFT) {
+			if (it.isAngleRight) {
+				playerCollision(STAIR_LEFT, NO_CHANGE_GROUND_HEIGHT);
+				std::cout << "* ";
 			}
-			else if (COLLISION_RIGHT) {
-				if (!it.isAngleRight) {
-					std::cout << "collision right";
-				}
-				else return;
-			}
+			else return;
 		}
+		else if (COLLISION_RIGHT) {
+			if (it.isAngleRight) {
+				playerCollision(NO_COLLISION, NO_CHANGE_GROUND_HEIGHT);
+			}
+			else return;
+		}
+		else if (playerBottom <= maxStairHeight || playerRight > stairs[0].right + COLLISION_OFFSET) {
+			playerCollision(STAIR_NONE, NO_CHANGE_GROUND_HEIGHT);
+		}
+
 	}
 
 	for (auto it : staticObjectPositions) {

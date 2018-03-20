@@ -28,9 +28,11 @@ void Player::update(float dt) {
 	animation->update(dt);
 
 	if (isJumping) {
-		jump(dt, currentSpeed);
+		jump(dt, currentSpeed);	
+		onStairsLeft = false;
 	}
-	
+
+	currentHeight = m_sprite.getPosition().y;	  
 }
 
 void Player::checkMovement(float dt) {
@@ -51,7 +53,7 @@ void Player::checkMovement(float dt) {
 			animation->updateAnimation(dt, m_sourceRect, &m_sprite);
 		}
 		break;
-	case JUMP:
+	case JUMP:		
 		isJumping = true;
 		animation->updateAnimation(dt, m_sourceRect, &m_sprite);
 		break;
@@ -65,14 +67,18 @@ void Player::checkMovement(float dt) {
 }
 
 void Player::moveHorizontal(float dt, float speed) {
+
+	(onStairsLeft) ? verticalSpeed = 20.0 : verticalSpeed = 0.0;
+
 	if (!isJumping) {
-		m_sprite.move(sf::Vector2f(speed * dt, 0.0));		
+		m_sprite.move(sf::Vector2f(speed * dt, verticalSpeed * speed));		
 		currentSpeed = speed;
 		isMoving = true;
 	}
 }
 
 void Player::jump(float dt, float speed) {	
+
 	if (!isMoving) {
 		if (!isAtMaxJumpHeight) {
 			m_sprite.move(sf::Vector2f(0.0, (-JUMP_SPEED * m_grav) * dt));
@@ -124,8 +130,13 @@ void Player::fallCheck() {
 }
 
 void Player::collision(char c, float gh) {
-	const char LEFT = 'l', RIGHT = 'r', TOP = 't', BOTTOM = 'b', 
-		NO_COLLISION = 'n', ENEMY = 'e', POWER_UP = 'p';
+	const char LEFT = 'l', RIGHT = 'r', TOP = 't', BOTTOM = 'b',
+		NO_COLLISION = 'n', ENEMY = 'e', POWER_UP = 'p',
+		STAIR_LEFT = 'z', STAIR_RIGHT = 'x', STAIR_NONE = 'c';
+		
+	if (currentHeight >= groundHeightOld + 1) {
+		onStairsLeft = false;
+	}	
 
 	switch (c) {
 	case LEFT:
@@ -140,15 +151,23 @@ void Player::collision(char c, float gh) {
 		break;
 	case TOP:	
 		collideLeft = false;
-		collideRight = false;
+		collideRight = false;		
 		updateGroundHeight(gh);
 		m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, gh));
 		break;
 	case BOTTOM:
-		isJumping = false;
+		isJumping = false;		
 		fall(deltaTime);
 		fallCheck();
 		break;
+	case STAIR_LEFT:
+		onStairsLeft = true;
+		break;
+	case STAIR_RIGHT:
+		break;
+	case STAIR_NONE:
+		onStairsLeft = false;
+		break;				 
 	case NO_COLLISION:
 		collideLeft = false;
 		collideRight = false;
@@ -166,12 +185,19 @@ void Player::collision(char c, float gh) {
 }
 
 void Player::updateGroundHeight(float gh) {
-	if (gh == 0.0) {		
-		groundHeight = groundHeightOld;
-		maxJumpHeight = maxJumpHeightOld;
+	
+	if (!onStairsLeft) {
+		if (gh == 0.0) {
+			groundHeight = groundHeightOld;
+			maxJumpHeight = maxJumpHeightOld;
+		}
+		else {
+			groundHeight = gh;
+			maxJumpHeight = gh - JUMP_HEIGHT;
+		}
 	}
 	else {
-		groundHeight = gh;
+		groundHeight = currentHeight;
 		maxJumpHeight = gh - JUMP_HEIGHT;
 	}
 }
