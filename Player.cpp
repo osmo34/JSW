@@ -32,7 +32,7 @@ void Player::update(float dt) {
 		onStairsLeft = false;
 	}
 
-	currentHeight = m_sprite.getPosition().y;	  
+	currentHeight = m_sprite.getPosition().y;
 }
 
 void Player::checkMovement(float dt) {
@@ -67,9 +67,7 @@ void Player::checkMovement(float dt) {
 }
 
 void Player::moveHorizontal(float dt, float speed) {
-
-	(onStairsLeft) ? verticalSpeed = 25.0 : verticalSpeed = 0.0;
-
+	
 	if (!isJumping) {
 		m_sprite.move(sf::Vector2f(speed * dt, verticalSpeed * speed));		
 		currentSpeed = speed;
@@ -133,7 +131,7 @@ void Player::collision(char c, float gh) {
 	const char LEFT = 'l', RIGHT = 'r', TOP = 't', BOTTOM = 'b',
 		NO_COLLISION = 'n', ENEMY = 'e', POWER_UP = 'p',
 		STAIR_LEFT = 'z', STAIR_RIGHT = 'x', STAIR_NONE = 'c';
-		
+
 	if (currentHeight >= groundHeightOld + 1) {
 		onStairsLeft = false;
 	}	
@@ -159,15 +157,7 @@ void Player::collision(char c, float gh) {
 		isJumping = false;		
 		fall(deltaTime);
 		fallCheck();
-		break;
-	case STAIR_LEFT:
-		onStairsLeft = true;
-		break;
-	case STAIR_RIGHT:
-		break;
-	case STAIR_NONE:
-		onStairsLeft = false;
-		break;				 
+		break;	 
 	case NO_COLLISION:
 		collideLeft = false;
 		collideRight = false;

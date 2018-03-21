@@ -76,43 +76,30 @@ bool Collision::checkCollision() {
 // check static blocks
 void Collision::checkCollision(std::function<void(char c, float i)> playerCollision) {
 	// TODO: Refactor
+
 	for (auto it : staticPlatformPositions) {
 		if (COLLISION_TOP) {
 			playerCollision(TOP, it.top);
 			return;
 		}
 	}
-	// TODO: implement after player class is updated for stairs
-	// TODO: Fix jumping glitch	
-	for (auto it : stairs) {		
-		if (COLLISION_LEFT) {
-			if (it.isAngleRight) {
-				playerCollision(STAIR_LEFT, NO_CHANGE_GROUND_HEIGHT);
-			}
-			else return;
-		}		
-		else if (playerRight > stairs[0].right + COLLISION_OFFSET && it.isAngleRight 
-			|| playerRight <= stairs[stairs.size() - 1].left + COLLISION_OFFSET && it.isAngleRight) {
-			playerCollision(STAIR_NONE, NO_CHANGE_GROUND_HEIGHT); // hop off the last and first stair pending improvements
-		}
-	}
 
 	for (auto it : staticObjectPositions) {
-		if (COLLISION_NONE) {
-			playerCollision(NO_COLLISION, NO_CHANGE_GROUND_HEIGHT);
-			return;
-		} else if (COLLISION_TOP) {
+		if (COLLISION_TOP) {
 			playerCollision(TOP, it.top);
+			temp = it.top;
 			return;
-		} else if (COLLISION_BOTTOM) {
+		}
+		if (COLLISION_BOTTOM) {
 			playerCollision(BOTTOM, 0.0);
 			return;
 		}
-		if (playerTop >= it.top) {
+		else if (playerTop >= it.top && playerBottom <= it.bottom) {
 			if (COLLISION_LEFT) {
 				playerCollision(LEFT, NO_CHANGE_GROUND_HEIGHT);
 				return;
-			} else if (COLLISION_RIGHT) {
+			}
+			else if (COLLISION_RIGHT) {
 				playerCollision(RIGHT, NO_CHANGE_GROUND_HEIGHT);
 				return;
 			}
@@ -120,7 +107,7 @@ void Collision::checkCollision(std::function<void(char c, float i)> playerCollis
 		else {
 			playerCollision(NO_COLLISION, NO_CHANGE_GROUND_HEIGHT);
 		}
-	} 	
+	}
 }
 
 

@@ -23,6 +23,8 @@ struct ObjectPositions {
 class Collision
 {
 private:	
+
+	float temp;
 	sf::RectangleShape updatePositions(std::vector<ObjectPositions> &t, ObjectPositions &m_objectPosition, sf::RectangleShape collisionBox);
 	void updatePositions(ObjectPositions m_objectPositions);
 
@@ -40,7 +42,8 @@ private:
 
 	sf::RectangleShape playerRectangle;
 	sf::RectangleShape collisionRectangle;
-	
+
+
 public:
 	Collision();
 	~Collision();
