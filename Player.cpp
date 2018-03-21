@@ -68,7 +68,7 @@ void Player::checkMovement(float dt) {
 
 void Player::moveHorizontal(float dt, float speed) {
 
-	(onStairsLeft) ? verticalSpeed = 20.0 : verticalSpeed = 0.0;
+	(onStairsLeft) ? verticalSpeed = 25.0 : verticalSpeed = 0.0;
 
 	if (!isJumping) {
 		m_sprite.move(sf::Vector2f(speed * dt, verticalSpeed * speed));		

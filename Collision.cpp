@@ -83,25 +83,18 @@ void Collision::checkCollision(std::function<void(char c, float i)> playerCollis
 		}
 	}
 	// TODO: implement after player class is updated for stairs
-	// TODO: Fix jumping glitch
+	// TODO: Fix jumping glitch	
 	for (auto it : stairs) {		
 		if (COLLISION_LEFT) {
 			if (it.isAngleRight) {
 				playerCollision(STAIR_LEFT, NO_CHANGE_GROUND_HEIGHT);
-				std::cout << "* ";
 			}
 			else return;
+		}		
+		else if (playerRight > stairs[0].right + COLLISION_OFFSET && it.isAngleRight 
+			|| playerRight <= stairs[stairs.size() - 1].left + COLLISION_OFFSET && it.isAngleRight) {
+			playerCollision(STAIR_NONE, NO_CHANGE_GROUND_HEIGHT); // hop off the last and first stair pending improvements
 		}
-		else if (COLLISION_RIGHT) {
-			if (it.isAngleRight) {
-				playerCollision(NO_COLLISION, NO_CHANGE_GROUND_HEIGHT);
-			}
-			else return;
-		}
-		else if (playerBottom <= maxStairHeight || playerRight > stairs[0].right + COLLISION_OFFSET) {
-			playerCollision(STAIR_NONE, NO_CHANGE_GROUND_HEIGHT);
-		}
-
 	}
 
 	for (auto it : staticObjectPositions) {
