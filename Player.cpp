@@ -15,7 +15,7 @@ Player::Player(int screenWidth, int screenHeight, sf::Texture texture) :
 }
  
 void Player::setStartPosition() {
-	m_sprite.setPosition(sf::Vector2f(m_screenWidth / 2, groundHeight));
+	m_sprite.setPosition(sf::Vector2f(350, groundHeight));
 	m_sprite.setOrigin(sf::Vector2f(0, 0));
 }
 
@@ -33,6 +33,7 @@ void Player::update(float dt) {
 	}
 
 	currentHeight = m_sprite.getPosition().y;
+	checkStairs();
 }
 
 void Player::checkMovement(float dt) {
@@ -67,10 +68,16 @@ void Player::checkMovement(float dt) {
 }
 
 void Player::moveHorizontal(float dt, float speed) {
-	
+		
 	if (!isJumping) {
-		m_sprite.move(sf::Vector2f(speed * dt, verticalSpeed * speed));		
+		if (onStairsLeft)
+			m_sprite.move(sf::Vector2f(verticalSpeed * speed * dt, verticalSpeed * speed * dt));
+		else
+			m_sprite.move(sf::Vector2f(speed * dt, 0.0));
+
 		currentSpeed = speed;
+		groundHeight = m_sprite.getPosition().y;
+		updateGroundHeight(groundHeight);
 		isMoving = true;
 	}
 }
@@ -131,11 +138,7 @@ void Player::collision(char c, float gh) {
 	const char LEFT = 'l', RIGHT = 'r', TOP = 't', BOTTOM = 'b',
 		NO_COLLISION = 'n', ENEMY = 'e', POWER_UP = 'p',
 		STAIR_LEFT = 'z', STAIR_RIGHT = 'x', STAIR_NONE = 'c';
-
-	if (currentHeight >= groundHeightOld + 1) {
-		onStairsLeft = false;
-	}	
-
+			  
 	switch (c) {
 	case LEFT:
 		collideLeft = true;
@@ -159,24 +162,25 @@ void Player::collision(char c, float gh) {
 		fallCheck();
 		break;	 
 	case NO_COLLISION:
-		collideLeft = false;
-		collideRight = false;
+		if (!onStairsLeft) {
+			collideLeft = false;
+			collideRight = false;
 
-		if (isJumping) {
-			groundHeight = groundHeightOld;
-		} 
-		else {
-			fall(deltaTime);
-			fallCheck();
-		} 
+			if (isJumping) {
+				groundHeight = groundHeightOld;
+			}
+			else {
+				fall(deltaTime);
+				fallCheck();
+			}
+		}
 	default:
 		break;		
 	}	
 }
 
 void Player::updateGroundHeight(float gh) {
-	
-	if (!onStairsLeft) {
+		 
 		if (gh == 0.0) {
 			groundHeight = groundHeightOld;
 			maxJumpHeight = maxJumpHeightOld;
@@ -184,12 +188,7 @@ void Player::updateGroundHeight(float gh) {
 		else {
 			groundHeight = gh;
 			maxJumpHeight = gh - JUMP_HEIGHT;
-		}
-	}
-	else {
-		groundHeight = currentHeight;
-		maxJumpHeight = gh - JUMP_HEIGHT;
-	}
+		}	
 }
 
 void Player::checkState() {
@@ -212,6 +211,39 @@ void Player::checkState() {
 
 void Player::collisionEntity(bool isHarmful) {	
 	(isHarmful) ? state->updateState(DEAD) : state->updateState(PICK_UP);
+}
+ 
+void Player::checkStairs() {
+	if (onStairsLeft) {
+		if (m_sprite.getPosition().x >= currentStairsBottom.x + 6) {  // TODO: reminder random variables
+			onStairsLeft = false;
+			currentStairsBottom = sf::Vector2f(0, 0);
+			currentStairsTop = sf::Vector2f(0, 0);
+		}
+	}
+	else {
+		currentStairsBottom = sf::Vector2f(0, 0);
+		currentStairsTop = sf::Vector2f(0, 0);
+		verticalSpeed = 0.0f;
+	}
+}
+
+void Player::calculateVerticalSpeed(float angle, float distance) {		
+	verticalSpeed = std::sin(angle) * distance;								
+}
+
+void Player::onStairs(sf::Vector2f bottom, sf::Vector2f top)
+{
+	if (!onStairsLeft) {
+		onStairsLeft = true;
+		currentStairsBottom = bottom;
+		currentStairsTop = top;
+
+		// get the angle and distance between 2 points. Divides distance by 100 to speed the player up vertically
+		float angle = std::fabs(atan2(top.y - bottom.y, top.x - bottom.x) * 180 / PI);
+		float distance = std::fabs(std::sqrt(std::pow(bottom.x - top.x, 2) + std::pow(bottom.y - top.y, 2))) / 100;
+		calculateVerticalSpeed(angle, distance);
+	}
 }
 
 

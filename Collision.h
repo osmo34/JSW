@@ -50,6 +50,8 @@ public:
 	void updateObjectPosition(std::function<double(char c)> position, char t);
 	void updateObjectPosition(std::function<double(char c)> position, bool isRightAngle);
 	void checkCollision(std::function<void(char c, float i)> playerCollision);
-	bool checkCollision();	
+	bool checkCollision();
+
+	void testCollisionStairs(sf::Vector2f bottom, sf::Vector2f top, std::function<void(sf::Vector2f b, sf::Vector2f t)> playerCheckStairs);
 };
 

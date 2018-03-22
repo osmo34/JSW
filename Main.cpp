@@ -19,6 +19,7 @@
 #include "WriteRoom.h"
 #include "LoadTextures.h"
 #include "StaticStairs.h"
+#include "StairTest.h"
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
@@ -204,6 +205,9 @@ int main() {
 	update(levelStaticObjects, collision);
 	update(levelStaticPlatforms, collision);
 	update(levelStaticStairs, collision, NULL);
+
+	StairTest stairTest;
+
 	
 	while (window.isOpen()) {
 		handlePollEvents(&window);
@@ -211,19 +215,25 @@ int main() {
 		clock.restart().asSeconds();
 
 		update(player, collision, time.asMilliseconds());
-		update(enemiesMoving, collision, player, time.asMilliseconds());
-		update(enemiesStatic, collision, player, time.asMilliseconds());
+		//update(enemiesMoving, collision, player, time.asMilliseconds());
+		//update(enemiesStatic, collision, player, time.asMilliseconds());
 		update(pickups, collision, player, time.asMilliseconds());
+
+		// test code 
+		collision->testCollisionStairs(stairTest.getBottomStair(), stairTest.getTopStair(), 
+			([&](sf::Vector2f b, sf::Vector2f t) { player->onStairs(b, t); }));
 
 		window.clear();	
 	
 		draw(levelStaticObjects, &window);
 		draw(levelStaticPlatforms, &window);
-		draw(levelStaticStairs, &window);
+		//draw(levelStaticStairs, &window);
 		draw(enemiesMoving, &window);
 		draw(enemiesStatic, &window);		
 		draw(pickups, &window);
 		draw(player, &window);
+
+		stairTest.draw(&window);
 
 		window.display();
 	}

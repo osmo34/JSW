@@ -2,6 +2,10 @@
 #include "Sprite.h"
 #include "PlayerInput.h"
 #include "PlayerState.h"
+#include <math.h>
+
+#define PI 3.141
+
 class Player : public Sprite
 {
 private:
@@ -39,6 +43,13 @@ private:
 	bool collideRight;
 	float deltaTime;
 
+	sf::Vector2f currentStairsBottom;
+	sf::Vector2f currentStairsTop;
+
+	void checkStairs();
+	void calculateVerticalSpeed(float angle, float distance);
+	float horiztonalSpeed = 1.0f;
+
 public:
 	const char objectId = 'p';
 	using Sprite::Sprite;	
@@ -48,5 +59,6 @@ public:
 	void collision(char c, float gh);
 	void updateGroundHeight(float gh);
 	void collisionEntity(bool isHarmful);
+	void onStairs(sf::Vector2f bottom, sf::Vector2f top);
 };
 

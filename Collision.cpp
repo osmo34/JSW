@@ -73,6 +73,18 @@ bool Collision::checkCollision() {
 	return (playerRectangle.getGlobalBounds().intersects(collisionRectangle.getGlobalBounds())) ? true : false;
 }
 
+
+void Collision::testCollisionStairs(sf::Vector2f bottom, sf::Vector2f top, std::function<void(sf::Vector2f b, sf::Vector2f t)> playerCheckStairs)
+{		
+	if (playerLeft >= bottom.x && playerLeft <= bottom.x + 5
+		&& playerBottom + 32 == bottom.y) {
+		playerCheckStairs(bottom, top);
+	}		
+}
+
+
+
+
 // check static blocks
 void Collision::checkCollision(std::function<void(char c, float i)> playerCollision) {
 	// TODO: Refactor
