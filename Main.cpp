@@ -221,7 +221,7 @@ int main() {
 
 		// test code 
 		collision->testCollisionStairs(stairTest.getBottomStair(), stairTest.getTopStair(), 
-			([&](sf::Vector2f b, sf::Vector2f t) { player->onStairs(b, t); }));
+			([&](sf::Vector2f b, sf::Vector2f t, bool c, bool d) { player->onStairs(b, t, c, d); }));
 
 		window.clear();	
 	

@@ -50,6 +50,8 @@ private:
 	void calculateVerticalSpeed(float angle, float distance);
 	float horiztonalSpeed = 1.0f;
 
+	bool topStairs = false;
+
 public:
 	const char objectId = 'p';
 	using Sprite::Sprite;	
@@ -59,6 +61,6 @@ public:
 	void collision(char c, float gh);
 	void updateGroundHeight(float gh);
 	void collisionEntity(bool isHarmful);
-	void onStairs(sf::Vector2f bottom, sf::Vector2f top);
+	void onStairs(sf::Vector2f bottom, sf::Vector2f top, bool onStairsBottom, bool onStairsTop);
 };
 

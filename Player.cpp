@@ -30,6 +30,7 @@ void Player::update(float dt) {
 	if (isJumping) {
 		jump(dt, currentSpeed);	
 		onStairsLeft = false;
+		topStairs = false;
 	}
 
 	currentHeight = m_sprite.getPosition().y;
@@ -109,14 +110,14 @@ void Player::jump(float dt, float speed) {
 } 
 
 void Player::fall(const float dt) {
-
-	if (!isMoving) {
-		m_sprite.move(sf::Vector2f(0.0, (JUMP_SPEED * m_grav) * dt));
-		m_grav += GRAVITY_CALCULATION;
-	}
-	else {		
-		m_sprite.move(sf::Vector2f(currentSpeed, (JUMP_SPEED * m_grav) * dt));
-		m_grav += GRAVITY_CALCULATION;
+		// divide by 10 to stop near instant falling
+		if (!isMoving) {
+			m_sprite.move(sf::Vector2f(0.0, (JUMP_SPEED * m_grav / 10) * dt));
+			m_grav += GRAVITY_CALCULATION;
+		}
+		else {
+			m_sprite.move(sf::Vector2f(currentSpeed, (JUMP_SPEED * m_grav / 10) * dt));
+			m_grav += GRAVITY_CALCULATION;
 	}
 }
 
@@ -150,7 +151,7 @@ void Player::collision(char c, float gh) {
 		collideLeft = false;
 		isMoving = false;
 		break;
-	case TOP:	
+	case TOP:
 		collideLeft = false;
 		collideRight = false;		
 		updateGroundHeight(gh);
@@ -166,6 +167,11 @@ void Player::collision(char c, float gh) {
 			collideLeft = false;
 			collideRight = false;
 
+			if (topStairs) {
+				updateGroundHeight(currentHeight);
+				m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, currentHeight));
+				break;
+			}
 			if (isJumping) {
 				groundHeight = groundHeightOld;
 			}
@@ -174,6 +180,7 @@ void Player::collision(char c, float gh) {
 				fallCheck();
 			}
 		}
+		break;
 	default:
 		break;		
 	}	
@@ -214,13 +221,22 @@ void Player::collisionEntity(bool isHarmful) {
 }
  
 void Player::checkStairs() {
+
+	float pixelOffset = 6.0f;
 	if (onStairsLeft) {
-		if (m_sprite.getPosition().x >= currentStairsBottom.x + 6) {  // TODO: reminder random variables
+		if (m_sprite.getPosition().x >= currentStairsBottom.x + pixelOffset) {
 			onStairsLeft = false;
-			currentStairsBottom = sf::Vector2f(0, 0);
-			currentStairsTop = sf::Vector2f(0, 0);
 		}
 	}
+	else if (topStairs) {  		
+		if (m_sprite.getPosition().x <= currentStairsTop.x - pixelOffset) {
+			// *hack* fakes a tiny jump so we land back on the block
+			m_grav = 0.001;
+			isJumping = true;			
+			topStairs = false;
+		}
+	}
+
 	else {
 		currentStairsBottom = sf::Vector2f(0, 0);
 		currentStairsTop = sf::Vector2f(0, 0);
@@ -232,9 +248,10 @@ void Player::calculateVerticalSpeed(float angle, float distance) {
 	verticalSpeed = std::sin(angle) * distance;								
 }
 
-void Player::onStairs(sf::Vector2f bottom, sf::Vector2f top)
+void Player::onStairs(sf::Vector2f bottom, sf::Vector2f top, bool onStairsBottom, bool onStairsTop)
 {
-	if (!onStairsLeft) {
+	if (!onStairsLeft && onStairsBottom) {
+		topStairs = false;
 		onStairsLeft = true;
 		currentStairsBottom = bottom;
 		currentStairsTop = top;
@@ -244,6 +261,13 @@ void Player::onStairs(sf::Vector2f bottom, sf::Vector2f top)
 		float distance = std::fabs(std::sqrt(std::pow(bottom.x - top.x, 2) + std::pow(bottom.y - top.y, 2))) / 100;
 		calculateVerticalSpeed(angle, distance);
 	}
+
+	if (onStairsLeft && onStairsTop) {		
+		topStairs = true;
+		onStairsLeft = false;		
+		verticalSpeed = 0.0f;
+	}
+   
 }
 
 
