@@ -24,6 +24,7 @@ private:
 	char m_currentDirection;			
 	const float PLAYER_SPEED = 0.1f;
 	bool onStairsLeft = false;
+	bool onStairsRight = false;
 	float verticalSpeed = 0.0f;
 	float currentHeight;
 	const float JUMP_SPEED = 0.1f;
@@ -61,6 +62,6 @@ public:
 	void collision(char c, float gh);
 	void updateGroundHeight(float gh);
 	void collisionEntity(bool isHarmful);
-	void onStairs(sf::Vector2f bottom, sf::Vector2f top, bool onStairsBottom, bool onStairsTop);
+	void onStairs(sf::Vector2f bottom, sf::Vector2f top, bool onStairsBottom, bool onStairsTop, bool isStairsLeft);
 };
 

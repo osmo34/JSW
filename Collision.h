@@ -52,6 +52,6 @@ public:
 	void checkCollision(std::function<void(char c, float i)> playerCollision);
 	bool checkCollision();
 
-	void testCollisionStairs(sf::Vector2f bottom, sf::Vector2f top, std::function<void(sf::Vector2f b, sf::Vector2f t, bool onStairsBottom, bool onStairsTop)> playerCheckStairs);
+	void testCollisionStairs(sf::Vector2f bottom, sf::Vector2f top, std::function<void(sf::Vector2f b, sf::Vector2f t, bool onStairsBottom, bool onStairsTop, bool isStairsLeft)> playerCheckStairs, bool isLeft);
 };
 

@@ -206,7 +206,8 @@ int main() {
 	update(levelStaticPlatforms, collision);
 	update(levelStaticStairs, collision, NULL);
 
-	StairTest stairTest;
+	StairTest stairTest(true, sf::Vector2f(300, 702), sf::Vector2f(100,500));
+	StairTest stairTestRight(false, sf::Vector2f(1000, 702), sf::Vector2f(1200, 500));
 
 	
 	while (window.isOpen()) {
@@ -221,7 +222,12 @@ int main() {
 
 		// test code 
 		collision->testCollisionStairs(stairTest.getBottomStair(), stairTest.getTopStair(), 
-			([&](sf::Vector2f b, sf::Vector2f t, bool c, bool d) { player->onStairs(b, t, c, d); }));
+			([&](sf::Vector2f b, sf::Vector2f t, bool c, bool d, bool e) { player->onStairs(b, t, c, d, e); }), stairTest.isLeft);
+
+		collision->testCollisionStairs(stairTestRight.getBottomStair(), stairTestRight.getTopStair(),
+			([&](sf::Vector2f b, sf::Vector2f t, bool c, bool d, bool e) { player->onStairs(b, t, c, d, e); }), stairTestRight.isLeft);
+
+
 
 		window.clear();	
 	
@@ -234,6 +240,7 @@ int main() {
 		draw(player, &window);
 
 		stairTest.draw(&window);
+		stairTestRight.draw(&window);
 
 		window.display();
 	}

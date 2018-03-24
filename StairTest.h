@@ -6,13 +6,14 @@
 class StairTest
 {
 public:
-	StairTest();
+	StairTest(bool isLeft, sf::Vector2f bottom, sf::Vector2f top);
 	~StairTest();
-	void testVerticies();
+	void testVerticies(sf::Vector2f bottom, sf::Vector2f top);
 
 	sf::Vector2f getBottomStair();
 	sf::Vector2f getTopStair();
 
+	bool isLeft;
 
 	sf::VertexArray va;
 	void draw(sf::RenderWindow *window);

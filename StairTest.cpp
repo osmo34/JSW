@@ -1,37 +1,29 @@
 #include "StairTest.h"
 
 
-
-StairTest::StairTest()
-{
-	testVerticies();
+StairTest::StairTest(bool isLeft, sf::Vector2f bottom, sf::Vector2f top) : isLeft(isLeft) {
+	testVerticies(bottom, top);
 }
 
 
-StairTest::~StairTest()
-{
-}
+StairTest::~StairTest()	{}
 
-void StairTest::testVerticies()
-{
+void StairTest::testVerticies(sf::Vector2f bottom, sf::Vector2f top) {
 	sf::VertexArray testPoints(sf::Points, 2);
-	testPoints[0].position = sf::Vector2f(300, 702);
-	testPoints[1].position = sf::Vector2f(100, 500);
+	testPoints[0].position = bottom;
+	testPoints[1].position = top;
 	va = testPoints;
 }
 
-sf::Vector2f StairTest::getBottomStair()
-{
+sf::Vector2f StairTest::getBottomStair() {
 	return va[0].position;
 }
 
-sf::Vector2f StairTest::getTopStair()
-{
+sf::Vector2f StairTest::getTopStair() {
 	return va[1].position;
 }
 
 
-void StairTest::draw(sf::RenderWindow * window)
-{
+void StairTest::draw(sf::RenderWindow * window) {
 	window->draw(va);
 }

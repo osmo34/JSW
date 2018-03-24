@@ -73,21 +73,30 @@ bool Collision::checkCollision() {
 	return (playerRectangle.getGlobalBounds().intersects(collisionRectangle.getGlobalBounds())) ? true : false;
 }
 
+// stairs
+void Collision::testCollisionStairs(sf::Vector2f bottom, sf::Vector2f top, std::function<void(sf::Vector2f b, sf::Vector2f t, bool onStairsTop, bool onStairsBottom, bool isStairsLeft)> playerCheckStairs, bool isLeft)
+{	
+	if (isLeft) {
+		if (playerLeft >= bottom.x && playerLeft <= bottom.x + 5
+			&& playerBottom + 32 == bottom.y) {
+			playerCheckStairs(bottom, top, true, false, true);
+		}
 
-void Collision::testCollisionStairs(sf::Vector2f bottom, sf::Vector2f top, std::function<void(sf::Vector2f b, sf::Vector2f t, bool onStairsTop, bool onStairsBottom)> playerCheckStairs)
-{		
-	if (playerLeft >= bottom.x && playerLeft <= bottom.x + 5
-		&& playerBottom + 32 == bottom.y) {
-		playerCheckStairs(bottom, top, true, false);
+		else if (playerLeft <= top.x && playerBottom <= top.y - 32) {
+			playerCheckStairs(bottom, top, false, true, true);
+		}
+
+		else if (playerRight >= top.x && playerBottom <= top.y) {
+			playerCheckStairs(bottom, top, true, false, true);
+		}
 	}
-	
-	else if (playerLeft <= top.x && playerBottom <= top.y -32) {
-		playerCheckStairs(bottom, top, false, true);
+	else {
+		if (playerRight >= bottom.x && playerRight <= bottom.x + 5
+			&& playerBottom + 32 == bottom.y) {
+			playerCheckStairs(bottom, top, true, false, false);
+		}
 	}
 
-	else if (playerRight >= top.x && playerBottom <= top.y) {		
-		playerCheckStairs(bottom, top, true, false);
-	}
 }
 	 
 // check static blocks
