@@ -1,5 +1,5 @@
 #include "Collision.h"
-		
+
 Collision::Collision() {
 	playerLeft = 0.0f, playerRight = 0.0f, playerTop = 0.0f, playerBottom = 0.0f;
 }						  
@@ -73,47 +73,25 @@ bool Collision::checkCollision() {
 	return (playerRectangle.getGlobalBounds().intersects(collisionRectangle.getGlobalBounds())) ? true : false;
 }
 
-// stairs
-void Collision::testCollisionStairs(sf::Vector2f bottom, sf::Vector2f top, std::function<void(sf::Vector2f b, sf::Vector2f t, bool onStairsTop, bool onStairsBottom, bool isStairsLeft)> playerCheckStairs)
-{
-	float distanceTop = std::fabs(std::sqrt(std::pow(top.x - playerLeft, 2) + std::pow(top.x - playerRight, 2)));
-	
-	if (playerLeft >= bottom.x && playerLeft <= bottom.x + 5
-		&& playerBottom + 32 == bottom.y) {
-		playerCheckStairs(bottom, top, true, false, true);
+
+void Collision::checkCollisionStairs(sf::Vector2f bottom, sf::Vector2f top, std::function<void(sf::Vector2f b, sf::Vector2f t, bool onStairsBottom, bool onStairsTop, bool isStairsLeft)> playerCheckStairs, bool isLeft)
+{	
+	if (isLeft) {	
+		float distanceTop = std::fabs(std::sqrt(std::pow(top.x - playerLeft, 2) + std::pow(top.x - playerRight, 2)));		 
+		if (COLLISION_STAIR_LEFT) { playerCheckStairs(bottom, top, true, false, isLeft); }		 		
+		else if (COLLISION_STAIR_LEFT_TOP) { playerCheckStairs(bottom, top, false, true, isLeft); }
+		else if (COLLISION_STAIR_LEFT_TOP_EXIT) { playerCheckStairs(bottom, top, true, false, isLeft); }
 	}
-
-	else if (playerLeft <= top.x && playerBottom <= top.y - 32 && distanceTop < 200) {
-		playerCheckStairs(bottom, top, false, true, true);
+	else {
+		float distanceTop = std::fabs(std::sqrt(std::pow(top.x - playerRight, 2) + std::pow(top.x - playerLeft, 2)));
+		if (COLLISION_STAIR_RIGHT) { playerCheckStairs(bottom, top, true, false, isLeft); } 
+		else if (COLLISION_STAIR_RIGHT_TOP) { playerCheckStairs(bottom, top, false, true, isLeft); }
+		else if (COLLISION_STAIR_RIGHT_TOP_EXIT) { playerCheckStairs(bottom, top, true, false, isLeft);	}
 	}
-
-	else if (playerRight >= top.x && playerBottom <= top.y && distanceTop < 200) {
-		playerCheckStairs(bottom, top, true, false, true);
-	}
-
-}
-
-void Collision::testCollisionStairs(sf::Vector2f bottom, sf::Vector2f top, std::function<void(sf::Vector2f b, sf::Vector2f t, bool onStairsBottom, bool onStairsTop, bool isStairsLeft)> playerCheckStairs, char left)
-{
-	float distanceTop = std::fabs(std::sqrt(std::pow(top.x - playerRight, 2) + std::pow(top.x - playerLeft, 2)));
-	
-	if (playerRight >= bottom.x && playerRight <= bottom.x + 5
-		&& playerBottom + 32 == bottom.y) {
-		playerCheckStairs(bottom, top, true, false, false);
-	}
-	else if (playerRight >= top.x && playerBottom <= top.y - 32 && distanceTop < 200) {
-		playerCheckStairs(bottom, top, false, true, false);		
-	} 
-
-	else if (playerLeft <= top.x && playerBottom <= top.y && distanceTop < 200) {
-		playerCheckStairs(bottom, top, true, false, false);
-	}	
 }
 	 
 // check static blocks
 void Collision::checkCollision(std::function<void(char c, float i)> playerCollision) {
-	// TODO: Refactor
-
 	for (auto it : staticPlatformPositions) {
 		if (COLLISION_TOP) {
 			playerCollision(TOP, it.top);
@@ -141,11 +119,6 @@ void Collision::checkCollision(std::function<void(char c, float i)> playerCollis
 				return;
 			}
 		}
-		else {
-			playerCollision(NO_COLLISION, NO_CHANGE_GROUND_HEIGHT);
-		}
+		else { playerCollision(NO_COLLISION, NO_CHANGE_GROUND_HEIGHT);	}
 	}
 }
-
-
-

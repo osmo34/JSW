@@ -41,20 +41,15 @@ private:
 	const float GRAVITY_CALCULATION = 0.04f;
 	float m_grav;
 	bool collideLeft;
-	bool collideRight;
-	float deltaTime;
-
+	bool collideRight;	   
+	float deltaTime;  
 	sf::Vector2f currentStairsBottom;
-	sf::Vector2f currentStairsTop;
-
-	void checkStairs();
-	
-
-	void calculateVerticalSpeed(float distance, float angle);
-															 
-	float horiztonalSpeed = 1.0f;
-
-	bool topStairs = false;
+	sf::Vector2f currentStairsTop;	
+	void checkStairs();																	 
+	float horiztonalSpeed = 1.0f; 
+	bool topStairs = false;	
+	float calculateVerticalSpeed(float distance, float angle);
+	void updateStairs(bool &stairs, bool &stairsBottom, bool &stairsTop, sf::Vector2f bottom, sf::Vector2f top, float vs);
 
 public:
 	const char objectId = 'p';
@@ -64,7 +59,7 @@ public:
 	void setStartPosition();
 	void collision(char c, float gh);
 	void updateGroundHeight(float gh);
-	void collisionEntity(bool isHarmful);
+	void collisionEntity(bool isHarmful);	
 	void onStairs(sf::Vector2f bottom, sf::Vector2f top, bool onStairsBottom, bool onStairsTop, bool isStairsLeft);
 };
 

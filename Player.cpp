@@ -189,8 +189,7 @@ void Player::collision(char c, float gh) {
 	}	
 }
 
-void Player::updateGroundHeight(float gh) {
-		 
+void Player::updateGroundHeight(float gh) {		 
 		if (gh == 0.0) {
 			groundHeight = groundHeightOld;
 			maxJumpHeight = maxJumpHeightOld;
@@ -224,28 +223,26 @@ void Player::collisionEntity(bool isHarmful) {
 }
  
 void Player::checkStairs() {
-
-	float pixelOffset = 6.0f;
+	const float pixelOffset = 6.0f;
+	
 	if (onStairsLeft) {	
 		if (m_sprite.getPosition().x >= currentStairsBottom.x + pixelOffset) {
 			onStairsLeft = false;
 		}	
 	}  	
 	else if (onStairsRight) {
-		if (m_sprite.getPosition().x <= currentStairsBottom.x - 32) { // TODO: Pixel size
+		if (m_sprite.getPosition().x <= currentStairsBottom.x - 32) { // TODO: Pixel size magic number
 			onStairsRight = false;
 		}
-	}
-
+	} 
 	else if (topStairs) {  		
 		if (m_sprite.getPosition().x <= currentStairsTop.x - pixelOffset) {
-			// *hack* fakes a tiny jump so we land back on the block - stops a weird wobble
+			// fakes a tiny jump so we land back on the block - stops a weird wobble
 			m_grav = 0.001;
 			isJumping = true;			
 			topStairs = false;
 		}
-	}
-
+	} 
 	else if (!onStairsLeft && !onStairsRight) {
 		currentStairsBottom = sf::Vector2f(0, 0);
 		currentStairsTop = sf::Vector2f(0, 0);
@@ -253,49 +250,31 @@ void Player::checkStairs() {
 	}
 }
 
-void Player::calculateVerticalSpeed(float distance, float angle) {
-	verticalSpeed = angle * distance;
+void Player::updateStairs(bool &stairs, bool &stairsBottom, bool &stairsTop, sf::Vector2f bottom, sf::Vector2f top, float vs) {
+	if (!stairs && stairsBottom) {
+		topStairs = false;
+		stairs = true;
+		currentStairsBottom = bottom;
+		currentStairsTop = top;		
+		verticalSpeed = vs;
+	}
+	else if (stairs && stairsTop) {
+		topStairs = true;
+		stairs = false;
+		verticalSpeed = 0.0f;
+	}
 }
 
+float Player::calculateVerticalSpeed(float distance, float angle) {
+	return angle * distance;
+}
 
-void Player::onStairs(sf::Vector2f bottom, sf::Vector2f top, bool onStairsBottom, bool onStairsTop, bool isStairsLeft)
-{
-	if (isStairsLeft) {
-		if (!onStairsLeft && onStairsBottom) {
-			topStairs = false;
-			onStairsLeft = true;
-			currentStairsBottom = bottom;
-			currentStairsTop = top;
-			// get the angle and distance between 2 points. Divides distance by 100 to speed the player up vertically
-			float angle = std::fabs(atan2(top.y - bottom.y, top.x - bottom.x) * 180 / PI);
-			float distance = std::fabs(std::sqrt(std::pow(bottom.x - top.x, 2) + std::pow(bottom.y - top.y, 2))) / 100;						
-			calculateVerticalSpeed(distance, std::sin(angle));
-		}
-
-		if (onStairsLeft && onStairsTop) { 			
-			topStairs = true;
-			onStairsLeft = false;
-			verticalSpeed = 0.0f;
-		}
-	}
-
-	else {		
-		if (!onStairsRight && onStairsBottom) {
-			topStairs = false;
-			onStairsRight = true;
-			currentStairsBottom = bottom;
-			currentStairsTop = top;
-			float angle = std::fabs(atan2(top.y - bottom.y, top.x - bottom.x) * 180 / PI);
-			float distance = std::sqrt(std::pow(bottom.x - top.x, 2) + std::pow(bottom.y - top.y, 2)) / 100;			
-			calculateVerticalSpeed(distance, std::cos(angle));			
-		}
-
-		if (onStairsRight && onStairsTop) {
-			topStairs = true;
-			onStairsRight = false;
-			verticalSpeed = 0.0f;
-		}
-	}
+void Player::onStairs(sf::Vector2f bottom, sf::Vector2f top, bool onStairsBottom, bool onStairsTop, bool isStairsLeft) {
+	const float angle = std::fabs(atan2(top.y - bottom.y, top.x - bottom.x) * 180 / PI);
+	const float distance = std::fabs(std::sqrt(std::pow(bottom.x - top.x, 2) + std::pow(bottom.y - top.y, 2))) / 100;
+	(isStairsLeft) ? 
+		updateStairs(onStairsLeft, onStairsBottom, onStairsTop, bottom, top, calculateVerticalSpeed(distance, std::sin(angle))) : 
+		updateStairs(onStairsRight, onStairsBottom, onStairsTop, bottom, top, calculateVerticalSpeed(distance, std::cos(angle)));	
 }
 
 

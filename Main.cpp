@@ -19,7 +19,6 @@
 #include "WriteRoom.h"
 #include "LoadTextures.h"
 #include "StaticStairs.h"
-#include "StairTest.h"
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
@@ -109,7 +108,7 @@ void handlePollEvents(sf::RenderWindow *window) {
 
 Room createRoom(std::vector<std::shared_ptr<StaticObject>> &levelStaticObjects,
 				std::vector<std::shared_ptr<StaticPlatform>> &levelStaticPlatforms,
-				std::vector<std::shared_ptr<StaticStairs>> &levelStaticStairs,
+				//std::vector<std::shared_ptr<StaticStairs>> &levelStaticStairs,
 				std::vector<std::shared_ptr<EnemyStatic>> &enemiesStatic,
 				std::vector<std::shared_ptr<EnemyMoving>> &enemiesMoving,
 				std::vector<std::shared_ptr<Pickup>> &pickups,				
@@ -133,10 +132,10 @@ Room createRoom(std::vector<std::shared_ptr<StaticObject>> &levelStaticObjects,
 			createObject(levelStaticPlatforms, room.roomData[i], texture, NULL);
 			break;
 		case STATIC_STAIR_RIGHT:
-			createObject(levelStaticStairs, room.roomData[i], texture, STATIC_STAIR_RIGHT);
+			//createObject(levelStaticStairs, room.roomData[i], texture, STATIC_STAIR_RIGHT);
 			break;
 		case STATIC_STAIR_LEFT:
-			createObject(levelStaticStairs, room.roomData[i], texture, STATIC_STAIR_LEFT);
+			//createObject(levelStaticStairs, room.roomData[i], texture, STATIC_STAIR_LEFT);
 			break;
 		case ENEMY_MOVING:
 			createObject(enemiesMoving, room.roomData[i], texture, ENEMY);
@@ -171,7 +170,7 @@ int main() {
 
 	std::vector<std::shared_ptr<StaticObject>> levelStaticObjects;
 	std::vector<std::shared_ptr<StaticPlatform>> levelStaticPlatforms;
-	std::vector<std::shared_ptr<StaticStairs>> levelStaticStairs;
+	//std::vector<std::shared_ptr<StaticStairs>> levelStaticStairs;
 	std::vector<std::shared_ptr<EnemyStatic>> enemiesStatic;	
 	std::vector<std::shared_ptr<EnemyMoving>> enemiesMoving;
 	std::vector<std::shared_ptr<Pickup>> pickups;
@@ -196,7 +195,7 @@ int main() {
 
 	// create room
 	Room room{};
-	room = createRoom(levelStaticObjects, levelStaticPlatforms, levelStaticStairs, enemiesStatic, enemiesMoving, pickups, textures);
+	room = createRoom(levelStaticObjects, levelStaticPlatforms, enemiesStatic, enemiesMoving, pickups, textures);
 
 	// create collision
 	std::shared_ptr <Collision> collision(new Collision());
@@ -204,10 +203,9 @@ int main() {
 	// create static objects collision out of the main loop	as they are not going to move
 	update(levelStaticObjects, collision);
 	update(levelStaticPlatforms, collision);
-	update(levelStaticStairs, collision, NULL);
 
-	StairTest stairTest(true, sf::Vector2f(300, 702), sf::Vector2f(100,500));
-	StairTest stairTestRight(false, sf::Vector2f(1000, 702), sf::Vector2f(1200, 500));
+	StaticStairs stairTest(true, sf::Vector2f(300, 702), sf::Vector2f(100,500));
+	StaticStairs stairTestRight(false, sf::Vector2f(1000, 702), sf::Vector2f(1200, 500));
 
 	
 	while (window.isOpen()) {
@@ -221,19 +219,16 @@ int main() {
 		update(pickups, collision, player, time.asMilliseconds());
 
 		// test code 
-		collision->testCollisionStairs(stairTest.getBottomStair(), stairTest.getTopStair(), 
-			([&](sf::Vector2f b, sf::Vector2f t, bool c, bool d, bool e) { player->onStairs(b, t, c, d, e); }));
+		collision->checkCollisionStairs(stairTest.getBottomStair(), stairTest.getTopStair(), 
+			([&](sf::Vector2f b, sf::Vector2f t, bool c, bool d, bool e) { player->onStairs(b, t, c, d, e); }), stairTest.isLeft);
 
-		collision->testCollisionStairs(stairTestRight.getBottomStair(), stairTestRight.getTopStair(),
-			([&](sf::Vector2f b, sf::Vector2f t, bool c, bool d, bool e) { player->onStairs(b, t, c, d, e); }), 'a');
-
-
+		collision->checkCollisionStairs(stairTestRight.getBottomStair(), stairTestRight.getTopStair(),
+			([&](sf::Vector2f b, sf::Vector2f t, bool c, bool d, bool e) { player->onStairs(b, t, c, d, e); }), stairTestRight.isLeft);
 
 		window.clear();	
 	
 		draw(levelStaticObjects, &window);
 		draw(levelStaticPlatforms, &window);
-		//draw(levelStaticStairs, &window);
 		draw(enemiesMoving, &window);
 		draw(enemiesStatic, &window);		
 		draw(pickups, &window);
