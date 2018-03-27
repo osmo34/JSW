@@ -13,7 +13,7 @@ Currently supports: <br>
 <p>
 Current TODO: <p>
 * <del>Platforms which can be jumped through from the underside and walked on</del> done <br>
-* Stairs <br>
+* <del> Stairs </del> done - pending refactor  <br>
 * Loading multiple rooms <br>
 * Ropes <br>
 * Sound support <br>
@@ -21,6 +21,6 @@ Current TODO: <p>
 * Gameplay logic, e.g. amount of collectables, lives etc. <br>
 * Level Editor - likely written in c# <p>
 <p>
-added first screenshot. Not much to see. The blue circles represent enemies
+added second screenshot with stairs support. Not much to see. The blue circles represent enemies
 
 ![alt text](screenshot.png)
