@@ -216,16 +216,16 @@ int main() {
 		clock.restart().asSeconds();
 
 		update(player, collision, time.asMilliseconds());
-		//update(enemiesMoving, collision, player, time.asMilliseconds());
-		//update(enemiesStatic, collision, player, time.asMilliseconds());
+		update(enemiesMoving, collision, player, time.asMilliseconds());
+		update(enemiesStatic, collision, player, time.asMilliseconds());
 		update(pickups, collision, player, time.asMilliseconds());
 
 		// test code 
 		collision->testCollisionStairs(stairTest.getBottomStair(), stairTest.getTopStair(), 
-			([&](sf::Vector2f b, sf::Vector2f t, bool c, bool d, bool e) { player->onStairs(b, t, c, d, e); }), stairTest.isLeft);
+			([&](sf::Vector2f b, sf::Vector2f t, bool c, bool d, bool e) { player->onStairs(b, t, c, d, e); }));
 
 		collision->testCollisionStairs(stairTestRight.getBottomStair(), stairTestRight.getTopStair(),
-			([&](sf::Vector2f b, sf::Vector2f t, bool c, bool d, bool e) { player->onStairs(b, t, c, d, e); }), stairTestRight.isLeft);
+			([&](sf::Vector2f b, sf::Vector2f t, bool c, bool d, bool e) { player->onStairs(b, t, c, d, e); }), 'a');
 
 
 

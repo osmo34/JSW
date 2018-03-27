@@ -2,7 +2,7 @@
 #include "Sprite.h"
 #include "PlayerInput.h"
 #include "PlayerState.h"
-#include <math.h>
+#include <cmath>
 
 #define PI 3.141
 
@@ -48,7 +48,10 @@ private:
 	sf::Vector2f currentStairsTop;
 
 	void checkStairs();
-	void calculateVerticalSpeed(float angle, float distance);
+	
+
+	void calculateVerticalSpeed(float distance, float angle);
+															 
 	float horiztonalSpeed = 1.0f;
 
 	bool topStairs = false;

@@ -9,7 +9,7 @@ StairTest::StairTest(bool isLeft, sf::Vector2f bottom, sf::Vector2f top) : isLef
 StairTest::~StairTest()	{}
 
 void StairTest::testVerticies(sf::Vector2f bottom, sf::Vector2f top) {
-	sf::VertexArray testPoints(sf::Points, 2);
+	sf::VertexArray testPoints(sf::LinesStrip, 2);
 	testPoints[0].position = bottom;
 	testPoints[1].position = top;
 	va = testPoints;

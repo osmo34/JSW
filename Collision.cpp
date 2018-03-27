@@ -74,29 +74,40 @@ bool Collision::checkCollision() {
 }
 
 // stairs
-void Collision::testCollisionStairs(sf::Vector2f bottom, sf::Vector2f top, std::function<void(sf::Vector2f b, sf::Vector2f t, bool onStairsTop, bool onStairsBottom, bool isStairsLeft)> playerCheckStairs, bool isLeft)
-{	
-	if (isLeft) {
-		if (playerLeft >= bottom.x && playerLeft <= bottom.x + 5
-			&& playerBottom + 32 == bottom.y) {
-			playerCheckStairs(bottom, top, true, false, true);
-		}
-
-		else if (playerLeft <= top.x && playerBottom <= top.y - 32) {
-			playerCheckStairs(bottom, top, false, true, true);
-		}
-
-		else if (playerRight >= top.x && playerBottom <= top.y) {
-			playerCheckStairs(bottom, top, true, false, true);
-		}
-	}
-	else {
-		if (playerRight >= bottom.x && playerRight <= bottom.x + 5
-			&& playerBottom + 32 == bottom.y) {
-			playerCheckStairs(bottom, top, true, false, false);
-		}
+void Collision::testCollisionStairs(sf::Vector2f bottom, sf::Vector2f top, std::function<void(sf::Vector2f b, sf::Vector2f t, bool onStairsTop, bool onStairsBottom, bool isStairsLeft)> playerCheckStairs)
+{
+	float distanceTop = std::fabs(std::sqrt(std::pow(top.x - playerLeft, 2) + std::pow(top.x - playerRight, 2)));
+	
+	if (playerLeft >= bottom.x && playerLeft <= bottom.x + 5
+		&& playerBottom + 32 == bottom.y) {
+		playerCheckStairs(bottom, top, true, false, true);
 	}
 
+	else if (playerLeft <= top.x && playerBottom <= top.y - 32 && distanceTop < 200) {
+		playerCheckStairs(bottom, top, false, true, true);
+	}
+
+	else if (playerRight >= top.x && playerBottom <= top.y && distanceTop < 200) {
+		playerCheckStairs(bottom, top, true, false, true);
+	}
+
+}
+
+void Collision::testCollisionStairs(sf::Vector2f bottom, sf::Vector2f top, std::function<void(sf::Vector2f b, sf::Vector2f t, bool onStairsBottom, bool onStairsTop, bool isStairsLeft)> playerCheckStairs, char left)
+{
+	float distanceTop = std::fabs(std::sqrt(std::pow(top.x - playerRight, 2) + std::pow(top.x - playerLeft, 2)));
+	
+	if (playerRight >= bottom.x && playerRight <= bottom.x + 5
+		&& playerBottom + 32 == bottom.y) {
+		playerCheckStairs(bottom, top, true, false, false);
+	}
+	else if (playerRight >= top.x && playerBottom <= top.y - 32 && distanceTop < 200) {
+		playerCheckStairs(bottom, top, false, true, false);		
+	} 
+
+	else if (playerLeft <= top.x && playerBottom <= top.y && distanceTop < 200) {
+		playerCheckStairs(bottom, top, true, false, false);
+	}	
 }
 	 
 // check static blocks
