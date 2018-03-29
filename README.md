@@ -6,16 +6,18 @@ currently very early days...
 <p>
 Currently supports: <br>
 * Collision detection for walls, enemies and collectables <br>
+* Stairs <br>
 * Loading of levels from external file in custom file format (needed for an editor!) <br>
 * Textures loaded externally and applied based on the file format <br>
-* Spritesheets (currently a bit hacky and restricted) <br>
+* Spritesheets (currently a bit hacky and restricted) <br>  
 <p>
 <p>
 Current TODO: <p>
 * <del>Platforms which can be jumped through from the underside and walked on</del> done <br>
-* <del> Stairs </del> done - pending refactor  <br>
+* <del> Stairs </del> done <br>
 * Loading multiple rooms <br>
 * Ropes <br>
+* improve spritesheets (this wont be done until there is more content!) <br>  
 * Sound support <br>
 * Refactoring main into a game manager <br>
 * Gameplay logic, e.g. amount of collectables, lives etc. <br>
