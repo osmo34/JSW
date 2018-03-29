@@ -8,7 +8,11 @@ struct RoomData {
 	float positionX;
 	float positionY;
 	float speedX;
-	float speedY;	
+	float speedY;
+	float stairBottomX;
+	float stairBottomY;
+	float stairTopX;
+	float stairTopY;
 };
 #pragma pack(pop)
 

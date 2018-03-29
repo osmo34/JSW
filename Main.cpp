@@ -31,6 +31,13 @@ void createObject(std::vector<std::shared_ptr<T>> &t, const RoomData &room,
 	t.push_back(std::shared_ptr<T>(new T(SCREEN_WIDTH, SCREEN_HEIGHT, texture, room.positionX, room.positionY, objectId, room.speedX, room.speedY)));
 }
 
+// stairs
+template <typename T>
+void createObject(std::vector<std::shared_ptr<T>> &t, const RoomData &room) {	
+	t.push_back(std::shared_ptr<T>(new T(sf::Vector2f(room.stairBottomX, room.stairBottomY), sf::Vector2f(room.stairTopX, room.stairTopY))));	
+}
+
+
 // UPDATES
 // single items and their collision - in reality this is for the player
 template <typename T>
@@ -70,11 +77,12 @@ void update(const std::vector<std::shared_ptr<T>> &t, std::shared_ptr<Collision>
 		collision->updateObjectPosition([&](char c) -> float { return it->getCollision(c); }, it->objectId);
 	}
 }
-// stairs, char is a hack to override
-template <typename T>
-void update(const std::vector<std::shared_ptr<T>> &t, std::shared_ptr<Collision> &collision, const char) {
-	for (auto it : t) {
-		collision->updateObjectPosition([&](char c) -> float { return it->getCollision(c); }, it->isRightAngle);
+
+// specific for stairs, no requirement for it to be a template at this time
+void update(const std::vector<std::shared_ptr<StaticStairs>> &stairs, std::shared_ptr<Collision> &collision, std::shared_ptr<Player> &player) {
+	for (auto it : stairs) {
+		collision->checkCollisionStairs(it->getBottomStair(), it->getTopStair(),
+		([&](sf::Vector2f b, sf::Vector2f t, bool c, bool d, bool e) { player->onStairs(b, t, c, d, e); }), it->isStairsLeft());
 	}
 }
 
@@ -108,12 +116,12 @@ void handlePollEvents(sf::RenderWindow *window) {
 
 Room createRoom(std::vector<std::shared_ptr<StaticObject>> &levelStaticObjects,
 				std::vector<std::shared_ptr<StaticPlatform>> &levelStaticPlatforms,
-				//std::vector<std::shared_ptr<StaticStairs>> &levelStaticStairs,
+				std::vector<std::shared_ptr<StaticStairs>> &levelStaticStairs,
 				std::vector<std::shared_ptr<EnemyStatic>> &enemiesStatic,
 				std::vector<std::shared_ptr<EnemyMoving>> &enemiesMoving,
 				std::vector<std::shared_ptr<Pickup>> &pickups,				
 				std::map<int, sf::Texture> &textures) {
-	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY = 'e', STATIC_PLATFORM = 't', STATIC_STAIR_RIGHT = 'l', STATIC_STAIR_LEFT = 'r', ENEMY_MOVING = 'm', ENEMY_STATIC = 'n', PICK_UP = 'u';
+	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY = 'e', STATIC_PLATFORM = 't', STATIC_STAIRS = 'l', ENEMY_MOVING = 'm', ENEMY_STATIC = 'n', PICK_UP = 'u';
 	std::string fileName = "test.jsb";
 	Room room{};
 	
@@ -131,11 +139,8 @@ Room createRoom(std::vector<std::shared_ptr<StaticObject>> &levelStaticObjects,
 		case STATIC_PLATFORM:
 			createObject(levelStaticPlatforms, room.roomData[i], texture, NULL);
 			break;
-		case STATIC_STAIR_RIGHT:
-			//createObject(levelStaticStairs, room.roomData[i], texture, STATIC_STAIR_RIGHT);
-			break;
-		case STATIC_STAIR_LEFT:
-			//createObject(levelStaticStairs, room.roomData[i], texture, STATIC_STAIR_LEFT);
+		case STATIC_STAIRS:
+			createObject(levelStaticStairs, room.roomData[i]);
 			break;
 		case ENEMY_MOVING:
 			createObject(enemiesMoving, room.roomData[i], texture, ENEMY);
@@ -170,7 +175,7 @@ int main() {
 
 	std::vector<std::shared_ptr<StaticObject>> levelStaticObjects;
 	std::vector<std::shared_ptr<StaticPlatform>> levelStaticPlatforms;
-	//std::vector<std::shared_ptr<StaticStairs>> levelStaticStairs;
+	std::vector<std::shared_ptr<StaticStairs>> levelStaticStairs;
 	std::vector<std::shared_ptr<EnemyStatic>> enemiesStatic;	
 	std::vector<std::shared_ptr<EnemyMoving>> enemiesMoving;
 	std::vector<std::shared_ptr<Pickup>> pickups;
@@ -195,7 +200,7 @@ int main() {
 
 	// create room
 	Room room{};
-	room = createRoom(levelStaticObjects, levelStaticPlatforms, enemiesStatic, enemiesMoving, pickups, textures);
+	room = createRoom(levelStaticObjects, levelStaticPlatforms, levelStaticStairs, enemiesStatic, enemiesMoving, pickups, textures);
 
 	// create collision
 	std::shared_ptr <Collision> collision(new Collision());
@@ -203,10 +208,6 @@ int main() {
 	// create static objects collision out of the main loop	as they are not going to move
 	update(levelStaticObjects, collision);
 	update(levelStaticPlatforms, collision);
-
-	StaticStairs stairTest(true, sf::Vector2f(300, 702), sf::Vector2f(100,500));
-	StaticStairs stairTestRight(false, sf::Vector2f(1000, 702), sf::Vector2f(1200, 500));
-
 	
 	while (window.isOpen()) {
 		handlePollEvents(&window);
@@ -214,29 +215,19 @@ int main() {
 		clock.restart().asSeconds();
 
 		update(player, collision, time.asMilliseconds());
+		update(levelStaticStairs, collision, player);
 		update(enemiesMoving, collision, player, time.asMilliseconds());
-		update(enemiesStatic, collision, player, time.asMilliseconds());
+		update(enemiesStatic, collision, player, time.asMilliseconds());		
 		update(pickups, collision, player, time.asMilliseconds());
-
-		// test code 
-		collision->checkCollisionStairs(stairTest.getBottomStair(), stairTest.getTopStair(), 
-			([&](sf::Vector2f b, sf::Vector2f t, bool c, bool d, bool e) { player->onStairs(b, t, c, d, e); }), stairTest.isLeft);
-
-		collision->checkCollisionStairs(stairTestRight.getBottomStair(), stairTestRight.getTopStair(),
-			([&](sf::Vector2f b, sf::Vector2f t, bool c, bool d, bool e) { player->onStairs(b, t, c, d, e); }), stairTestRight.isLeft);
-
 		window.clear();	
 	
 		draw(levelStaticObjects, &window);
 		draw(levelStaticPlatforms, &window);
+		draw(levelStaticStairs, &window);
 		draw(enemiesMoving, &window);
 		draw(enemiesStatic, &window);		
 		draw(pickups, &window);
 		draw(player, &window);
-
-		stairTest.draw(&window);
-		stairTestRight.draw(&window);
-
 		window.display();
 	}
 	return 0;

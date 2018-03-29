@@ -6,16 +6,18 @@
 class StaticStairs
 {
 public:
-	StaticStairs(bool isLeft, sf::Vector2f bottom, sf::Vector2f top);
+	StaticStairs(sf::Vector2f bottom, sf::Vector2f top);
 	~StaticStairs();
-	void testVerticies(sf::Vector2f bottom, sf::Vector2f top);
-
 	sf::Vector2f getBottomStair();
 	sf::Vector2f getTopStair();
+	
+	bool isStairsLeft();
 
-	bool isLeft;
-
-	sf::VertexArray va;
 	void draw(sf::RenderWindow *window);
+
+private:
+	void createVerticies(sf::Vector2f bottom, sf::Vector2f top);
+	bool isLeft;
+	sf::VertexArray va;
 };
 

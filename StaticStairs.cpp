@@ -1,14 +1,15 @@
 #include "StaticStairs.h"
 
 
-StaticStairs::StaticStairs(bool isLeft, sf::Vector2f bottom, sf::Vector2f top) : isLeft(isLeft) {
-	testVerticies(bottom, top);
+StaticStairs::StaticStairs(sf::Vector2f bottom, sf::Vector2f top) {
+	createVerticies(bottom, top);
+	(top.x > bottom.x) ? isLeft = false : isLeft = true;	
 }
 
 
 StaticStairs::~StaticStairs()	{}
 
-void StaticStairs::testVerticies(sf::Vector2f bottom, sf::Vector2f top) {
+void StaticStairs::createVerticies(sf::Vector2f bottom, sf::Vector2f top) {
 	sf::VertexArray testPoints(sf::LinesStrip, 2);
 	testPoints[0].position = bottom;
 	testPoints[1].position = top;
@@ -21,6 +22,10 @@ sf::Vector2f StaticStairs::getBottomStair() {
 
 sf::Vector2f StaticStairs::getTopStair() {
 	return va[1].position;
+}
+
+bool StaticStairs::isStairsLeft() {
+	return isLeft;
 }
 
 

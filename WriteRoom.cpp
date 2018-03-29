@@ -23,7 +23,7 @@ Room WriteRoom::createRoomData()
 		std::string value;
 		inFile >> value;
 		inFile >> std::ws;
-
+		// TODO: Refactor this
 		if (type == "num") {
 			room.numObjects = std::stoi(value);
 		}
@@ -49,6 +49,18 @@ Room WriteRoom::createRoomData()
 		else if (type == "sy") {
 			roomData.speedY = std::stof(value);
 		}
+		else if (type == "stbx") {
+			roomData.stairBottomX = std::stof(value);
+		}
+		else if (type == "stby") {
+			roomData.stairBottomY = std::stof(value);
+		}
+		else if (type == "sttx") {
+			roomData.stairTopX = std::stof(value);
+		}
+		else if (type == "stty") {
+			roomData.stairTopY = std::stof(value);
+		}										  
 		else if (type == "end") {
 			room.roomData[i] = roomData;
 			i++;			
