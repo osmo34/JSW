@@ -1,5 +1,6 @@
 #pragma once
 #include "Sprite.h"
+#include "DataRoom.h"
 
 // for use with solid structures which cannot be passed - e.g. a wall
 class StaticObject : public Sprite
@@ -12,9 +13,7 @@ public:
 	StaticObject(const int screenWidth,
 		const int screenHeight,
 		sf::Texture texture,
-		const float posX,
-		const float posY,
-		const char, const float, const float
+		RoomData &roomData
 		);
 	~StaticObject();
 

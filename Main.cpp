@@ -26,17 +26,10 @@ const int FPS = 60;
 
 // create object in their vectors
 template <typename T>
-void createObject(std::vector<std::shared_ptr<T>> &t, const RoomData &room,    
-	const sf::Texture &texture, const char objectId) {
-	t.push_back(std::shared_ptr<T>(new T(SCREEN_WIDTH, SCREEN_HEIGHT, texture, room.positionX, room.positionY, objectId, room.speedX, room.speedY)));
+void createObject(std::vector<std::shared_ptr<T>> &t, RoomData &room,
+	const sf::Texture &texture) { 	
+	t.push_back(std::shared_ptr<T>(new T(SCREEN_WIDTH, SCREEN_HEIGHT, texture, room)));	  // room.positionX, room.positionY, objectId, room.speedX, room.speedY
 }
-
-// stairs
-template <typename T>
-void createObject(std::vector<std::shared_ptr<T>> &t, const RoomData &room) {	
-	t.push_back(std::shared_ptr<T>(new T(sf::Vector2f(room.stairBottomX, room.stairBottomY), sf::Vector2f(room.stairTopX, room.stairTopY))));	
-}
-
 
 // UPDATES
 // single items and their collision - in reality this is for the player
@@ -134,22 +127,22 @@ Room createRoom(std::vector<std::shared_ptr<StaticObject>> &levelStaticObjects,
 
 		switch (room.roomData[i].objectType) {
 		case STATIC_OBJECT:
-			createObject(levelStaticObjects, room.roomData[i], texture, NULL);
+			createObject(levelStaticObjects, room.roomData[i], texture);
 			break;
 		case STATIC_PLATFORM:
-			createObject(levelStaticPlatforms, room.roomData[i], texture, NULL);
+			createObject(levelStaticPlatforms, room.roomData[i], texture);
 			break;
 		case STATIC_STAIRS:
-			createObject(levelStaticStairs, room.roomData[i]);
+			createObject(levelStaticStairs, room.roomData[i], texture);
 			break;
 		case ENEMY_MOVING:
-			createObject(enemiesMoving, room.roomData[i], texture, ENEMY);
+			createObject(enemiesMoving, room.roomData[i], texture);
 			break;
 		case ENEMY_STATIC:
-			createObject(enemiesStatic, room.roomData[i], texture, ENEMY);
+			createObject(enemiesStatic, room.roomData[i], texture);
 			break;
 		case PICK_UP:
-			createObject(pickups, room.roomData[i], texture, PICK_UP);
+			createObject(pickups, room.roomData[i], texture);
 			break;
 		default:
 			std::cout << "error in room data";

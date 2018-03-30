@@ -1,12 +1,13 @@
 #pragma once
 #include <SFML\Graphics.hpp>
+#include "DataRoom.h"
 
 // TODO: created as a test, move into stair class in due course
 
 class StaticStairs
 {
 public:
-	StaticStairs(sf::Vector2f bottom, sf::Vector2f top);
+	StaticStairs(const int screenWidth, const int screenHeight, sf::Texture texture, RoomData &roomData);
 	~StaticStairs();
 	sf::Vector2f getBottomStair();
 	sf::Vector2f getTopStair();

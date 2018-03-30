@@ -1,13 +1,12 @@
 #include "StaticStairs.h"
 
 
-StaticStairs::StaticStairs(sf::Vector2f bottom, sf::Vector2f top) {
+StaticStairs::StaticStairs(const int screenWidth, const int screenHeight, sf::Texture texture, RoomData &roomData) {
+	sf::Vector2f bottom(roomData.stairBottomX, roomData.stairBottomY);
+	sf::Vector2f top(roomData.stairTopX, roomData.stairTopY);
 	createVerticies(bottom, top);
 	(top.x > bottom.x) ? isLeft = false : isLeft = true;	
 }
-
-
-StaticStairs::~StaticStairs()	{}
 
 void StaticStairs::createVerticies(sf::Vector2f bottom, sf::Vector2f top) {
 	sf::VertexArray testPoints(sf::LinesStrip, 2);
@@ -15,6 +14,8 @@ void StaticStairs::createVerticies(sf::Vector2f bottom, sf::Vector2f top) {
 	testPoints[1].position = top;
 	va = testPoints;
 }
+
+StaticStairs::~StaticStairs()	{}
 
 sf::Vector2f StaticStairs::getBottomStair() {
 	return va[0].position;
@@ -28,7 +29,7 @@ bool StaticStairs::isStairsLeft() {
 	return isLeft;
 }
 
-
 void StaticStairs::draw(sf::RenderWindow * window) {
 	window->draw(va);
 }
+

@@ -1,10 +1,10 @@
 #include "Pickup.h"
 
+
 Pickup::Pickup(const int screenWidth, 
 	const int screenHeight, 
 	sf::Texture texture, 
-	const float posX, const float posY, 
-	const char objectId, float, float) : posX(posX), posY(posY), objectId(objectId),
+	RoomData &roomData) : posX(roomData.positionX), posY(roomData.positionY), objectId(roomData.objectType),
 	Sprite(screenWidth, screenHeight, texture) {
 	setStartPosition();
 }

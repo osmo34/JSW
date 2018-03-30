@@ -1,16 +1,13 @@
 #pragma once
 #include "Sprite.h"
+#include "DataRoom.h"
 class Enemy : public Sprite
 {
 public:
 	Enemy(const int screenWidth,
 		const int screenHeight,
 		sf::Texture texture,
-		const float posX,
-		const float posY,
-		const char objectId,
-		const float speedX,
-		const float speedY
+		RoomData &roomData		
 		);
 	~Enemy();
 	virtual void update(const float dt) = 0;

@@ -1,15 +1,14 @@
 #pragma once
 #include "Sprite.h"
+#include "DataRoom.h"
+
 class Pickup : public Sprite
 {
 public:
 	Pickup(const int screenWidth,
 		const int screenHeight,
 		sf::Texture texture,
-		const float posX,
-		const float posY,
-		const char objectId, 
-		const float, const float);
+		RoomData &roomData);
 	~Pickup();
 
 	char objectId;
