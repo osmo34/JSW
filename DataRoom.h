@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <string>
 
 #pragma pack(push, 2)
 struct RoomData {
@@ -18,7 +19,7 @@ struct RoomData {
 
 #pragma pack(push, 2)
 struct Room {
-	std::uint32_t roomNumber;
+	std::int32_t roomId;
 	RoomData roomData[256];
 	std::uint8_t numObjects;
 };
@@ -27,6 +28,6 @@ struct Room {
 // TODO: likely use this when we have more levels
 #pragma pack(push, 2)
 struct World {
-	Room rooms[256];
+	std::string fileNames[256];
 };
 #pragma pack(pop)

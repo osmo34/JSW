@@ -1,3 +1,5 @@
+// this code is depreciated - please refer to seperate compiler.
+
 #include "WriteRoom.h"
 
 WriteRoom::WriteRoom(){}
@@ -26,6 +28,9 @@ Room WriteRoom::createRoomData()
 		// TODO: Refactor this
 		if (type == "num") {
 			room.numObjects = std::stoi(value);
+		}
+		else if (type == "roomID") {
+			room.roomId = std::stoi(value);
 		}
 		
 		else if (type == "type") {		
@@ -78,7 +83,6 @@ void WriteRoom::createRoom(std::string fileName, int SCREEN_WIDTH, int SCREEN_HE
 	//writeRoom->createRoom(fileName, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	Room room = createRoomData();
-	room.roomNumber = 0;
 
 	std::ofstream outputFile;
 

@@ -19,6 +19,7 @@
 #include "WriteRoom.h"
 #include "LoadTextures.h"
 #include "StaticStairs.h"
+#include "LevelInfo.h"
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
@@ -107,7 +108,8 @@ void handlePollEvents(sf::RenderWindow *window) {
 	}			  
 }
 
-Room createRoom(std::vector<std::shared_ptr<StaticObject>> &levelStaticObjects,
+Room createRoom(std::string fileName,
+				std::vector<std::shared_ptr<StaticObject>> &levelStaticObjects,
 				std::vector<std::shared_ptr<StaticPlatform>> &levelStaticPlatforms,
 				std::vector<std::shared_ptr<StaticStairs>> &levelStaticStairs,
 				std::vector<std::shared_ptr<EnemyStatic>> &enemiesStatic,
@@ -115,7 +117,7 @@ Room createRoom(std::vector<std::shared_ptr<StaticObject>> &levelStaticObjects,
 				std::vector<std::shared_ptr<Pickup>> &pickups,				
 				std::map<int, sf::Texture> &textures) {
 	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY = 'e', STATIC_PLATFORM = 't', STATIC_STAIRS = 'l', ENEMY_MOVING = 'm', ENEMY_STATIC = 'n', PICK_UP = 'u';
-	std::string fileName = "test.jsb";
+//	std::string fileName = "test.jsb";
 	Room room{};
 	
 	std::shared_ptr<LoadRoom> loadLevel(new LoadRoom);
@@ -161,6 +163,9 @@ int main() {
 	std::string fileName = "test.jsb";
 	std::string texturesFileName = "textures.txt";
 
+	World world;
+	world.fileNames[0] = "test.jsb";
+
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "JSW");
 	sf::Clock clock;
 	window.setFramerateLimit(FPS);
@@ -188,12 +193,12 @@ int main() {
 	std::shared_ptr <Player> player(new Player(SCREEN_WIDTH, SCREEN_HEIGHT, textures[0]));
 
 	// TODO: Only call this if we want to compile. It is only here for testing
-	std::shared_ptr <WriteRoom> writeRoom(new WriteRoom);
-	writeRoom->createRoom(fileName, SCREEN_WIDTH, SCREEN_HEIGHT);
+	//std::shared_ptr <WriteRoom> writeRoom(new WriteRoom);
+	//writeRoom->createRoom(fileName, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// create room
 	Room room{};
-	room = createRoom(levelStaticObjects, levelStaticPlatforms, levelStaticStairs, enemiesStatic, enemiesMoving, pickups, textures);
+	room = createRoom(world.fileNames[currentRoom], levelStaticObjects, levelStaticPlatforms, levelStaticStairs, enemiesStatic, enemiesMoving, pickups, textures);
 
 	// create collision
 	std::shared_ptr <Collision> collision(new Collision());
@@ -201,11 +206,11 @@ int main() {
 	// create static objects collision out of the main loop	as they are not going to move
 	update(levelStaticObjects, collision);
 	update(levelStaticPlatforms, collision);
-	
+		
 	while (window.isOpen()) {
 		handlePollEvents(&window);
 		sf::Time time = clock.getElapsedTime();
-		clock.restart().asSeconds();
+		clock.restart().asSeconds();	   
 
 		update(player, collision, time.asMilliseconds());
 		update(levelStaticStairs, collision, player);
