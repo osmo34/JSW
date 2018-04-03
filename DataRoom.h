@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdint>
 #include <string>
+#include <vector>
+#include <memory>
 
 #pragma pack(push, 2)
 struct RoomData {
@@ -31,3 +33,4 @@ struct World {
 	std::string fileNames[256];
 };
 #pragma pack(pop)
+

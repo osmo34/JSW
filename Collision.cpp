@@ -91,7 +91,8 @@ void Collision::checkCollisionStairs(sf::Vector2f bottom, sf::Vector2f top, std:
 		else if (COLLISION_STAIR_RIGHT_TOP_EXIT) { playerCheckStairs(bottom, top, true, false, isLeft);	}
 	}
 }
-	 
+
+
 // check static blocks
 void Collision::checkCollision(std::function<void(char c, float i)> playerCollision) {
 	for (auto it : staticPlatformPositions) {
@@ -123,4 +124,11 @@ void Collision::checkCollision(std::function<void(char c, float i)> playerCollis
 		}
 		else { playerCollision(NO_COLLISION, NO_CHANGE_GROUND_HEIGHT);	}
 	}
+}
+
+void Collision::clearCollisionData() {
+	staticObjectPositions.clear();
+	staticPlatformPositions.clear();
+	stairs.clear();
+	entityPositions.clear();
 }

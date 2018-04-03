@@ -17,13 +17,22 @@
 #include "DataRoom.h"
 #include "LoadRoom.h"
 #include "WriteRoom.h"
-#include "LoadTextures.h"
+#include "LoadTextFile.h"
 #include "StaticStairs.h"
 #include "LevelInfo.h"
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
 const int FPS = 60;
+
+struct LevelObjects {
+	std::vector<std::shared_ptr<StaticObject>> levelStaticObjects;
+	std::vector<std::shared_ptr<StaticPlatform>> levelStaticPlatforms;
+	std::vector<std::shared_ptr<StaticStairs>> levelStaticStairs;
+	std::vector<std::shared_ptr<EnemyStatic>> enemiesStatic;
+	std::vector<std::shared_ptr<EnemyMoving>> enemiesMoving;
+	std::vector<std::shared_ptr<Pickup>> pickups;
+};
 
 // create object in their vectors
 template <typename T>
@@ -79,7 +88,6 @@ void update(const std::vector<std::shared_ptr<StaticStairs>> &stairs, std::share
 		([&](sf::Vector2f b, sf::Vector2f t, bool c, bool d, bool e) { player->onStairs(b, t, c, d, e); }), it->isStairsLeft());
 	}
 }
-
 // end updates
 
 // DRAWING
@@ -108,16 +116,20 @@ void handlePollEvents(sf::RenderWindow *window) {
 	}			  
 }
 
-Room createRoom(std::string fileName,
-				std::vector<std::shared_ptr<StaticObject>> &levelStaticObjects,
-				std::vector<std::shared_ptr<StaticPlatform>> &levelStaticPlatforms,
-				std::vector<std::shared_ptr<StaticStairs>> &levelStaticStairs,
-				std::vector<std::shared_ptr<EnemyStatic>> &enemiesStatic,
-				std::vector<std::shared_ptr<EnemyMoving>> &enemiesMoving,
-				std::vector<std::shared_ptr<Pickup>> &pickups,				
+// clear out vectors with any world objects	
+void clearList(LevelObjects &levelObjects) {
+	levelObjects.enemiesMoving.clear();
+	levelObjects.enemiesStatic.clear();
+	levelObjects.levelStaticObjects.clear();
+	levelObjects.levelStaticPlatforms.clear();
+	levelObjects.levelStaticStairs.clear();
+	levelObjects.pickups.clear();
+}					
+
+Room createRoom(std::string fileName,							
+				LevelObjects &levelObjects,
 				std::map<int, sf::Texture> &textures) {
 	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY = 'e', STATIC_PLATFORM = 't', STATIC_STAIRS = 'l', ENEMY_MOVING = 'm', ENEMY_STATIC = 'n', PICK_UP = 'u';
-//	std::string fileName = "test.jsb";
 	Room room{};
 	
 	std::shared_ptr<LoadRoom> loadLevel(new LoadRoom);
@@ -129,22 +141,22 @@ Room createRoom(std::string fileName,
 
 		switch (room.roomData[i].objectType) {
 		case STATIC_OBJECT:
-			createObject(levelStaticObjects, room.roomData[i], texture);
+			createObject(levelObjects.levelStaticObjects, room.roomData[i], texture);
 			break;
 		case STATIC_PLATFORM:
-			createObject(levelStaticPlatforms, room.roomData[i], texture);
+			createObject(levelObjects.levelStaticPlatforms, room.roomData[i], texture);
 			break;
 		case STATIC_STAIRS:
-			createObject(levelStaticStairs, room.roomData[i], texture);
+			createObject(levelObjects.levelStaticStairs, room.roomData[i], texture);
 			break;
 		case ENEMY_MOVING:
-			createObject(enemiesMoving, room.roomData[i], texture);
+			createObject(levelObjects.enemiesMoving, room.roomData[i], texture);
 			break;
 		case ENEMY_STATIC:
-			createObject(enemiesStatic, room.roomData[i], texture);
+			createObject(levelObjects.enemiesStatic, room.roomData[i], texture);
 			break;
 		case PICK_UP:
-			createObject(pickups, room.roomData[i], texture);
+			createObject(levelObjects.pickups, room.roomData[i], texture);
 			break;
 		default:
 			std::cout << "error in room data";
@@ -157,55 +169,52 @@ void loadTexture(std::map<int, sf::Texture> &textures, std::string fileName, int
 	sf::Texture texture;
 	if (!texture.loadFromFile(fileName)){ std::cout << "texture load failure - " << fileName ; }
 	textures[id] = texture;	
-}
+}  
 			   
-int main() {
-	std::string fileName = "test.jsb";
+int main() {	
 	std::string texturesFileName = "textures.txt";
-
-	World world;
-	world.fileNames[0] = "test.jsb";
-
+	std::string worldFileName = "world.txt";
+		
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "JSW");
 	sf::Clock clock;
 	window.setFramerateLimit(FPS);
 	window.setVerticalSyncEnabled(true);
 
-	std::vector<std::shared_ptr<StaticObject>> levelStaticObjects;
-	std::vector<std::shared_ptr<StaticPlatform>> levelStaticPlatforms;
-	std::vector<std::shared_ptr<StaticStairs>> levelStaticStairs;
-	std::vector<std::shared_ptr<EnemyStatic>> enemiesStatic;	
-	std::vector<std::shared_ptr<EnemyMoving>> enemiesMoving;
-	std::vector<std::shared_ptr<Pickup>> pickups;
-	std::vector<std::string> textureList;
+	LevelObjects levelObjects{};	
+	std::vector<std::string> worldList;
+	std::vector<std::string> textureList;	
 	std::map<int, sf::Texture> textures;
 
 	// load textures
-	std::shared_ptr <LoadTextures> loadTextures(new LoadTextures(texturesFileName));
-	loadTextures->loadTextures(textureList);
-
+	std::shared_ptr <LoadTextFile> loadTextures(new LoadTextFile(texturesFileName));
+	loadTextures->loadFile(textureList);
+	
 	for (int i = 0; i < textureList.size(); i++) {
 		loadTexture(textures, textureList[i], i);		
 	}
-	// end load textures
+
+	// load world
+	World world;
+	std::shared_ptr <LoadTextFile> loadWorld(new LoadTextFile(worldFileName));
+	loadWorld->loadFile(worldList);
+	
+	for (int i = 0; i < worldList.size(); i++) {
+		world.fileNames[i] = worldList[i];
+	}
 
 	// create player
 	std::shared_ptr <Player> player(new Player(SCREEN_WIDTH, SCREEN_HEIGHT, textures[0]));
 
-	// TODO: Only call this if we want to compile. It is only here for testing
-	//std::shared_ptr <WriteRoom> writeRoom(new WriteRoom);
-	//writeRoom->createRoom(fileName, SCREEN_WIDTH, SCREEN_HEIGHT);
-
 	// create room
 	Room room{};
-	room = createRoom(world.fileNames[currentRoom], levelStaticObjects, levelStaticPlatforms, levelStaticStairs, enemiesStatic, enemiesMoving, pickups, textures);
+	room = createRoom(world.fileNames[currentRoom], levelObjects, textures);
 
 	// create collision
 	std::shared_ptr <Collision> collision(new Collision());
 
 	// create static objects collision out of the main loop	as they are not going to move
-	update(levelStaticObjects, collision);
-	update(levelStaticPlatforms, collision);
+	update(levelObjects.levelStaticObjects, collision);
+	update(levelObjects.levelStaticPlatforms, collision);
 		
 	while (window.isOpen()) {
 		handlePollEvents(&window);
@@ -213,18 +222,26 @@ int main() {
 		clock.restart().asSeconds();	   
 
 		update(player, collision, time.asMilliseconds());
-		update(levelStaticStairs, collision, player);
-		update(enemiesMoving, collision, player, time.asMilliseconds());
-		update(enemiesStatic, collision, player, time.asMilliseconds());		
-		update(pickups, collision, player, time.asMilliseconds());
+		update(levelObjects.levelStaticStairs, collision, player);
+		update(levelObjects.enemiesMoving, collision, player, time.asMilliseconds());
+		update(levelObjects.enemiesStatic, collision, player, time.asMilliseconds());
+		update(levelObjects.pickups, collision, player, time.asMilliseconds());
+
+		/* test to ensure we can clear everything
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+			clearList(levelObjects);
+			collision->clearCollisionData();
+		}		
+		*/
+
 		window.clear();	
 	
-		draw(levelStaticObjects, &window);
-		draw(levelStaticPlatforms, &window);
-		draw(levelStaticStairs, &window);
-		draw(enemiesMoving, &window);
-		draw(enemiesStatic, &window);		
-		draw(pickups, &window);
+		draw(levelObjects.levelStaticObjects, &window);
+		draw(levelObjects.levelStaticPlatforms, &window);
+		draw(levelObjects.levelStaticStairs, &window);
+		draw(levelObjects.enemiesMoving, &window);
+		draw(levelObjects.enemiesStatic, &window);
+		draw(levelObjects.pickups, &window);
 		draw(player, &window);
 		window.display();
 	}
