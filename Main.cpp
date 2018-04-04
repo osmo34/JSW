@@ -6,6 +6,7 @@
 #include <map>
 #include <string>
 #include <memory>
+#include <functional>
 #include <SFML\Graphics.hpp>
 #include "Player.h"
 #include "StaticObject.h"
@@ -38,7 +39,7 @@ struct LevelObjects {
 template <typename T>
 void createObject(std::vector<std::shared_ptr<T>> &t, RoomData &room,
 	const sf::Texture &texture) { 	
-	t.push_back(std::shared_ptr<T>(new T(SCREEN_WIDTH, SCREEN_HEIGHT, texture, room)));	  // room.positionX, room.positionY, objectId, room.speedX, room.speedY
+	t.push_back(std::shared_ptr<T>(new T(SCREEN_WIDTH, SCREEN_HEIGHT, texture, room)));	 
 }
 
 // UPDATES
@@ -117,13 +118,13 @@ void handlePollEvents(sf::RenderWindow *window) {
 }
 
 // clear out vectors with any world objects	
-void clearList(LevelObjects &levelObjects) {
-	levelObjects.enemiesMoving.clear();
-	levelObjects.enemiesStatic.clear();
-	levelObjects.levelStaticObjects.clear();
-	levelObjects.levelStaticPlatforms.clear();
-	levelObjects.levelStaticStairs.clear();
-	levelObjects.pickups.clear();
+void clearRoomObjects(LevelObjects &levelObjects) {
+	clearVector(levelObjects.enemiesMoving);
+	clearVector(levelObjects.enemiesStatic);
+	clearVector(levelObjects.levelStaticObjects);
+	clearVector(levelObjects.levelStaticPlatforms);
+	clearVector(levelObjects.levelStaticStairs);
+	clearVector(levelObjects.pickups);
 }					
 
 Room createRoom(std::string fileName,							
@@ -142,7 +143,7 @@ Room createRoom(std::string fileName,
 		switch (room.roomData[i].objectType) {
 		case STATIC_OBJECT:
 			createObject(levelObjects.levelStaticObjects, room.roomData[i], texture);
-			break;
+break;
 		case STATIC_PLATFORM:
 			createObject(levelObjects.levelStaticPlatforms, room.roomData[i], texture);
 			break;
@@ -162,42 +163,42 @@ Room createRoom(std::string fileName,
 			std::cout << "error in room data";
 		}
 	}
-	return room; 		
+	return room;
 }
 
 void loadTexture(std::map<int, sf::Texture> &textures, std::string fileName, int id) {
 	sf::Texture texture;
-	if (!texture.loadFromFile(fileName)){ std::cout << "texture load failure - " << fileName ; }
-	textures[id] = texture;	
-}  
-			   
-int main() {	
+	if (!texture.loadFromFile(fileName)) { std::cout << "texture load failure - " << fileName; }
+	textures[id] = texture;
+}
+
+int main() {
 	std::string texturesFileName = "textures.txt";
 	std::string worldFileName = "world.txt";
-		
+
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "JSW");
 	sf::Clock clock;
 	window.setFramerateLimit(FPS);
 	window.setVerticalSyncEnabled(true);
 
-	LevelObjects levelObjects{};	
+	LevelObjects levelObjects{};
 	std::vector<std::string> worldList;
-	std::vector<std::string> textureList;	
+	std::vector<std::string> textureList;
 	std::map<int, sf::Texture> textures;
 
 	// load textures
 	std::shared_ptr <LoadTextFile> loadTextures(new LoadTextFile(texturesFileName));
 	loadTextures->loadFile(textureList);
-	
+
 	for (int i = 0; i < textureList.size(); i++) {
-		loadTexture(textures, textureList[i], i);		
+		loadTexture(textures, textureList[i], i);
 	}
 
 	// load world
 	World world;
 	std::shared_ptr <LoadTextFile> loadWorld(new LoadTextFile(worldFileName));
 	loadWorld->loadFile(worldList);
-	
+
 	for (int i = 0; i < worldList.size(); i++) {
 		world.fileNames[i] = worldList[i];
 	}
@@ -208,31 +209,61 @@ int main() {
 	// create room
 	Room room{};
 	room = createRoom(world.fileNames[currentRoom], levelObjects, textures);
+	std::cout << "test " << room.roomId << std::endl;
+	nextRoomRight = room.roomId + 1;
+	nextRoomLeft = room.roomId - 1;
 
 	// create collision
 	std::shared_ptr <Collision> collision(new Collision());
 
-	// create static objects collision out of the main loop	as they are not going to move
-	update(levelObjects.levelStaticObjects, collision);
-	update(levelObjects.levelStaticPlatforms, collision);
-		
+	bool inLevel = true;
+	bool firstLoopComplete = false;
+
 	while (window.isOpen()) {
+
 		handlePollEvents(&window);
 		sf::Time time = clock.getElapsedTime();
-		clock.restart().asSeconds();	   
+		clock.restart().asSeconds();
 
 		update(player, collision, time.asMilliseconds());
-		update(levelObjects.levelStaticStairs, collision, player);
-		update(levelObjects.enemiesMoving, collision, player, time.asMilliseconds());
-		update(levelObjects.enemiesStatic, collision, player, time.asMilliseconds());
-		update(levelObjects.pickups, collision, player, time.asMilliseconds());
 
-		/* test to ensure we can clear everything
+		if (inLevel) {
+			if (!firstLoopComplete) {
+				update(levelObjects.levelStaticObjects, collision);
+				update(levelObjects.levelStaticPlatforms, collision);
+				firstLoopComplete = true;
+			}
+			update(levelObjects.levelStaticStairs, collision, player);
+			update(levelObjects.enemiesMoving, collision, player, time.asMilliseconds());
+			update(levelObjects.enemiesStatic, collision, player, time.asMilliseconds());
+			update(levelObjects.pickups, collision, player, time.asMilliseconds());
+		}
+
+		// TEST CODE for clearing and loading levels
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
-			clearList(levelObjects);
+			clearRoomObjects(levelObjects);
 			collision->clearCollisionData();
-		}		
-		*/
+			inLevel = false;
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::C) && !inLevel) {
+			room = createRoom(world.fileNames[nextRoomRight], levelObjects, textures);
+			nextRoomRight = room.roomId + 1;
+			nextRoomLeft = room.roomId - 1;
+			firstLoopComplete = false;
+			inLevel = true;
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::X) && !inLevel) {
+			room = createRoom(world.fileNames[nextRoomLeft], levelObjects, textures);
+			nextRoomRight = room.roomId + 1;
+			nextRoomLeft = room.roomId - 1;
+			firstLoopComplete = false;
+			inLevel = true;
+		}
+
+		// END test code
+
 
 		window.clear();	
 	
