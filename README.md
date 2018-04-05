@@ -15,13 +15,14 @@ Currently supports: <br>
 Current TODO: <p>
 * <del>Platforms which can be jumped through from the underside and walked on</del> done <br>
 * <del> Stairs </del> done <br>
-* Loading multiple rooms <br>
+* Loading multiple rooms - in progress <br>
 * Ropes <br>
 * improve spritesheets (this wont be done until there is more content!) <br>  
 * Sound support <br>
-* Refactoring main into a game manager <br>
+  * <del> Refactoring main into a game manager </del> done <br>
 * Gameplay logic, e.g. amount of collectables, lives etc. <br>
 * Level Editor - likely written in c# <p>
+* Content!
 <p>
 added second screenshot with stairs support. Not much to see. The blue circles represent enemies
 
