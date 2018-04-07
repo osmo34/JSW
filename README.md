@@ -8,8 +8,8 @@ Currently supports: <br>
 * Collision detection for walls, enemies and collectables <br>
 * Stairs <br>
 * Loading of levels from external file in custom file format (needed for an editor!) <br>
-* Changes levels dynamically
-* Music support
+* Changes levels dynamically <br>
+* Music support <br>
 * Textures loaded externally and applied based on the file format <br>
 * Spritesheets (currently a bit hacky and restricted) <br>  
 <p>
