@@ -78,8 +78,8 @@ void GameManager::initializeGame() {
 	collision = std::shared_ptr <Collision>(new Collision());
 
 	// play music
-	musicPlayer = std::shared_ptr<MusicPlayer>(new MusicPlayer());
-	musicPlayer->playMusic("Moonlight_Sonata.ogg");
+	mediaPlayer = std::unique_ptr<MediaPlayer>(new MediaPlayer(20));
+	mediaPlayer->playMusic("Moonlight_Sonata.ogg");
 }
 
 void GameManager::checkLevelChange() {
@@ -141,6 +141,3 @@ void GameManager::draw(sf::RenderWindow *window) {
 	draw(levelObjects.pickups, window);
 	draw(player, window);
 }
-
-
-

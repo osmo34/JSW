@@ -26,7 +26,7 @@ int main() {
 	window.setFramerateLimit(FPS);
 	window.setVerticalSyncEnabled(true);
 
-	std::shared_ptr <GameManager> gameManager(new GameManager(SCREEN_WIDTH, SCREEN_HEIGHT));
+	std::unique_ptr <GameManager> gameManager(new GameManager(SCREEN_WIDTH, SCREEN_HEIGHT));
 	gameManager->initializeGame();
 	
 	while (window.isOpen()) {		
