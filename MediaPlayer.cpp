@@ -13,9 +13,9 @@ void MediaPlayer::stopMusic() {
 	music.stop();
 }																										 
 
-void MediaPlayer::playSoundEffect(std::string soundEffect) {
+void MediaPlayer::playSoundEffect(std::string soundEffect, float volume) {
 	if (!buffer.loadFromFile(soundEffect)) { std::cout << soundEffect << " failed to load" << std::endl;}
-	sf::Sound sound;
 	sound.setBuffer(buffer);
+	sound.setVolume(volume);
 	sound.play();
 }

@@ -2,6 +2,7 @@
 #include "Sprite.h"
 #include "PlayerInput.h"
 #include "PlayerState.h"
+#include "MediaPlayer.h"
 #include <cmath>
 
 #define PI 3.141
@@ -29,6 +30,7 @@ private:
 	float currentHeight;
 	const float JUMP_SPEED = 0.1f;
 	const float JUMP_HEIGHT = 100.0f;
+	bool landed = true;
 	float currentSpeed;
 	float groundHeight;
 	float groundHeightOld;
@@ -49,7 +51,7 @@ private:
 	float horiztonalSpeed = 1.0f; 
 	bool topStairs = false;	
 	float calculateVerticalSpeed(float distance, float angle);
-	void updateStairs(bool &stairs, bool &stairsBottom, bool &stairsTop, sf::Vector2f bottom, sf::Vector2f top, float vs);
+	void updateStairs(bool &stairs, bool &stairsBottom, bool &stairsTop, sf::Vector2f bottom, sf::Vector2f top, float vs);	
 
 public:
 	const char objectId = 'p';

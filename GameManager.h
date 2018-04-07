@@ -115,6 +115,8 @@ private:
 	void clearRoomObjects(LevelObjects &levelObjects);
 	Room createRoom(std::string fileName, LevelObjects &levelObjects, std::map<int, sf::Texture> &textures);
 	void loadTexture(std::map<int, sf::Texture> &textures, std::string fileName, int id);
+	void checkLevelChange();
+	void checkSoundEffects();
 	
 	// member variables
 	const std::string TEXTURES_FILE_NAME = "textures.txt";
@@ -135,7 +137,12 @@ private:
 	bool isFirstRun = true;
 	bool inLevel = true;
 	bool firstLoopComplete = false;
-	void checkLevelChange();
+	int musicVolume = 10;
+	int soundEffectVolume = 100;
+
 	void changeLevel(int nextRoom);
+	bool playedJumpSound = false;
+	bool playedDeadSound = false;
+	bool playedPickupSound = false;
 };
 

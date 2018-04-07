@@ -24,15 +24,14 @@ void Player::update(float dt) {
 	m_currentDirection = input->update(dt);
 	checkMovement(dt);
 	checkScreenEdge();
-	checkState();
-	//state->updateState(NONE);
+	checkState();	
 	animation->update(dt);
 
 	if (isJumping) {
-		jump(dt, currentSpeed);	
+		jump(dt, currentSpeed);
 		onStairsLeft = false;
 		onStairsRight = false;
-		topStairs = false;
+		topStairs = false;		
 	}
 
 	currentHeight = m_sprite.getPosition().y;
@@ -58,7 +57,8 @@ void Player::checkMovement(float dt) {
 		}
 		break;
 	case JUMP:		
-		isJumping = true;
+		isJumping = true; 
+		state->updateState(JUMP);
 		animation->updateAnimation(dt, m_sourceRect, &m_sprite);
 		break;
 	case STATIONARY:
@@ -89,6 +89,7 @@ void Player::moveHorizontal(float dt, float speed) {
 
 void Player::jump(float dt, float speed) {	
 
+	landed = false;
 	if (!isMoving) {
 		if (!isAtMaxJumpHeight) {
 			m_sprite.move(sf::Vector2f(0.0, (-JUMP_SPEED * m_grav) * dt));
@@ -125,7 +126,8 @@ void Player::fall(const float dt) {
 	}
 }
 
-void Player::fallCheck() {	
+void Player::fallCheck() {
+	const char NONE = 'n';
 	if (m_sprite.getPosition().y <= maxJumpHeight) {		
 		m_grav = GRAVITY;
 	}
@@ -136,6 +138,11 @@ void Player::fallCheck() {
 		m_grav = GRAVITY;
 		isAtMaxJumpHeight = false;
 		isJumping = false;
+		// Related to sound effects only at this time (prevents replaying, odd level changing behaviour)
+		if (!landed) {
+			state->updateState(NONE);
+			landed = true;
+		}
 	}
 }
 
@@ -170,7 +177,6 @@ void Player::collision(char c, float gh) {
 		if (!onStairsLeft &&!onStairsRight) {
 			collideLeft = false;
 			collideRight = false;
-
 			if (topStairs) {
 				updateGroundHeight(currentHeight);
 				m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, currentHeight));
@@ -231,8 +237,7 @@ void Player::collisionEntity(bool isHarmful) {
 	(isHarmful) ? state->updateState(DEAD) : state->updateState(PICK_UP);
 }
   
-void Player::checkScreenEdge()
-{
+void Player::checkScreenEdge() {
 	const char LEFT = 'l', RIGHT = 'r';
 	if (m_sprite.getPosition().x < 0.0) {
 		state->updateState(LEFT);

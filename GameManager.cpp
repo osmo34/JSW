@@ -16,7 +16,7 @@ Room GameManager::createRoom(std::string fileName, LevelObjects & levelObjects, 
 	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY = 'e', STATIC_PLATFORM = 't', STATIC_STAIRS = 'l', ENEMY_MOVING = 'm', ENEMY_STATIC = 'n', PICK_UP = 'u';
 	Room room{};
 
-	std::shared_ptr<LoadRoom> loadLevel(new LoadRoom);
+	std::unique_ptr<LoadRoom> loadLevel(new LoadRoom);
 	room = loadLevel->loadRoom(fileName);
 
 	for (int i = 0; i < room.numObjects; i++) {
@@ -57,14 +57,14 @@ void GameManager::loadTexture(std::map<int, sf::Texture>& textures, std::string 
 
 void GameManager::initializeGame() {
 	// load textures
-	loadTextures = std::shared_ptr <LoadTextFile>(new LoadTextFile(TEXTURES_FILE_NAME));																					  
+	loadTextures = std::unique_ptr <LoadTextFile>(new LoadTextFile(TEXTURES_FILE_NAME));																					  
 	loadTextures->loadFile(textureList);
 	
 	for (int i = 0; i < textureList.size(); i++) {
 		loadTexture(textures, textureList[i], i);
 	}
 	// load world
-	loadWorld = std::shared_ptr <LoadTextFile>(new LoadTextFile(WORLD_FILE_NAME));
+	loadWorld = std::unique_ptr <LoadTextFile>(new LoadTextFile(WORLD_FILE_NAME));
 	loadWorld->loadFile(worldList);
 
 	for (int i = 0; i < worldList.size(); i++) {
@@ -78,7 +78,7 @@ void GameManager::initializeGame() {
 	collision = std::shared_ptr <Collision>(new Collision());
 
 	// play music
-	mediaPlayer = std::unique_ptr<MediaPlayer>(new MediaPlayer(20));
+	mediaPlayer = std::unique_ptr<MediaPlayer>(new MediaPlayer(musicVolume));	
 	mediaPlayer->playMusic("Moonlight_Sonata.ogg");
 }
 
@@ -87,12 +87,41 @@ void GameManager::checkLevelChange() {
 	const char LEFT = 'l', RIGHT = 'r';
 	switch (playerState) {
 	case LEFT:
-		changeLevel(nextRoomLeft);
+		changeLevel(nextRoomLeft);		
 		break;
 	case RIGHT:
 		changeLevel(nextRoomRight);
+		break;		  
+	default:		
+		break;
+	}
+}
+
+void GameManager::checkSoundEffects() {
+	char playerState = player->externalCheckState();
+	const char JUMP = 'j', DEAD = 'd', PICK_UP = 'u';
+	auto playSound = [&](std::string sound, bool &b, int volume) { mediaPlayer->playSoundEffect(sound, volume); b = true;  };
+
+	switch (playerState) {
+	case JUMP:
+		if (!playedJumpSound) {
+			playSound("126416__cabeeno-rossley__jump.wav", playedJumpSound, soundEffectVolume);
+		}
+		break;
+	case DEAD:
+		if (!playedDeadSound) {
+			playSound("126416__cabeeno-rossley__jump.wav", playedDeadSound, soundEffectVolume);
+		}
+		break;
+	case PICK_UP:
+		if (!playedPickupSound) {
+			playSound("126416__cabeeno-rossley__jump.wav", playedPickupSound, soundEffectVolume);
+		}
 		break;
 	default:
+		playedJumpSound = false;
+		playedDeadSound = false;
+		playedPickupSound = false;
 		break;
 	}
 }
@@ -130,6 +159,7 @@ void GameManager::update(float dt) {
 		update(levelObjects.pickups, collision, player, dt);
 	}
 	checkLevelChange();
+	checkSoundEffects();
 }
 
 void GameManager::draw(sf::RenderWindow *window) {
