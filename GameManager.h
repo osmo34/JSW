@@ -18,6 +18,7 @@
 #include "LoadTextFile.h"
 #include "StaticStairs.h"
 #include "LevelInfo.h"
+#include "MusicPlayer.h"
 
 struct LevelObjects {
 	std::vector<std::shared_ptr<StaticObject>> levelStaticObjects;
@@ -130,8 +131,11 @@ private:
 	std::shared_ptr <LoadTextFile> loadWorld = nullptr;
 	std::shared_ptr <Player> player = nullptr;
 	std::shared_ptr <Collision> collision = nullptr;
+	std::shared_ptr <MusicPlayer> musicPlayer = nullptr;
 	bool isFirstRun = true;
 	bool inLevel = true;
 	bool firstLoopComplete = false;
+	void checkLevelChange();
+	void changeLevel(int nextRoom);
 };
 

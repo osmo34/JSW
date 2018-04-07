@@ -63,7 +63,7 @@ void GameManager::initializeGame() {
 	for (int i = 0; i < textureList.size(); i++) {
 		loadTexture(textures, textureList[i], i);
 	}
-
+	// load world
 	loadWorld = std::shared_ptr <LoadTextFile>(new LoadTextFile(WORLD_FILE_NAME));
 	loadWorld->loadFile(worldList);
 
@@ -75,10 +75,41 @@ void GameManager::initializeGame() {
 	player = std::shared_ptr <Player>(new Player(m_screenWidth, m_screenHeight, textures[0]));
 
 	// create collision
-	collision = std::shared_ptr <Collision>(new Collision());				
+	collision = std::shared_ptr <Collision>(new Collision());
+
+	// play music
+	musicPlayer = std::shared_ptr<MusicPlayer>(new MusicPlayer());
+	musicPlayer->playMusic("Moonlight_Sonata.ogg");
 }
 
-void GameManager::update(float dt) {
+void GameManager::checkLevelChange() {
+	char playerState = player->externalCheckState();
+	const char LEFT = 'l', RIGHT = 'r';
+	switch (playerState) {
+	case LEFT:
+		changeLevel(nextRoomLeft);
+		break;
+	case RIGHT:
+		changeLevel(nextRoomRight);
+		break;
+	default:
+		break;
+	}
+}
+
+// TODO: Will likely require an overiden method for top/bottom
+void GameManager::changeLevel(int nextRoom) {
+	clearRoomObjects(levelObjects);
+	collision->clearCollisionData();
+	room = createRoom(world.fileNames[nextRoom], levelObjects, textures);
+	nextRoomRight = room.roomId + 1;
+	nextRoomLeft = room.roomId - 1;
+	firstLoopComplete = false;
+	inLevel = true;
+	player->externalResetState();
+}
+
+void GameManager::update(float dt) { 
 	update(player, collision, dt);
 	if (isFirstRun) {
 		room = createRoom(world.fileNames[currentRoom], levelObjects, textures);
@@ -98,31 +129,7 @@ void GameManager::update(float dt) {
 		update(levelObjects.enemiesStatic, collision, player, dt);
 		update(levelObjects.pickups, collision, player, dt);
 	}
-
-	// TEST CODE for clearing and loading levels - 
-	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
-	//clearRoomObjects(levelObjects);
-	//collision->clearCollisionData();
-	//inLevel = false;
-	//}
-
-	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::C) && !inLevel) {
-	//room = createRoom(world.fileNames[nextRoomRight], levelObjects, textures);
-	//nextRoomRight = room.roomId + 1;
-	//nextRoomLeft = room.roomId - 1;
-	//firstLoopComplete = false;
-	//inLevel = true;
-	//}
-
-	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::X) && !inLevel) {
-	//room = createRoom(world.fileNames[nextRoomLeft], levelObjects, textures);
-	//nextRoomRight = room.roomId + 1;
-	//nextRoomLeft = room.roomId - 1;
-	//firstLoopComplete = false;
-	//inLevel = true;
-	//}
-
-	// END test code
+	checkLevelChange();
 }
 
 void GameManager::draw(sf::RenderWindow *window) {

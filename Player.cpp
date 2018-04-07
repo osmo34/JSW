@@ -23,8 +23,9 @@ void Player::update(float dt) {
 	deltaTime = dt;
 	m_currentDirection = input->update(dt);
 	checkMovement(dt);
+	checkScreenEdge();
 	checkState();
-	state->updateState(NONE);
+	//state->updateState(NONE);
 	animation->update(dt);
 
 	if (isJumping) {
@@ -201,16 +202,24 @@ void Player::updateGroundHeight(float gh) {
 }
 
 void Player::checkState() {
-	const char DEAD = 'd', PICK_UP = 'u', NONE = 'n';
+	const char DEAD = 'd', PICK_UP = 'u', NONE = 'n', LEFT = 'l', RIGHT = 'r';
 	char c = state->getState();
 
 	switch (c) {
 	case DEAD:
 		std::cout << "dead" << std::endl;
 		setStartPosition();
+		state->updateState(NONE);
 		break;
 	case PICK_UP:
 		std::cout << "pick up" << std::endl;
+		state->updateState(NONE);
+		break;
+	case LEFT:
+		m_sprite.setPosition(sf::Vector2f(m_screenWidth, m_sprite.getPosition().y));
+		break;
+	case RIGHT:
+		m_sprite.setPosition(sf::Vector2f(0, m_sprite.getPosition().y));
 		break;
 	case NONE:
 	default:
@@ -221,6 +230,18 @@ void Player::checkState() {
 void Player::collisionEntity(bool isHarmful) {	
 	(isHarmful) ? state->updateState(DEAD) : state->updateState(PICK_UP);
 }
+  
+void Player::checkScreenEdge()
+{
+	const char LEFT = 'l', RIGHT = 'r';
+	if (m_sprite.getPosition().x < 0.0) {
+		state->updateState(LEFT);
+	}
+	else if (m_sprite.getPosition().x > m_screenWidth) {
+		state->updateState(RIGHT);
+	}
+}
+
  
 void Player::checkStairs() {
 	const float pixelOffset = 6.0f;
@@ -275,6 +296,15 @@ void Player::onStairs(sf::Vector2f bottom, sf::Vector2f top, bool onStairsBottom
 	(isStairsLeft) ? 
 		updateStairs(onStairsLeft, onStairsBottom, onStairsTop, bottom, top, calculateVerticalSpeed(distance, std::sin(angle))) : 
 		updateStairs(onStairsRight, onStairsBottom, onStairsTop, bottom, top, calculateVerticalSpeed(distance, std::cos(angle)));	
+}
+
+char Player::externalCheckState() {
+	return state->getState();
+}
+
+void Player::externalResetState()
+{
+	state->updateState(NONE);
 }
 
 

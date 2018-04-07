@@ -9,13 +9,13 @@
 class Player : public Sprite
 {
 private:
-
 	void checkMovement(const float dt);
 	void moveHorizontal(const float dt, const float speed);
 	void jump(const float dt, const float speed);
 	void fall(const float dt);
 	void fallCheck();
 	void checkState();
+	void checkScreenEdge();
 
 	std::unique_ptr <PlayerInput> input = nullptr;
 	std::unique_ptr <PlayerState> state = nullptr;
@@ -61,5 +61,7 @@ public:
 	void updateGroundHeight(float gh);
 	void collisionEntity(bool isHarmful);	
 	void onStairs(sf::Vector2f bottom, sf::Vector2f top, bool onStairsBottom, bool onStairsTop, bool isStairsLeft);
+	char externalCheckState();
+	void externalResetState();
 };
 
