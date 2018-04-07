@@ -9,7 +9,7 @@ Currently supports: <br>
 * Stairs <br>
 * Loading of levels from external file in custom file format (needed for an editor!) <br>
 * Changes levels dynamically <br>
-* Music support <br>
+* Music & sound effect support <br>
 * Textures loaded externally and applied based on the file format <br>
 * Spritesheets (currently a bit hacky and restricted) <br>  
 <p>
@@ -20,7 +20,7 @@ Current TODO: <p>
 * <del> Loading multiple rooms </del> done (although only left and right at this current time) <br>
 * Ropes <br>
 * improve spritesheets (this wont be done until there is more content!) <br>  
-* Sound support - Partially done, music player is implemented<br>
+* <del> Sound support </del> done <br>
 * <del> Refactoring main into a game manager </del> done <br>
 * Gameplay logic, e.g. amount of collectables, lives etc. <br>
 * Level Editor - likely written in c# <p>
