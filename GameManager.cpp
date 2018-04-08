@@ -43,7 +43,8 @@ Room GameManager::createRoom(std::string fileName, LevelObjects & levelObjects, 
 			createObject(levelObjects.pickups, room.roomData[i], texture);
 			break;
 		default:
-			std::cout << "error in room data";
+			//std::cout << "error in room data" << std::endl;
+			break;
 		}
 	}
 	return room;
@@ -56,6 +57,11 @@ void GameManager::loadTexture(std::map<int, sf::Texture>& textures, std::string 
 }
 
 void GameManager::initializeGame() {
+	//set up title screen
+	sf::Texture titleTexture;
+	if (!titleTexture.loadFromFile("title.png")) {	std::cout << "error"; }
+	titleScreen = std::unique_ptr <TitleScreen>(new TitleScreen(m_screenWidth, m_screenHeight, titleTexture));
+
 	// load textures
 	loadTextures = std::unique_ptr <LoadTextFile>(new LoadTextFile(TEXTURES_FILE_NAME));																					  
 	loadTextures->loadFile(textureList);
@@ -138,36 +144,60 @@ void GameManager::changeLevel(int nextRoom) {
 	player->externalResetState();
 }
 
-void GameManager::update(float dt) { 
-	update(player, collision, dt);
-	if (isFirstRun) {
-		room = createRoom(world.fileNames[currentRoom], levelObjects, textures);
-		nextRoomRight = room.roomId + 1;
-		nextRoomLeft = room.roomId - 1;
-		isFirstRun = false;
-	}
-
-	if (inLevel) {
-		if (!firstLoopComplete) {
-			update(levelObjects.levelStaticObjects, collision);
-			update(levelObjects.levelStaticPlatforms, collision);
-			firstLoopComplete = true;
+void GameManager::update(float dt) {
+	switch (game) {
+	case Game::TITLE_SCREEN:
+		titleScreen->update(dt);
+		if (!titleScreen->getTitleScreenStatus()) {
+			game = Game::GAME;
+			break;
 		}
-		update(levelObjects.levelStaticStairs, collision, player);
-		update(levelObjects.enemiesMoving, collision, player, dt);
-		update(levelObjects.enemiesStatic, collision, player, dt);
-		update(levelObjects.pickups, collision, player, dt);
-	}
-	checkLevelChange();
-	checkSoundEffects();
+		break;
+	case Game::GAME:
+		update(player, collision, dt);
+		if (isFirstRun) {
+			room = createRoom(world.fileNames[currentRoom], levelObjects, textures);
+			nextRoomRight = room.roomId + 1;
+			nextRoomLeft = room.roomId - 1;
+			isFirstRun = false;
+		}
+
+		if (inLevel) {
+			if (!firstLoopComplete) {
+				update(levelObjects.levelStaticObjects, collision);
+				update(levelObjects.levelStaticPlatforms, collision);
+				firstLoopComplete = true;
+			}
+			update(levelObjects.levelStaticStairs, collision, player);
+			update(levelObjects.enemiesMoving, collision, player, dt);
+			update(levelObjects.enemiesStatic, collision, player, dt);
+			update(levelObjects.pickups, collision, player, dt);
+		}
+		checkLevelChange();
+		checkSoundEffects();
+		break;
+	case Game::DEAD:
+		break;
+	} 	
 }
 
 void GameManager::draw(sf::RenderWindow *window) {
-	draw(levelObjects.levelStaticObjects, window);
-	draw(levelObjects.levelStaticPlatforms, window);
-	draw(levelObjects.levelStaticStairs, window);
-	draw(levelObjects.enemiesMoving, window);
-	draw(levelObjects.enemiesStatic, window);
-	draw(levelObjects.pickups, window);
-	draw(player, window);
+
+	switch (game) {
+
+	case Game::TITLE_SCREEN:
+		titleScreen->draw(window);
+		break;
+	case Game::GAME:
+		draw(levelObjects.levelStaticObjects, window);
+		draw(levelObjects.levelStaticPlatforms, window);
+		draw(levelObjects.levelStaticStairs, window);
+		draw(levelObjects.enemiesMoving, window);
+		draw(levelObjects.enemiesStatic, window);
+		draw(levelObjects.pickups, window);
+		draw(player, window);
+		break;
+	case Game::DEAD:
+		break;
+	}
 }

@@ -7,8 +7,7 @@
 
 class Sprite {
 private:
-	const int TEXTURE_SIZE_X = 32;
-	const int TEXTURE_SIZE_Y = 32;
+
 
 public:
 	Sprite();
@@ -31,6 +30,7 @@ protected:
 	int m_screenHeight;
 	int m_screenWidth;
 	void flipSprite(bool isFlipLeft);
-
+	int TEXTURE_SIZE_X = 32;
+	int TEXTURE_SIZE_Y = 32;
 
 };

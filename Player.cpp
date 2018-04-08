@@ -36,6 +36,7 @@ void Player::update(float dt) {
 
 	currentHeight = m_sprite.getPosition().y;
 	checkStairs();
+		
 }
 
 void Player::checkMovement(float dt) {

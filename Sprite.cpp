@@ -1,7 +1,5 @@
 #include "Sprite.h"
 
-
-
 Sprite::Sprite() = default;
 
 Sprite::Sprite(int screenWidth, int screenHeight, sf::Texture texture)
@@ -40,7 +38,6 @@ sf::Sprite Sprite::createSprite() {
 	m_sourceRect = createSourceRect();
 	sf::Sprite sprite(m_texture, m_sourceRect);
 	sprite.setTextureRect(m_sourceRect);
-
 	return sprite;
 }
 

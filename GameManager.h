@@ -19,6 +19,7 @@
 #include "StaticStairs.h"
 #include "LevelInfo.h"
 #include "MediaPlayer.h"
+#include "TitleScreen.h"
 
 struct LevelObjects {
 	std::vector<std::shared_ptr<StaticObject>> levelStaticObjects;
@@ -110,6 +111,9 @@ private:
 		}
 	}
 	// ends drawing
+
+	enum class Game { TITLE_SCREEN, GAME, DEAD };
+	Game game = Game::TITLE_SCREEN;
 	
 	// private methods
 	void clearRoomObjects(LevelObjects &levelObjects);
@@ -134,6 +138,7 @@ private:
 	std::shared_ptr <Player> player = nullptr;
 	std::shared_ptr <Collision> collision = nullptr;
 	std::unique_ptr <MediaPlayer> mediaPlayer = nullptr;
+	std::unique_ptr <TitleScreen> titleScreen = nullptr;
 	bool isFirstRun = true;
 	bool inLevel = true;
 	bool firstLoopComplete = false;
