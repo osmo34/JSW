@@ -3,8 +3,7 @@
 Player::Player(int screenWidth, int screenHeight, sf::Texture texture) :
 	Sprite (screenWidth, screenHeight, texture)	{
 	input = std::unique_ptr<PlayerInput>(new PlayerInput());
-	state = std::unique_ptr<PlayerState>(new PlayerState());
-	groundHeight = m_screenHeight - 50.0f;
+	state = std::unique_ptr<PlayerState>(new PlayerState());	
 	groundHeightOld = groundHeight;
 	maxJumpHeight = groundHeight - JUMP_HEIGHT;
 	maxJumpHeightOld = maxJumpHeight;
@@ -26,7 +25,7 @@ void Player::update(float dt) {
 	checkScreenEdge();
 	checkState();	
 	animation->update(dt);
-
+	
 	if (isJumping) {
 		jump(dt, currentSpeed);
 		onStairsLeft = false;
@@ -36,6 +35,8 @@ void Player::update(float dt) {
 
 	currentHeight = m_sprite.getPosition().y;
 	checkStairs();
+
+	std::cout << groundHeight << std::endl;
 		
 }
 
@@ -97,8 +98,8 @@ void Player::jump(float dt, float speed) {
 			m_grav -= GRAVITY_CALCULATION;
 		}
 		else {
-			m_sprite.move(sf::Vector2f(0.0, (JUMP_SPEED * m_grav) * dt));
-			m_grav += GRAVITY_CALCULATION;
+			//m_sprite.move(sf::Vector2f(0.0, (JUMP_SPEED * m_grav) * dt));
+			//m_grav += GRAVITY_CALCULATION;
 		}  
 	}
 	
@@ -108,21 +109,20 @@ void Player::jump(float dt, float speed) {
 			m_grav -= GRAVITY_CALCULATION;
 		}
 		else {
-			m_sprite.move(sf::Vector2f(speed * dt, (JUMP_SPEED * m_grav) * dt));
-			m_grav += GRAVITY_CALCULATION;
+			//m_sprite.move(sf::Vector2f(speed * dt, (JUMP_SPEED * m_grav) * dt));
+			//m_grav += GRAVITY_CALCULATION;
 		}
 	}
 	fallCheck(); 
 } 
 
 void Player::fall(const float dt) {
-		// divide by 10 to stop near instant falling
 		if (!isMoving) {
-			m_sprite.move(sf::Vector2f(0.0, (JUMP_SPEED * m_grav / 10) * dt));
+			m_sprite.move(sf::Vector2f(0.0, (JUMP_SPEED * m_grav) * dt));
 			m_grav += GRAVITY_CALCULATION;
 		}
 		else {
-			m_sprite.move(sf::Vector2f(currentSpeed, (JUMP_SPEED * m_grav / 10) * dt));
+			m_sprite.move(sf::Vector2f(currentSpeed, (JUMP_SPEED * m_grav) * dt));
 			m_grav += GRAVITY_CALCULATION;
 	}
 }
@@ -133,7 +133,7 @@ void Player::fallCheck() {
 		m_grav = GRAVITY;
 	}
 
-	if (m_sprite.getPosition().y >= groundHeight) {
+	if (m_sprite.getPosition().y >= groundHeight) {		
 		m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, groundHeight));				
 		updateGroundHeight(0.0);
 		m_grav = GRAVITY;
@@ -167,7 +167,7 @@ void Player::collision(char c, float gh) {
 		collideLeft = false;
 		collideRight = false;		
 		updateGroundHeight(gh);
-		m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, gh));
+		m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, gh));		
 		break;
 	case BOTTOM:
 		isJumping = false;		

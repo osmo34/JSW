@@ -32,7 +32,7 @@ private:
 	const float JUMP_HEIGHT = 100.0f;
 	bool landed = true;
 	float currentSpeed;
-	float groundHeight;
+	float groundHeight = 606.0f;
 	float groundHeightOld;
 	float maxJumpHeight;
 	float maxJumpHeightOld;

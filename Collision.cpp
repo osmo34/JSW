@@ -132,12 +132,26 @@ void Collision::checkCollision(std::function<void(char c, float i)> playerCollis
 	}
 
 	for (auto it : staticPlatformPositions) {
-		if (COLLISION_TOP) {
+		float blockCentreX = it.left + 16;
+		float playerCentreX = playerLeft + 16;	
+		float blockCentreY = it.top - 16;
+		float playerCentreY = playerBottom - 16;
+		float distanceX = playerCentreX - blockCentreX;
+		float distanceY = playerCentreY - blockCentreY;
+
+		if (distanceX < -32 || distanceX > 32) {			
+			continue;
+		}			
+		else if (COLLISION_TOP) {
 			playerCollision(TOP, it.top);
-			return;
+			continue;
+		}	
+		else {
+			playerCollision(NO_COLLISION, NO_CHANGE_GROUND_HEIGHT);
+			continue;
 		}
 	}	
-	//playerCollision(NO_COLLISION, NO_CHANGE_GROUND_HEIGHT); // TODO: Further testing required
+	
 }
 
 void Collision::clearCollisionData() {
