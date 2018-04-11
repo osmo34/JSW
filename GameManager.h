@@ -28,24 +28,29 @@ struct LevelObjects {
 	std::vector<std::shared_ptr<EnemyStatic>> enemiesStatic;
 	std::vector<std::shared_ptr<EnemyMoving>> enemiesMoving;
 	std::vector<std::shared_ptr<Pickup>> pickups;
+	std::shared_ptr<Player> player;
+	std::shared_ptr<Collision> collision;
+	std::shared_ptr<TitleScreen> titleScreen;
+	std::map<int, sf::Texture> textures;
+	Room room;
+	World world;
 };
 
-class GameManager
-{
-public:
-	GameManager(int screenWidth, int screenHeight);
-	~GameManager();
-	void initializeGame();
-	void update(float dt);
-	void draw(sf::RenderWindow *window);
+enum class Game { TITLE_SCREEN, GAME, DEAD };
 
+class GameUpdates {
+					 
+public:
+	GameUpdates(int screenWidth, int screenHeight);
+	~GameUpdates();
+	void updateGame(float dt, LevelObjects &levelObjects, Game &game);
 private:
+
 	// Templates for creating objects, updates and drawing:
-	
 	template <typename T>
 	void createObject(std::vector<std::shared_ptr<T>> &t, RoomData &room,
 		const sf::Texture &texture) {
-		t.push_back(std::shared_ptr<T>(new T(m_screenWidth, m_screenHeight, texture, room)));
+		t.push_back(std::shared_ptr<T>(new T(screenWidth, screenHeight, texture, room)));
 	}
 
 	// UPDATES
@@ -97,6 +102,28 @@ private:
 	}
 	// end updates
 
+	LevelObjects levelObjects{};
+	Room createRoom(std::string fileName, LevelObjects &levelObjects);
+	void checkLevelChange(LevelObjects &levelObjects);
+	void changeLevel(int nextRoom, LevelObjects &levelObjects);
+	void clearRoomObjects(LevelObjects &levelObjects);
+	bool isFirstRun;
+	bool inLevel; // TODO: ?? Check this
+	bool firstLoopComplete;
+	int screenWidth;
+	int screenHeight;
+};
+
+class GameManager
+{
+public:
+	GameManager(int screenWidth, int screenHeight);
+	~GameManager();
+	void initializeGame();
+	void update(float dt);
+	void draw(sf::RenderWindow *window);
+
+private:
 	// DRAWING
 	// single objects
 	template <typename T>
@@ -110,16 +137,12 @@ private:
 			it->draw(window);
 		}
 	}
-	// ends drawing
-
-	enum class Game { TITLE_SCREEN, GAME, DEAD };
+	// ends drawing	 
+	
 	Game game = Game::TITLE_SCREEN;
 	
-	// private methods
-	void clearRoomObjects(LevelObjects &levelObjects);
-	Room createRoom(std::string fileName, LevelObjects &levelObjects, std::map<int, sf::Texture> &textures);
-	void loadTexture(std::map<int, sf::Texture> &textures, std::string fileName, int id);
-	void checkLevelChange();
+	// private methods	
+	void loadTexture(std::map<int, sf::Texture> &textures, std::string fileName, int id); 
 	void checkSoundEffects();
 	
 	// member variables
@@ -130,22 +153,16 @@ private:
 	LevelObjects levelObjects{};
 	std::vector<std::string> worldList;
 	std::vector<std::string> textureList;
-	std::map<int, sf::Texture> textures;
 	std::shared_ptr <LoadTextFile> loadTextures = nullptr;
-	World world{};
-	Room room{};
 	std::shared_ptr <LoadTextFile> loadWorld = nullptr;
-	std::shared_ptr <Player> player = nullptr;
-	std::shared_ptr <Collision> collision = nullptr;
 	std::unique_ptr <MediaPlayer> mediaPlayer = nullptr;
-	std::unique_ptr <TitleScreen> titleScreen = nullptr;
+	std::unique_ptr <GameUpdates> gameUpdates = nullptr;
 	bool isFirstRun = true;
 	bool inLevel = true;
 	bool firstLoopComplete = false;
 	int musicVolume = 10;
 	int soundEffectVolume = 100;
 
-	void changeLevel(int nextRoom);
 	bool playedJumpSound = false;
 	bool playedDeadSound = false;
 	bool playedPickupSound = false;

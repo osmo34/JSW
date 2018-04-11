@@ -1,5 +1,7 @@
 #include "Player.h"
 
+//TODO: this is getting bloated - break up into smaller classes
+
 Player::Player(int screenWidth, int screenHeight, sf::Texture texture) :
 	Sprite (screenWidth, screenHeight, texture)	{
 	input = std::unique_ptr<PlayerInput>(new PlayerInput());
