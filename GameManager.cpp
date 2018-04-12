@@ -1,5 +1,4 @@
 #include "GameManager.h"
-// TODO: Split into smaller classes still - avoid bloat						   
 
 GameManager::GameManager(int screenWidth, int screenHeight) : m_screenWidth(screenWidth), m_screenHeight(screenHeight){}
 GameManager::~GameManager(){}
@@ -13,7 +12,7 @@ void GameManager::loadTexture(std::map<int, sf::Texture>& textures, std::string 
 void GameManager::initializeGame() {
 	//set up title screen
 	sf::Texture titleTexture;
-	if (!titleTexture.loadFromFile("title.png")) {	std::cout << "error"; }
+	if (!titleTexture.loadFromFile("title.png")) {	std::cout << "error with title screen image file"; }
 	levelObjects.titleScreen = std::unique_ptr <TitleScreen>(new TitleScreen(m_screenWidth, m_screenHeight, titleTexture));
 
 	// load textures
@@ -38,65 +37,22 @@ void GameManager::initializeGame() {
 	levelObjects.collision = std::shared_ptr <Collision>(new Collision());
 
 	// play music
-	mediaPlayer = std::unique_ptr<MediaPlayer>(new MediaPlayer(musicVolume));	
-	mediaPlayer->playMusic("Moonlight_Sonata.ogg");
+	gameSounds = std::unique_ptr<GameSounds>(new GameSounds(musicVolume, soundEffectVolume));
+	gameSounds->playMusic("Moonlight_Sonata.ogg");
 
 	// set up game updates
 	gameUpdates = std::unique_ptr<GameUpdates>(new GameUpdates(m_screenWidth, m_screenHeight));
-}
 
-// TODO: Refactor into seperate class
-void GameManager::checkSoundEffects() {
-	char playerState = levelObjects.player->externalCheckState();
-	const char JUMP = 'j', DEAD = 'd', PICK_UP = 'u';
-	auto playSound = [&](std::string sound, bool &b, int volume) { mediaPlayer->playSoundEffect(sound, volume); b = true;  };
-
-	switch (playerState) {
-	case JUMP:
-		if (!playedJumpSound) {
-			playSound("126416__cabeeno-rossley__jump.wav", playedJumpSound, soundEffectVolume);
-		}
-		break;
-	case DEAD:
-		if (!playedDeadSound) {
-			playSound("126416__cabeeno-rossley__jump.wav", playedDeadSound, soundEffectVolume);
-		}
-		break;
-	case PICK_UP:
-		if (!playedPickupSound) {
-			playSound("126416__cabeeno-rossley__jump.wav", playedPickupSound, soundEffectVolume);
-		}
-		break;
-	default:
-		playedJumpSound = false;
-		playedDeadSound = false;
-		playedPickupSound = false;
-		break;
-	}
+	// set up drawing
+	gameDraw = std::unique_ptr<GameDraw>(new GameDraw());
 }
 
 void GameManager::update(float dt) {
 	gameUpdates->updateGame(dt, levelObjects, game);
-	checkSoundEffects();	
+	gameSounds->checkPlayerSoundEffects(levelObjects);
 }
 
 // TODO: refactor into draw class
 void GameManager::draw(sf::RenderWindow *window) {
-	switch (game) {
-
-	case Game::TITLE_SCREEN:
-		levelObjects.titleScreen->draw(window);
-		break;
-	case Game::GAME:
-		draw(levelObjects.levelStaticObjects, window);
-		draw(levelObjects.levelStaticPlatforms, window);
-		draw(levelObjects.levelStaticStairs, window);
-		draw(levelObjects.enemiesMoving, window);
-		draw(levelObjects.enemiesStatic, window);
-		draw(levelObjects.pickups, window);
-		draw(levelObjects.player, window);
-		break;
-	case Game::DEAD:
-		break;
-	}
+	gameDraw->draw(window, levelObjects, game);	
 }

@@ -21,6 +21,7 @@
 #include "MediaPlayer.h"
 #include "TitleScreen.h"
 
+// struct to hold all game objects in one place
 struct LevelObjects {
 	std::vector<std::shared_ptr<StaticObject>> levelStaticObjects;
 	std::vector<std::shared_ptr<StaticPlatform>> levelStaticPlatforms;
@@ -36,8 +37,10 @@ struct LevelObjects {
 	World world;
 };
 
+// Game state
 enum class Game { TITLE_SCREEN, GAME, DEAD };
 
+// Game Updates. Responsible for updating all objects & loading rooms when levels change
 class GameUpdates {
 					 
 public:
@@ -114,17 +117,31 @@ private:
 	int screenHeight;
 };
 
-class GameManager
-{
+// responsible for sound & music
+class GameSounds {
 public:
-	GameManager(int screenWidth, int screenHeight);
-	~GameManager();
-	void initializeGame();
-	void update(float dt);
-	void draw(sf::RenderWindow *window);
+	GameSounds(int musicVolume, int soundEffectVolume);
+	~GameSounds();
+	void playMusic(std::string song);
+	void checkPlayerSoundEffects(LevelObjects &levelObjects);
 
 private:
-	// DRAWING
+	std::unique_ptr <MediaPlayer> mediaPlayer = nullptr;
+	void initializeMediaPlayer();
+	int musicVolume = 10;
+	int soundEffectVolume = 100;
+	bool playedJumpSound = false;
+	bool playedDeadSound = false;
+	bool playedPickupSound = false;
+};
+
+// responsible for drawing
+class GameDraw {
+public:
+	GameDraw();
+	~GameDraw();
+	void draw(sf::RenderWindow *window, LevelObjects &levelObjects, Game &game);
+private:
 	// single objects
 	template <typename T>
 	void draw(const std::shared_ptr<T> &t, sf::RenderWindow *window) {
@@ -137,13 +154,25 @@ private:
 			it->draw(window);
 		}
 	}
-	// ends drawing	 
-	
+	// ends drawing
+};
+
+// Responsible for initiliazation, managing updates & drawing.
+class GameManager
+{
+public:
+	GameManager(int screenWidth, int screenHeight);
+	~GameManager();
+	void initializeGame();
+	void update(float dt);
+	void draw(sf::RenderWindow *window);
+
+private:	
+	// set game state
 	Game game = Game::TITLE_SCREEN;
-	
+
 	// private methods	
 	void loadTexture(std::map<int, sf::Texture> &textures, std::string fileName, int id); 
-	void checkSoundEffects();
 	
 	// member variables
 	const std::string TEXTURES_FILE_NAME = "textures.txt";
@@ -157,14 +186,12 @@ private:
 	std::shared_ptr <LoadTextFile> loadWorld = nullptr;
 	std::unique_ptr <MediaPlayer> mediaPlayer = nullptr;
 	std::unique_ptr <GameUpdates> gameUpdates = nullptr;
+	std::unique_ptr <GameSounds> gameSounds = nullptr;
+	std::unique_ptr <GameDraw> gameDraw = nullptr;
 	bool isFirstRun = true;
 	bool inLevel = true;
 	bool firstLoopComplete = false;
 	int musicVolume = 10;
 	int soundEffectVolume = 100;
-
-	bool playedJumpSound = false;
-	bool playedDeadSound = false;
-	bool playedPickupSound = false;
 };
 
