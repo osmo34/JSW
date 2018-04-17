@@ -23,7 +23,7 @@ Current TODO: <p>
 * <del> Sound support </del> done <br>
 * <del> Refactoring main into a game manager </del> done <br>
 * Gameplay logic, e.g. amount of collectables, lives etc. <br>
-* Level Editor - likely written in c# <p>
+* Level Editor - In progress (being written in c#) <p>
 * Content!
 <p>
 added second screenshot with stairs support. Not much to see. The blue circles represent enemies
