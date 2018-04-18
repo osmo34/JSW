@@ -31,5 +31,4 @@ added second screenshot with stairs support. Not much to see. The blue circles r
 added level editor screenshot
 
 ![alt text](screenshot.png)
-<p>
 ![alt text](screenshot_editor.png)
