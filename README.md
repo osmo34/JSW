@@ -11,7 +11,8 @@ Currently supports: <br>
 * Changes levels dynamically <br>
 * Music & sound effect support <br>
 * Textures loaded externally and applied based on the file format <br>
-* Spritesheets (currently a bit hacky and restricted) <br>  
+* Spritesheets (currently a bit hacky and restricted) <br> 
+* Level Editor written in c# (very early version)
 <p>
 <p>
 Current TODO: <p>
@@ -23,9 +24,12 @@ Current TODO: <p>
 * <del> Sound support </del> done <br>
 * <del> Refactoring main into a game manager </del> done <br>
 * Gameplay logic, e.g. amount of collectables, lives etc. <br>
-* Level Editor - In progress (being written in c#) <p>
+* <del> Level Editor </del> very early version <p>
 * Content!
 <p>
-added second screenshot with stairs support. Not much to see. The blue circles represent enemies
+added second screenshot with stairs support. Not much to see. The blue circles represent enemies <br>
+added level editor screenshot
 
 ![alt text](screenshot.png)
+<p>
+![alt text](screenshot_editor.png)
