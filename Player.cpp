@@ -38,7 +38,7 @@ void Player::update(float dt) {
 	currentHeight = m_sprite.getPosition().y;
 	checkStairs();
 
-	std::cout << groundHeight << std::endl;
+	//std::cout << groundHeight << std::endl;
 		
 }
 
@@ -153,6 +153,8 @@ void Player::collision(char c, float gh) {
 	const char LEFT = 'l', RIGHT = 'r', TOP = 't', BOTTOM = 'b',
 		NO_COLLISION = 'n', ENEMY = 'e', POWER_UP = 'p',
 		STAIR_LEFT = 'z', STAIR_RIGHT = 'x', STAIR_NONE = 'c';
+
+	if (gh == 0.0) { gh = groundHeight; }
 			  
 	switch (c) {
 	case LEFT:
@@ -186,7 +188,7 @@ void Player::collision(char c, float gh) {
 				break;
 			}
 			if (isJumping) {
-				groundHeight = groundHeightOld;
+				groundHeight = gh;
 			}
 			else {
 				fall(deltaTime);
@@ -279,7 +281,7 @@ void Player::checkStairs() {
 	}
 }
 
-void Player::updateStairs(bool &stairs, bool &stairsBottom, bool &stairsTop, sf::Vector2f bottom, sf::Vector2f top, float vs) {
+void Player::updateStairs(bool &stairs, bool &stairsBottom, bool &stairsTop, sf::Vector2f bottom, sf::Vector2f top, float vs) {	
 	if (!stairs && stairsBottom) {
 		topStairs = false;
 		stairs = true;
@@ -295,12 +297,14 @@ void Player::updateStairs(bool &stairs, bool &stairsBottom, bool &stairsTop, sf:
 }
 
 float Player::calculateVerticalSpeed(float distance, float angle) {
+	//std::cout << distance;
+	distance = 4.0f; // TODO: distance doesn't really work. Angle calculations are a bit dodgy - only works at one specific angle
 	return angle * distance;
 }
 
 void Player::onStairs(sf::Vector2f bottom, sf::Vector2f top, bool onStairsBottom, bool onStairsTop, bool isStairsLeft) {
-	const float angle = std::fabs(atan2(top.y - bottom.y, top.x - bottom.x) * 180 / PI);
-	const float distance = std::fabs(std::sqrt(std::pow(bottom.x - top.x, 2) + std::pow(bottom.y - top.y, 2))) / 100;
+	const float angle = std::fabs(atan2(top.y - bottom.y, top.x - bottom.x) * 180 / PI);	
+	const float distance = std::fabs(std::sqrt(std::pow(bottom.x - top.x, 2) + std::pow(bottom.y - top.y, 2))) / 100; // TODO: reconsider, see above function
 	(isStairsLeft) ? 
 		updateStairs(onStairsLeft, onStairsBottom, onStairsTop, bottom, top, calculateVerticalSpeed(distance, std::sin(angle))) : 
 		updateStairs(onStairsRight, onStairsBottom, onStairsTop, bottom, top, calculateVerticalSpeed(distance, std::cos(angle)));	

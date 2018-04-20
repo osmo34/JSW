@@ -73,25 +73,23 @@ void Collision::updateObjectPosition(std::function<double(char c)> position, boo
 // detects collision with an entity
 bool Collision::checkCollision() {
 	return (playerRectangle.getGlobalBounds().intersects(collisionRectangle.getGlobalBounds())) ? true : false;
-}
-
+}	
 
 void Collision::checkCollisionStairs(sf::Vector2f bottom, sf::Vector2f top, std::function<void(sf::Vector2f b, sf::Vector2f t, bool onStairsBottom, bool onStairsTop, bool isStairsLeft)> playerCheckStairs, bool isLeft)
-{	
+{
 	if (isLeft) {	
 		float distanceTop = std::fabs(std::sqrt(std::pow(top.x - playerLeft, 2) + std::pow(top.x - playerRight, 2)));		 
-		if (COLLISION_STAIR_LEFT) { playerCheckStairs(bottom, top, true, false, isLeft); }		 		
+		if (COLLISION_STAIR_LEFT) { playerCheckStairs(bottom, top, true, false, isLeft); }
 		else if (COLLISION_STAIR_LEFT_TOP) { playerCheckStairs(bottom, top, false, true, isLeft); }
 		else if (COLLISION_STAIR_LEFT_TOP_EXIT) { playerCheckStairs(bottom, top, true, false, isLeft); }
 	}
 	else {
 		float distanceTop = std::fabs(std::sqrt(std::pow(top.x - playerRight, 2) + std::pow(top.x - playerLeft, 2)));
-		if (COLLISION_STAIR_RIGHT) { playerCheckStairs(bottom, top, true, false, isLeft); } 
+		if (COLLISION_STAIR_RIGHT) { playerCheckStairs(bottom, top, true, false, isLeft); }
 		else if (COLLISION_STAIR_RIGHT_TOP) { playerCheckStairs(bottom, top, false, true, isLeft); }
-		else if (COLLISION_STAIR_RIGHT_TOP_EXIT) { playerCheckStairs(bottom, top, true, false, isLeft);	}
+		else if (COLLISION_STAIR_RIGHT_TOP_EXIT) { playerCheckStairs(bottom, top, true, false, isLeft); }
 	}
 }
-
 
 // check static blocks
 void Collision::checkCollision(std::function<void(char c, float i)> playerCollision) { 
@@ -130,16 +128,16 @@ void Collision::checkCollision(std::function<void(char c, float i)> playerCollis
 			}
 		}		
 	}
-
+	
 	for (auto it : staticPlatformPositions) {
+		
 		float blockCentreX = it.left + 16;
 		float playerCentreX = playerLeft + 16;	
 		float blockCentreY = it.top - 16;
 		float playerCentreY = playerBottom - 16;
 		float distanceX = playerCentreX - blockCentreX;
 		float distanceY = playerCentreY - blockCentreY;
-
-		if (distanceX < -32 || distanceX > 32) {			
+		if (distanceX < -32 || distanceX > 32 || distanceY > 40) {			
 			continue;
 		}			
 		else if (COLLISION_TOP) {
@@ -151,7 +149,6 @@ void Collision::checkCollision(std::function<void(char c, float i)> playerCollis
 			continue;
 		}
 	}	
-	
 }
 
 void Collision::clearCollisionData() {

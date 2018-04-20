@@ -1,6 +1,6 @@
 #pragma once
 
-static int currentRoom = 5;
+static int currentRoom = 6;
 static int nextRoomRight;
 static int nextRoomLeft;
 static int lives = 3;
