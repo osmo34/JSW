@@ -30,5 +30,5 @@ Current TODO: <p>
 added second screenshot with stairs support. Not much to see. The blue circles represent enemies <br>
 added level editor screenshot
 
-![alt text](screenshot.png)
+![alt text](screenshot1.png)
 ![alt text](screenshot_editor.png)
