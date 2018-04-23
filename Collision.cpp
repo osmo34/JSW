@@ -65,7 +65,7 @@ void Collision::updateObjectPosition(std::function<double(char c)> position, boo
 	m_objectPosition.left = position(LEFT);
 	m_objectPosition.right = position(RIGHT);
 	m_objectPosition.top = position(TOP);
-	maxStairHeight = m_objectPosition.top; // TODO: currently only supports one set of stairs
+	maxStairHeight = m_objectPosition.top;
 	(isRightAngle) ? m_objectPosition.isAngleRight = true : m_objectPosition.isAngleRight = false;
 	stairs.push_back(m_objectPosition);
 }
@@ -87,7 +87,8 @@ void Collision::checkCollisionStairs(sf::Vector2f bottom, sf::Vector2f top, std:
 		float distanceTop = std::fabs(std::sqrt(std::pow(top.x - playerRight, 2) + std::pow(top.x - playerLeft, 2)));
 		if (COLLISION_STAIR_RIGHT) { playerCheckStairs(bottom, top, true, false, isLeft); }
 		else if (COLLISION_STAIR_RIGHT_TOP) { playerCheckStairs(bottom, top, false, true, isLeft); }
-		else if (COLLISION_STAIR_RIGHT_TOP_EXIT) { playerCheckStairs(bottom, top, true, false, isLeft); }
+		else if (COLLISION_STAIR_RIGHT_TOP_EXIT) { playerCheckStairs(bottom, top, true, false, isLeft);
+		}
 	}
 }
 

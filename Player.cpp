@@ -38,8 +38,9 @@ void Player::update(float dt) {
 	currentHeight = m_sprite.getPosition().y;
 	checkStairs();
 
-	//std::cout << groundHeight << std::endl;
-		
+
+	std::cout << isJumping << std::endl;
+	//std::cout << groundHeight << std::endl;		
 }
 
 void Player::checkMovement(float dt) {
@@ -91,8 +92,7 @@ void Player::moveHorizontal(float dt, float speed) {
 	}
 }
 
-void Player::jump(float dt, float speed) {	
-
+void Player::jump(float dt, float speed) {
 	landed = false;
 	if (!isMoving) {
 		if (!isAtMaxJumpHeight) {
@@ -135,11 +135,12 @@ void Player::fallCheck() {
 		m_grav = GRAVITY;
 	}
 
-	if (m_sprite.getPosition().y >= groundHeight) {		
+	// TODO: falling bug - double jump is caused here. 
+	if (m_sprite.getPosition().y > groundHeight) {		
 		m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, groundHeight));				
 		updateGroundHeight(0.0);
 		m_grav = GRAVITY;
-		isAtMaxJumpHeight = false;
+		isAtMaxJumpHeight = false;		
 		isJumping = false;
 		// Related to sound effects only at this time (prevents replaying, odd level changing behaviour)
 		if (!landed) {
@@ -178,13 +179,12 @@ void Player::collision(char c, float gh) {
 		fall(deltaTime);
 		fallCheck();
 		break;	 
-	case NO_COLLISION:
+	case NO_COLLISION:		
 		if (!onStairsLeft &&!onStairsRight) {
 			collideLeft = false;
 			collideRight = false;
 			if (topStairs) {
-				updateGroundHeight(currentHeight);
-				m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, currentHeight));
+				topStairs = false;
 				break;
 			}
 			if (isJumping) {
@@ -218,7 +218,7 @@ void Player::checkState() {
 
 	switch (c) {
 	case DEAD:
-		std::cout << "dead" << std::endl;
+		std::cout << "dead" << std::endl;		
 		setStartPosition();
 		state->updateState(NONE);
 		break;
@@ -267,10 +267,7 @@ void Player::checkStairs() {
 		}
 	} 
 	else if (topStairs) {  		
-		if (m_sprite.getPosition().x <= currentStairsTop.x - pixelOffset) {
-			// fakes a tiny jump so we land back on the block - stops a weird wobble
-			m_grav = 0.001;
-			isJumping = true;			
+		if (m_sprite.getPosition().x <= currentStairsTop.x - pixelOffset) {		
 			topStairs = false;
 		}
 	} 
@@ -281,7 +278,7 @@ void Player::checkStairs() {
 	}
 }
 
-void Player::updateStairs(bool &stairs, bool &stairsBottom, bool &stairsTop, sf::Vector2f bottom, sf::Vector2f top, float vs) {	
+void Player::updateStairs(bool &stairs, bool &stairsBottom, bool &stairsTop, sf::Vector2f bottom, sf::Vector2f top, float vs) {		
 	if (!stairs && stairsBottom) {
 		topStairs = false;
 		stairs = true;
@@ -296,18 +293,15 @@ void Player::updateStairs(bool &stairs, bool &stairsBottom, bool &stairsTop, sf:
 	}
 }
 
-float Player::calculateVerticalSpeed(float distance, float angle) {
-	//std::cout << distance;
-	distance = 4.0f; // TODO: distance doesn't really work. Angle calculations are a bit dodgy - only works at one specific angle
+float Player::calculateVerticalSpeed(float distance, float angle) {	
 	return angle * distance;
 }
 
 void Player::onStairs(sf::Vector2f bottom, sf::Vector2f top, bool onStairsBottom, bool onStairsTop, bool isStairsLeft) {
-	const float angle = std::fabs(atan2(top.y - bottom.y, top.x - bottom.x) * 180 / PI);	
-	const float distance = std::fabs(std::sqrt(std::pow(bottom.x - top.x, 2) + std::pow(bottom.y - top.y, 2))) / 100; // TODO: reconsider, see above function
+	const float angle = std::fabs(atan2(top.y - bottom.y, top.x - bottom.x) * 180 / PI);		
 	(isStairsLeft) ? 
-		updateStairs(onStairsLeft, onStairsBottom, onStairsTop, bottom, top, calculateVerticalSpeed(distance, std::sin(angle))) : 
-		updateStairs(onStairsRight, onStairsBottom, onStairsTop, bottom, top, calculateVerticalSpeed(distance, std::cos(angle)));	
+		updateStairs(onStairsLeft, onStairsBottom, onStairsTop, bottom, top, calculateVerticalSpeed(STAIR_SPEED, std::sin(angle))) : 
+		updateStairs(onStairsRight, onStairsBottom, onStairsTop, bottom, top, calculateVerticalSpeed(STAIR_SPEED, std::cos(angle)));	
 }
 
 char Player::externalCheckState() {

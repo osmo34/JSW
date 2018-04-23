@@ -24,6 +24,7 @@ private:
 
 	char m_currentDirection;			
 	const float PLAYER_SPEED = 0.1f;
+	const float STAIR_SPEED = 4.0f;
 	bool onStairsLeft = false;
 	bool onStairsRight = false;
 	float verticalSpeed = 0.0f;

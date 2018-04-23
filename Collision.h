@@ -15,13 +15,13 @@
 
 // left stairs
 #define COLLISION_STAIR_LEFT playerLeft >= bottom.x && playerLeft <= bottom.x + 5 && playerBottom + 32 == bottom.y
-#define COLLISION_STAIR_LEFT_TOP playerLeft <= top.x && playerBottom <= top.y - 32 && distanceTop < 200
-#define COLLISION_STAIR_LEFT_TOP_EXIT playerRight >= top.x && playerBottom <= top.y && distanceTop < 64 // Magic numbers TODO: could cause bugs in stairs
+#define COLLISION_STAIR_LEFT_TOP playerLeft <= top.x && playerBottom <= top.y - 32 && distanceTop < 64
+#define COLLISION_STAIR_LEFT_TOP_EXIT playerLeft >= top.x && playerBottom <= top.y && distanceTop < 35 // Magic numbers TODO: could cause bugs in stairs - also check change to left!
 
 // right stairs
-#define COLLISION_STAIR_RIGHT playerRight >= bottom.x && playerRight <= bottom.x + 5 && playerBottom + 32 == bottom.y
-#define COLLISION_STAIR_RIGHT_TOP playerRight >= top.x && playerBottom <= top.y - 32 && distanceTop < 200
-#define COLLISION_STAIR_RIGHT_TOP_EXIT playerLeft <= top.x && playerBottom <= top.y && distanceTop < 64
+#define COLLISION_STAIR_RIGHT playerRight >= bottom.x + 10 && playerBottom + 32 == bottom.y // TODO: + 10 taking player sprite size
+#define COLLISION_STAIR_RIGHT_TOP playerRight >= top.x && playerBottom <= top.y - 32 && distanceTop < 64
+#define COLLISION_STAIR_RIGHT_TOP_EXIT playerRight <= top.x && playerBottom <= top.y && distanceTop < 35
 
 struct ObjectPositions {
 	float top;
@@ -34,8 +34,6 @@ struct ObjectPositions {
 class Collision
 {
 private:  
-
-	float temp;
 	sf::RectangleShape updatePositions(std::vector<ObjectPositions> &t, ObjectPositions &m_objectPosition, sf::RectangleShape collisionBox);
 	void updatePositions(ObjectPositions m_objectPositions);
 
