@@ -9,7 +9,7 @@ GameUpdates::GameUpdates(int screenWidth, int screenHeight) : screenWidth(screen
 GameUpdates::~GameUpdates() {}
 
 Room GameUpdates::createRoom(std::string fileName, LevelObjects & levelObjects) {
-	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY = 'e', STATIC_PLATFORM = 't', STATIC_STAIRS = 'l', ENEMY_MOVING = 'm', ENEMY_STATIC = 'n', PICK_UP = 'u';
+	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY = 'e', STATIC_PLATFORM = 't', STATIC_STAIRS = 'l', STATIC_SPRITE = '#', ENEMY_MOVING = 'm', ENEMY_STATIC = 'n', PICK_UP = 'u';
 	Room room{};
 
 	std::unique_ptr<LoadRoom> loadLevel(new LoadRoom);
@@ -34,6 +34,9 @@ Room GameUpdates::createRoom(std::string fileName, LevelObjects & levelObjects) 
 			break;
 		case ENEMY_STATIC:
 			createObject(levelObjects.enemiesStatic, room.roomData[i], texture);
+			break;
+		case STATIC_SPRITE:
+			createObject(levelObjects.spritesStatic, room.roomData[i], texture);
 			break;
 		case PICK_UP:
 			createObject(levelObjects.pickups, room.roomData[i], texture);
@@ -68,6 +71,7 @@ void GameUpdates::clearRoomObjects(LevelObjects &levelObjects) {
 	clearVector(levelObjects.levelStaticPlatforms);
 	clearVector(levelObjects.levelStaticStairs);
 	clearVector(levelObjects.pickups);
+	clearVector(levelObjects.spritesStatic);
 }
 
 void GameUpdates::changeLevel(int nextRoom, LevelObjects &levelObjects) {
@@ -102,13 +106,14 @@ void GameUpdates::updateGame(float dt, LevelObjects &levelObjects, Game &game) {
 		if (inLevel) {
 			if (!firstLoopComplete) {
 				update(levelObjects.levelStaticObjects, levelObjects.collision);
-				update(levelObjects.levelStaticPlatforms, levelObjects.collision);
+				update(levelObjects.levelStaticPlatforms, levelObjects.collision);				
 				firstLoopComplete = true;
 			}
 			update(levelObjects.levelStaticStairs, levelObjects.collision, levelObjects.player);
 			update(levelObjects.enemiesMoving, levelObjects.collision, levelObjects.player, dt);
 			update(levelObjects.enemiesStatic, levelObjects.collision, levelObjects.player, dt);
 			update(levelObjects.pickups, levelObjects.collision, levelObjects.player, dt);
+			update(levelObjects.spritesStatic, dt);
 		}
 		checkLevelChange(levelObjects);
 		break;

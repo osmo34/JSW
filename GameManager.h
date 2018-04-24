@@ -17,6 +17,7 @@
 #include "WriteRoom.h"
 #include "LoadTextFile.h"
 #include "StaticStairs.h"
+#include "StaticSprite.h"
 #include "LevelInfo.h"
 #include "MediaPlayer.h"
 #include "TitleScreen.h"
@@ -27,6 +28,7 @@ struct LevelObjects {
 	std::vector<std::shared_ptr<StaticPlatform>> levelStaticPlatforms;
 	std::vector<std::shared_ptr<StaticStairs>> levelStaticStairs;
 	std::vector<std::shared_ptr<EnemyStatic>> enemiesStatic;
+	std::vector <std::shared_ptr<StaticSprite>> spritesStatic;
 	std::vector<std::shared_ptr<EnemyMoving>> enemiesMoving;
 	std::vector<std::shared_ptr<Pickup>> pickups;
 	std::shared_ptr<Player> player;
@@ -80,7 +82,7 @@ private:
 		}
 	}
 
-	// anything else in a vector with no collision e.g. background animations - TODO: currently unused
+	// anything else in a vector with no collision e.g. background animations
 	template <typename T>
 	void update(const std::vector<std::shared_ptr<T>> &t, const float dt) {
 		for (auto &it : t) {

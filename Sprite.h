@@ -4,6 +4,7 @@
 #include <memory>
 #include "Animation.h"
 #include <memory>
+#include "DataRoom.h"
 
 class Sprite {
 private:

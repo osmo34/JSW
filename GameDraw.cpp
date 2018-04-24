@@ -10,6 +10,7 @@ void GameDraw::draw(sf::RenderWindow *window, LevelObjects &levelObjects, Game &
 		levelObjects.titleScreen->draw(window);
 		break;
 	case Game::GAME:
+		draw(levelObjects.spritesStatic, window);
 		draw(levelObjects.levelStaticObjects, window);
 		draw(levelObjects.levelStaticPlatforms, window);
 		draw(levelObjects.levelStaticStairs, window);
