@@ -22,11 +22,11 @@ void Player::setStartPosition() {
 
 void Player::update(float dt) {
 	deltaTime = dt;
-	m_currentDirection = input->update(dt);
-	checkMovement(dt);
+	m_currentDirection = input->update(deltaTime, isJumping);
+	checkMovement(deltaTime);
 	checkScreenEdge();
 	checkState();
-	animation->update(dt);
+	animation->update(deltaTime);
 
 	if (isJumping) {
 		jump(dt, currentSpeed);
@@ -37,11 +37,20 @@ void Player::update(float dt) {
 
 	currentHeight = m_sprite.getPosition().y;
 	checkStairs();
+	updateFall();
+}
+
+void Player::updateFall() {
+	if (m_sprite.getPosition().y > groundHeightPlatform && m_sprite.getPosition().y < groundHeightOld && !onStairsLeft && !onStairsRight) {
+		isJumping = false;
+		landed = true;
+		m_grav = GRAVITY;
+	}
 }
 
 void Player::checkMovement(float dt) {
 	const char LEFT = 'l', RIGHT = 'r', JUMP = 'j', STATIONARY = 's';
-
+	
 	switch (m_currentDirection) {
 	case LEFT:
 		if (!collideLeft) {
@@ -58,12 +67,14 @@ void Player::checkMovement(float dt) {
 		}
 		break;
 	case JUMP:
-		isJumping = true;
-		state->updateState(JUMP);
-		animation->updateAnimation(dt, m_sourceRect, &m_sprite);
+		if (!isJumping) {
+			isJumping = true;
+			state->updateState(JUMP);
+			animation->updateAnimation(dt, m_sourceRect, &m_sprite);
+		}
 		break;
 	case STATIONARY:
-		isMoving = false;
+		moveHorizontal(dt, 0.0f);
 		animation->updateAnimation(dt, m_sourceRect, &m_sprite);
 		break;
 	default:
@@ -73,6 +84,7 @@ void Player::checkMovement(float dt) {
 
 void Player::moveHorizontal(float dt, float speed) {
 
+	currentSpeed = speed;
 	if (!isJumping) {
 		if (onStairsLeft)
 			m_sprite.move(sf::Vector2f(verticalSpeed * speed * dt, verticalSpeed * speed * dt));
@@ -80,8 +92,7 @@ void Player::moveHorizontal(float dt, float speed) {
 			m_sprite.move(sf::Vector2f(verticalSpeed * speed * dt, verticalSpeed * -speed * dt));
 		else
 			m_sprite.move(sf::Vector2f(speed * dt, 0.0));
-
-		currentSpeed = speed;
+		
 		groundHeight = m_sprite.getPosition().y;
 		updateGroundHeight(groundHeight);
 		isMoving = true;
@@ -115,28 +126,19 @@ void Player::jump(float dt, float speed) {
 }
 
 void Player::fall(const float dt) {
-	if (!isMoving) {
 		m_sprite.move(sf::Vector2f(0.0, (JUMP_SPEED * m_grav) * dt));
 		m_grav += GRAVITY_CALCULATION;
-	}
-	else {		
-		m_sprite.move(sf::Vector2f(currentSpeed, (JUMP_SPEED * m_grav) * dt));
-		m_grav += GRAVITY_CALCULATION;
-	}
 }
 
-void Player::fallCheck() {
+void Player::fallCheck() {	
 	const char NONE = 'n';
-	if (m_sprite.getPosition().y <= maxJumpHeight) {
-		m_grav = GRAVITY;
-	}
-
 	if (m_sprite.getPosition().y > groundHeight) {
 		m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, groundHeight));
 		updateGroundHeight(0.0);
 		m_grav = GRAVITY;
 		isAtMaxJumpHeight = false;
 		isJumping = false;
+
 		// Related to sound effects only at this time (prevents replaying, odd level changing behaviour)
 		if (!landed) {
 			state->updateState(NONE);
@@ -173,7 +175,6 @@ void Player::collision(char c, float gh) {
 		break;
 	case BOTTOM:
 		isJumping = false;
-		fall(deltaTime);
 		fallCheck();
 		break;
 	case NO_COLLISION:
@@ -187,7 +188,7 @@ void Player::collision(char c, float gh) {
 			else if (isJumping) { 
 				groundHeight = groundHeightOld;
 			}
-			else {
+			else {				
 				fall(deltaTime);
 				fallCheck();
 			}

@@ -11,12 +11,12 @@ private:
 	const char LEFT = 'l';
 	const char RIGHT = 'r';	
 	const char STATIONARY = 's';
-
+	bool isJumping = false;
 
 public:
 	PlayerInput();
 	~PlayerInput();
-	char update(const float dt);
+	char update(const float dt, bool isJumping);
 
 
 };

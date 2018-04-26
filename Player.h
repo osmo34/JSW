@@ -60,6 +60,7 @@ public:
 	using Sprite::Sprite;
 	Player(const int screenWidth, const int screenHeight, sf::Texture texture);
 	void update(const float dt);
+	void updateFall();
 	void setStartPosition();
 	void collision(char c, float gh);
 	void updateGroundHeight(float gh);

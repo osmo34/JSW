@@ -12,8 +12,9 @@ void PlayerInput::keyboadInput(float dt) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 		m_currentDirection = RIGHT;
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-		m_currentDirection = JUMP;		
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !isJumping) {
+		m_currentDirection = JUMP;
+		isJumping = true;
 	}
 
 	if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Left) &&
@@ -23,7 +24,8 @@ void PlayerInput::keyboadInput(float dt) {
 	}									 
 }	   
 
-char PlayerInput::update(float dt) {
+char PlayerInput::update(float dt, bool isJumping) {
+	this->isJumping = isJumping;
 	keyboadInput(dt);
 	return m_currentDirection;
 }
