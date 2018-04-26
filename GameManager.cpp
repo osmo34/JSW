@@ -6,7 +6,7 @@ GameManager::~GameManager(){}
 void GameManager::loadTexture(std::map<int, sf::Texture>& textures, std::string fileName, int id) {
 	sf::Texture texture;
 	if (!texture.loadFromFile(fileName)) { std::cout << "texture load failure - " << fileName; }
-	textures[id] = texture;
+	textures[id] = texture;	
 }
 
 void GameManager::initializeGame() {

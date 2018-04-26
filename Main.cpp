@@ -1,6 +1,4 @@
 // Bug fixes
-// TODO: - low priority - Fix bug in player/collision whereby you can stick to the bottom of platforms by holding jump
-// TODO: - low priority - in player 'isAtMaxJumpHeight' is never made true. This may be causing a rare bug whereby the player flies off into the sky
 
 #include <SFML\Graphics.hpp>
 #include "GameManager.h"
@@ -33,9 +31,8 @@ int main() {
 		handlePollEvents(&window);
 		sf::Time time = clock.getElapsedTime();
 		clock.restart().asSeconds();
-		gameManager->update(time.asMilliseconds());
-	 
-		window.clear();
+		gameManager->update(time.asMilliseconds());	 
+		window.clear(sf::Color::Color(217, 217, 217, 255));		
 		gameManager->draw(&window);		
 		window.display();
 	}

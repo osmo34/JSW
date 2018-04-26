@@ -19,7 +19,7 @@
 #define COLLISION_STAIR_LEFT_TOP_EXIT playerLeft >= top.x && playerBottom <= top.y && distanceTop < 35 // Magic numbers TODO: could cause bugs in stairs - also check change to left!
 
 // right stairs
-#define COLLISION_STAIR_RIGHT playerRight >= bottom.x + 10 && playerBottom + 32 == bottom.y // TODO: + 10 taking player sprite size
+#define COLLISION_STAIR_RIGHT playerRight >= bottom.x + 10 && playerBottom + 32 == bottom.y && distanceBottom < 32 // TODO: + 10 taking player sprite size
 #define COLLISION_STAIR_RIGHT_TOP playerRight >= top.x && playerBottom <= top.y - 32 && distanceTop < 64
 #define COLLISION_STAIR_RIGHT_TOP_EXIT playerRight <= top.x && playerBottom <= top.y && distanceTop < 35
 

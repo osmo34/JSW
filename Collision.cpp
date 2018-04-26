@@ -84,7 +84,8 @@ void Collision::checkCollisionStairs(sf::Vector2f bottom, sf::Vector2f top, std:
 		else if (COLLISION_STAIR_LEFT_TOP_EXIT) { playerCheckStairs(bottom, top, true, false, isLeft); }
 	}
 	else {
-		float distanceTop = std::fabs(std::sqrt(std::pow(top.x - playerRight, 2) + std::pow(top.x - playerLeft, 2)));
+		float distanceTop = std::fabs(std::sqrt(std::pow(top.x - playerRight, 2) + std::pow(top.x - playerLeft, 2)));		
+		float distanceBottom = std::fabs(std::sqrt(std::pow(bottom.x - playerRight, 2) + std::pow(bottom.x - playerLeft, 2)));		
 		if (COLLISION_STAIR_RIGHT) { playerCheckStairs(bottom, top, true, false, isLeft); }
 		else if (COLLISION_STAIR_RIGHT_TOP) { playerCheckStairs(bottom, top, false, true, isLeft); }
 		else if (COLLISION_STAIR_RIGHT_TOP_EXIT) { playerCheckStairs(bottom, top, true, false, isLeft);
