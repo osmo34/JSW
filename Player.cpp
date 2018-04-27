@@ -38,13 +38,27 @@ void Player::update(float dt) {
 	currentHeight = m_sprite.getPosition().y;
 	checkStairs();
 	updateFall();
+	//std::cout << "gh " << groundHeightPlatform << std::endl;
+	//std::cout << "player " << m_sprite.getPosition().y << std::endl;
+	//std::cout << onStairsRight << std::endl;
+	//std::cout << landed << std::endl;
+	std::cout << state->getState() << std::endl;
+
 }
 
 void Player::updateFall() {
-	if (m_sprite.getPosition().y > groundHeightPlatform && m_sprite.getPosition().y < groundHeightOld && !onStairsLeft && !onStairsRight) {
+
+	// fixes bug preventing jumping on stairs
+	if (onStairsRight || onStairsLeft) {
+		groundHeightPlatform = m_sprite.getPosition().y;
+		return;
+	}
+
+	if (m_sprite.getPosition().y > groundHeightPlatform && m_sprite.getPosition().y < groundHeightOld && !onStairsLeft && !onStairsRight) {		
 		isJumping = false;
 		landed = true;
 		m_grav = GRAVITY;
+		state->updateState('n');
 	}
 }
 

@@ -13,6 +13,8 @@ void StaticStairs::createVerticies(sf::Vector2f bottom, sf::Vector2f top) {
 	testPoints[0].position = bottom;
 	testPoints[1].position = top;
 	va = testPoints;
+	va[0].color = sf::Color::Black;
+	va[1].color = sf::Color::Black;
 }
 
 StaticStairs::~StaticStairs()	{}

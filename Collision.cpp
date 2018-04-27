@@ -116,8 +116,8 @@ void Collision::checkCollision(std::function<void(char c, float i)> playerCollis
 		float blockCentreY = it.bottom - 16;
 		float playerCentreY = playerBottom - 16;
 
-		float distanceX = blockCentreX - playerCentreX;
-		float distanceY = playerCentreY - blockCentreY;
+		float distanceX = std::fabsf(blockCentreX - playerCentreX);
+		float distanceY = std::fabsf(playerCentreY - blockCentreY);
 
 		if (distanceX <= 32 && distanceX >= 0 && distanceY <= 32 && distanceY >= 0) {
 			if (COLLISION_LEFT) {
