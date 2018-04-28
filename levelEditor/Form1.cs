@@ -18,6 +18,7 @@ namespace JSB_LevelEditor
         List<Item> itemList = new List<Item>();
         List<String> textureList = new List<String>();
         List<String> objectList = new List<string>();
+        List<String> textList = new List<String>();
 
         ObservableCollection<ToolTip> toolTipList = new ObservableCollection<ToolTip>();
         
@@ -60,6 +61,7 @@ namespace JSB_LevelEditor
             textureList.Add("collect.png");
             textureList.Add("platform.png");
 
+            objectList.Add("Erase");
             objectList.Add("Static Platform");
             objectList.Add("Static Object");
             objectList.Add("Static Stairs");
@@ -89,11 +91,21 @@ namespace JSB_LevelEditor
             this.label2.Text = this.comboBox2.SelectedIndex.ToString();
         }        
 
-        private void PixelClickEvent(object sender, MouseEventArgs e) {            
-            this.label1.Text = "pos is " + e.X + " , " + e.Y;
+        private void PixelClickEvent(object sender, MouseEventArgs e) {
+            
             if (sender is PictureBox pictureBox) {
                 pictureBox.Image = Image.FromFile(textureList[textureID]);                
-                int i = Int32.Parse(pictureBox.Tag.ToString());                
+                int i = Int32.Parse(pictureBox.Tag.ToString());
+                this.label2.Text = itemList[i - 1].TextureNumber.ToString();
+                if (selectedObject == "Erase")
+                {   
+                    itemList[i - 1].TextureNumber = 0;
+                    itemList[i - 1].ObjectPositionNumber = i - 1;
+                    itemList[i - 1].ObjectType = selectedObject;                
+                    toolTipList[i - 1].SetToolTip(pictureBoxList[i - 1], "Obj Pos Number: " + itemList[i - 1].ObjectPositionNumber + "Texutre ID: " + itemList[i - 1].TextureNumber.ToString() + ", Object Type: " + itemList[i - 1].ObjectOutput.ToString() + ", SpeedX: " + itemList[i - 1].SpeedX.ToString() + ", SpeedY: " + itemList[i - 1].SpeedY.ToString() + ", PositionX: " + itemList[i - 1].PositionX + ", Position Y: " + itemList[i - 1].PositionY);
+                    return;
+                }
+
                 itemList[i - 1].TextureNumber = textureID;
                 itemList[i - 1].ObjectPositionNumber = i - 1;
                 itemList[i - 1].ObjectType = selectedObject;
@@ -115,8 +127,7 @@ namespace JSB_LevelEditor
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            textureID = this.comboBox2.SelectedIndex;
-            this.label2.Text = textureID.ToString();
+            textureID = this.comboBox2.SelectedIndex;            
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -128,22 +139,27 @@ namespace JSB_LevelEditor
 
         private void button2_Click(object sender, EventArgs e)
         {
-            outputFile();
+            outputFile();            
         }
 
         private void outputFile()
         {
-            List<String> textList = new List<String>();
+            System.IO.File.Delete("levelEditorTest.txt");            
+            itemList.Reverse();
             foreach (var item in itemList)
             {
-                if (item.TextureNumber == 0)
+                if ((item.TextureNumber == 0))
                 {
-                    continue;
+                    continue;                    
                 }
-                textList.Add(item.objectOutput());
+                else
+                {
+                    textList.Add(item.objectOutput());
+                }
             }
 
             System.IO.File.WriteAllLines("levelEditorTest.txt", textList.ToArray());
+            textList.Clear();
         }
     }
 
@@ -193,7 +209,13 @@ namespace JSB_LevelEditor
                 case "Enemy Move Vertical":
                     _objectTypeOutput = ENEMY_MOVING;
                     break;
+                case "Erase":
+                    _objectTypeOutput = '@';
+                    _textureNumber = 0;
+                    break;
                 default:
+                    _objectTypeOutput = '@';
+                    _textureNumber = 0;
                     break;
             }
         }
@@ -227,17 +249,27 @@ namespace JSB_LevelEditor
                 _positionX += 32;
                 calcPos++;
             }
+
+            if (_positionY == 640)
+            {
+                _positionY = 638; // hack because of the groundheight in game
+            }
         }
 
         public string objectOutput()
         {
+            if (_textureNumber == 0)
+            {
+                return null;
+            }
+
             string output = "type:" + _objectTypeOutput +
                 System.Environment.NewLine +
                 "texture:" + _textureNumber.ToString() +
                 System.Environment.NewLine +
-                "px:" + _positionX.ToString() +
+                "px:" + _positionX.ToString() + ".0" +
                 System.Environment.NewLine +
-                "py:" + _positionY.ToString() +
+                "py:" + _positionY.ToString() + ".0" +
                 System.Environment.NewLine +
                 "sx:" + _speedX.ToString() +
                 System.Environment.NewLine +
