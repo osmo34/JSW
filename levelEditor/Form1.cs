@@ -9,6 +9,17 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Collections.ObjectModel;
 
+// TODO: Tasks here
+// Refactor
+// Erase bug fixed at some point
+// Add support for pickups
+// Add support for stairs - the game supports a specific angle - needs to be calculated in a method
+// Add level ID on output
+// Output custom file name
+// *Save & load support!!*
+// Consider compile in editor to speed up workflow
+// consider play from editor
+
 namespace JSB_LevelEditor
 {
     public partial class Form1 : Form
@@ -17,8 +28,7 @@ namespace JSB_LevelEditor
         ObservableCollection<PictureBox> pictureBoxList = new ObservableCollection<PictureBox>();
         List<Item> itemList = new List<Item>();
         List<String> textureList = new List<String>();
-        List<String> objectList = new List<string>();
-        List<String> textList = new List<String>();
+        List<String> objectList = new List<string>();     
 
         ObservableCollection<ToolTip> toolTipList = new ObservableCollection<ToolTip>();
         
@@ -48,7 +58,7 @@ namespace JSB_LevelEditor
                 toolTipList[i - 1].ShowAlways = true;
                 toolTipList[i - 1].SetToolTip(pictureBoxList[i - 1], "Empty");
             }
-            
+            // add event to each 'pixel'
             foreach (var item in pictureBoxList) {
                 item.SizeMode = PictureBoxSizeMode.StretchImage;
                 item.Image = Image.FromFile(defaultTexture);
@@ -70,15 +80,13 @@ namespace JSB_LevelEditor
             objectList.Add("Enemy Move Vertical");
             objectList.Add("Pick Up");
 
-            for(int i = 0; i < objectList.Count(); i++)
-            {
+            for(int i = 0; i < objectList.Count(); i++) {
                 objectComboBoxList.Add(new ComboBoxItem());
                 objectComboBoxList[i].Text = objectList[i];
                 this.comboBox1.Items.Add(objectComboBoxList[i]);
             }
 
-            for (int i = 0; i < textureList.Count(); i++)
-            {
+            for (int i = 0; i < textureList.Count(); i++) {
                 textureComboBoxList.Add(new ComboBoxItem());
                 textureComboBoxList[i].Text = textureList[i];
                 this.comboBox2.Items.Add(textureComboBoxList[i]);
@@ -91,18 +99,17 @@ namespace JSB_LevelEditor
             this.label2.Text = this.comboBox2.SelectedIndex.ToString();
         }        
 
-        private void PixelClickEvent(object sender, MouseEventArgs e) {
-            
+        // event for clicking in a pixel. If it's erase then change texture number to 0 so it is ignored at output (0 is the player sprite in game so is never used)
+        private void PixelClickEvent(object sender, MouseEventArgs e) {            
             if (sender is PictureBox pictureBox) {
                 pictureBox.Image = Image.FromFile(textureList[textureID]);                
                 int i = Int32.Parse(pictureBox.Tag.ToString());
                 this.label2.Text = itemList[i - 1].TextureNumber.ToString();
-                if (selectedObject == "Erase")
-                {   
+                if (selectedObject == "Erase") {   
                     itemList[i - 1].TextureNumber = 0;
                     itemList[i - 1].ObjectPositionNumber = i - 1;
                     itemList[i - 1].ObjectType = selectedObject;                
-                    toolTipList[i - 1].SetToolTip(pictureBoxList[i - 1], "Obj Pos Number: " + itemList[i - 1].ObjectPositionNumber + "Texutre ID: " + itemList[i - 1].TextureNumber.ToString() + ", Object Type: " + itemList[i - 1].ObjectOutput.ToString() + ", SpeedX: " + itemList[i - 1].SpeedX.ToString() + ", SpeedY: " + itemList[i - 1].SpeedY.ToString() + ", PositionX: " + itemList[i - 1].PositionX + ", Position Y: " + itemList[i - 1].PositionY);
+                    toolTipList[i - 1].SetToolTip(pictureBoxList[i - 1], "Obj Pos Number: " + itemList[i - 1].ObjectPositionNumber + "Texutre ID: " + itemList[i - 1].TextureNumber.ToString() + "ERASED ITEM");
                     return;
                 }
 
@@ -117,57 +124,83 @@ namespace JSB_LevelEditor
             }
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        // update combobox 1 (type of item)
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e) {
             selectedObjectIndex = this.comboBox1.SelectedIndex;
             selectedObject = objectList[selectedObjectIndex];
             this.label1.Text = selectedObject;
-
         }
-
-        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        // update combobox 2 (texture)
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e) {
             textureID = this.comboBox2.SelectedIndex;            
         }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
+        // update speed used for enemies
+        private void button1_Click(object sender, EventArgs e) {
             speedX = float.Parse(SpeedXBox.Text);
             speedY = float.Parse(SpeedYBox.Text);
         }
-
-
-        private void button2_Click(object sender, EventArgs e)
-        {
+        // output text file
+        private void button2_Click(object sender, EventArgs e) {
             outputFile();            
         }
+        // add items in order to the textlist which is used for output
+        private void updateTextList(ref List<Item>items, ref List<String> textList) {
+            foreach (var item in items) {
+                textList.Add(item.objectOutput());
+            }
+        }
 
-        private void outputFile()
-        {
+        private void outputFile() {
+            List<String> textList = new List<String>();
+            List<Item> staticPlatforms = new List<Item>();
+            List<Item> staticObjects = new List<Item>();
+            List<Item> staticEnemies = new List<Item>();
+            List<Item> movingEnemies = new List<Item>();
+
             System.IO.File.Delete("levelEditorTest.txt");            
-            itemList.Reverse();
-            foreach (var item in itemList)
-            {
-                if ((item.TextureNumber == 0))
-                {
-                    continue;                    
+            itemList.Reverse(); // reverse the itemlist so it goes top to bottom - this seems to work better in game
+            
+            // break up the itemlist into specific items so they are grouped together in output - again this works better in game
+            foreach (var item in itemList) {
+                if ((item.TextureNumber == 0)) { // ignore and continue
+                    continue;
                 }
-                else
-                {
-                    textList.Add(item.objectOutput());
+                else {
+                    switch (item.ObjectType) {
+                        case "Static Object":
+                            staticObjects.Add(item);
+                            break;
+                        case "Static Platform":
+                            staticPlatforms.Add(item);
+                            break;
+                        case "Enemy Static":
+                            staticEnemies.Add(item);
+                            break;
+                        case "Enemy Move Horizontal":
+                        case "Enemy Move Vertical":
+                            movingEnemies.Add(item);
+                            break;
+                        default:
+                            continue;
+                    }
                 }
             }
-
-            System.IO.File.WriteAllLines("levelEditorTest.txt", textList.ToArray());
+            // complete text list
+            updateTextList(ref staticObjects, ref textList);
+            updateTextList(ref staticPlatforms, ref textList);
+            updateTextList(ref staticEnemies, ref textList);
+            updateTextList(ref movingEnemies, ref textList);
+            // write text list
+            System.IO.File.WriteAllLines("levelEditorOutput.txt", textList.ToArray());
             textList.Clear();
         }
     }
 
     public class Item
     {
-        const char STATIC_OBJECT = 's', ENEMY = 'e', STATIC_PLATFORM = 't', STATIC_STAIRS = 'l', ENEMY_MOVING = 'm', ENEMY_STATIC = 'n', PICK_UP = 'u';
+        const string STATIC_OBJECT = "s", ENEMY = "e", STATIC_PLATFORM = "t", STATIC_STAIRS = "l", ENEMY_MOVING = "m", ENEMY_STATIC = "n", PICK_UP = "u";
         private string _objectType;
-        private char _objectTypeOutput;
+        private string _objectTypeOutput;
         private int _textureNumber;        
         private int _objectPostionNumber;
         private float _speedX;
@@ -181,16 +214,14 @@ namespace JSB_LevelEditor
         public string ObjectType { set { _objectType = value; } get { return _objectType; } }
         public int ObjectPositionNumber { set { _objectPostionNumber = value; } get { return _objectPostionNumber; } }
         public int TextureNumber { set { _textureNumber = value; } get { return _textureNumber; } }
-        public char ObjectOutput { get { return _objectTypeOutput; } }
+        public string ObjectOutput { get { return _objectTypeOutput; } }
         public float SpeedX { get { return _speedX; } set { _speedX = value; } }
         public float SpeedY { get { return _speedY; } set { _speedY = value; } }
         public int PositionX { get { return _positionX; } }
         public int PositionY { get { return _positionY; } }
 
-        public void convertObjectType()
-        {
-            switch (ObjectType)
-            {
+        public void convertObjectType() {
+            switch (ObjectType) {
                 case "Static Platform":
                     _objectTypeOutput = STATIC_PLATFORM;
                     break;
@@ -210,36 +241,32 @@ namespace JSB_LevelEditor
                     _objectTypeOutput = ENEMY_MOVING;
                     break;
                 case "Erase":
-                    _objectTypeOutput = '@';
+                    _objectTypeOutput = "@";
                     _textureNumber = 0;
                     break;
                 default:
-                    _objectTypeOutput = '@';
+                    _objectTypeOutput = "@";
                     _textureNumber = 0;
                     break;
             }
         }
-
-        public void calculatePosition()
-        {
+        // convert the item number into a pixel number
+        public void calculatePosition() {
+            const int GROUND_HEIGHT = 638; // game groundheight
             _positionX = 0;
             _positionY = 0;
             int calcPos = 0;
 
-            for (int i = 0; i < 921; i++)
-            {
-                if (_objectPostionNumber == 0)
-                {                    
+            for (int i = 0; i < 921; i++) {
+                if (_objectPostionNumber == 0) {                    
                     break;
                 }        
 
-                else if (i == _objectPostionNumber)
-                {
+                else if (i == _objectPostionNumber) {
                     break;
                 }
                                 
-                else if (calcPos == 39)
-                {
+                else if (calcPos == 39) {
                     _positionX = 0;
                     _positionY += 32;
                     calcPos = 0;
@@ -250,16 +277,13 @@ namespace JSB_LevelEditor
                 calcPos++;
             }
 
-            if (_positionY == 640)
-            {
-                _positionY = 638; // hack because of the groundheight in game
+            if (_positionY == 640) {
+                _positionY = GROUND_HEIGHT; // hack because of the groundheight in game
             }
         }
 
-        public string objectOutput()
-        {
-            if (_textureNumber == 0)
-            {
+        public string objectOutput() {
+            if (_textureNumber == 0) { // ignore any textures with 0 in case anything slipped through (unlikely)
                 return null;
             }
 
@@ -284,8 +308,7 @@ namespace JSB_LevelEditor
     {
         public string Text { get; set; }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             return Text;
         }
     }
