@@ -8,15 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Collections.ObjectModel;
+using System.IO;
 
 // TODO: Tasks here
 // Refactor
 // Erase bug fixed at some point
 // Add support for pickups
 // Add support for stairs - the game supports a specific angle - needs to be calculated in a method
-// Add level ID on output
-// Output custom file name
-// *Save & load support!!*
 // Consider compile in editor to speed up workflow
 // consider play from editor
 
@@ -24,7 +22,7 @@ namespace JSB_LevelEditor
 {
     public partial class Form1 : Form
     {
-        const int totalPixels = 921;
+        const int totalPixels = 921;        
         ObservableCollection<PictureBox> pictureBoxList = new ObservableCollection<PictureBox>();
         List<Item> itemList = new List<Item>();
         List<String> textureList = new List<String>();
@@ -44,9 +42,18 @@ namespace JSB_LevelEditor
         List<ComboBoxItem> objectComboBoxList = new List<ComboBoxItem>();
         List<ComboBoxItem> textureComboBoxList = new List<ComboBoxItem>();
 
+        static string outputTextFileName = "output";
+        static string levelID = "0";
+
         public Form1() {           
             InitializeComponent();
-            for (int i = 1; i < totalPixels; i++) {
+            resetEditor();
+        }
+        
+        void resetEditor()
+        {
+            for (int i = 1; i < totalPixels; i++)
+            {
                 pictureBoxList.Add((PictureBox)Controls.Find("pictureBox" + i, true)[0]);
                 pictureBoxList[i - 1].Tag = i;
                 itemList.Add(new Item());
@@ -59,7 +66,8 @@ namespace JSB_LevelEditor
                 toolTipList[i - 1].SetToolTip(pictureBoxList[i - 1], "Empty");
             }
             // add event to each 'pixel'
-            foreach (var item in pictureBoxList) {
+            foreach (var item in pictureBoxList)
+            {
                 item.SizeMode = PictureBoxSizeMode.StretchImage;
                 item.Image = Image.FromFile(defaultTexture);
                 item.MouseClick += new MouseEventHandler(PixelClickEvent);
@@ -80,24 +88,26 @@ namespace JSB_LevelEditor
             objectList.Add("Enemy Move Vertical");
             objectList.Add("Pick Up");
 
-            for(int i = 0; i < objectList.Count(); i++) {
+            for (int i = 0; i < objectList.Count(); i++)
+            {
                 objectComboBoxList.Add(new ComboBoxItem());
                 objectComboBoxList[i].Text = objectList[i];
                 this.comboBox1.Items.Add(objectComboBoxList[i]);
             }
 
-            for (int i = 0; i < textureList.Count(); i++) {
+            for (int i = 0; i < textureList.Count(); i++)
+            {
                 textureComboBoxList.Add(new ComboBoxItem());
                 textureComboBoxList[i].Text = textureList[i];
                 this.comboBox2.Items.Add(textureComboBoxList[i]);
             }
-            
+
             this.comboBox1.SelectedIndex = 0;
             this.label1.Text = this.comboBox1.SelectedIndex.ToString();
 
             this.comboBox2.SelectedIndex = 0;
             this.label2.Text = this.comboBox2.SelectedIndex.ToString();
-        }        
+        }
 
         // event for clicking in a pixel. If it's erase then change texture number to 0 so it is ignored at output (0 is the player sprite in game so is never used)
         private void PixelClickEvent(object sender, MouseEventArgs e) {            
@@ -157,7 +167,10 @@ namespace JSB_LevelEditor
             List<Item> staticEnemies = new List<Item>();
             List<Item> movingEnemies = new List<Item>();
 
-            System.IO.File.Delete("levelEditorTest.txt");            
+            outputTextFileName = this.outputFileBox.Text;
+            levelID = this.IdTextBox.Text;
+
+            System.IO.File.Delete(outputTextFileName+".txt");            
             itemList.Reverse(); // reverse the itemlist so it goes top to bottom - this seems to work better in game
             
             // break up the itemlist into specific items so they are grouped together in output - again this works better in game
@@ -186,16 +199,86 @@ namespace JSB_LevelEditor
                 }
             }
             // complete text list
+            textList.Add(
+                "num: " + itemList.Count() + // TODO: do a genuine count ignoring empty blocks!
+                System.Environment.NewLine +
+                "roomID:" + levelID);
+
             updateTextList(ref staticObjects, ref textList);
             updateTextList(ref staticPlatforms, ref textList);
             updateTextList(ref staticEnemies, ref textList);
             updateTextList(ref movingEnemies, ref textList);
             // write text list
-            System.IO.File.WriteAllLines("levelEditorOutput.txt", textList.ToArray());
+            System.IO.File.WriteAllLines(outputTextFileName+".txt", textList.ToArray());
             textList.Clear();
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e) {           
+            DialogResult result = MessageBox.Show("Are you sure you want to start over? You will lose any unsaved work", "Reset?", MessageBoxButtons.YesNo);
+
+            if (result == DialogResult.Yes) {
+                itemList.Clear();
+                textureList.Clear();
+                objectList.Clear();
+                pictureBoxList.Clear();
+                objectComboBoxList.Clear();
+                textureComboBoxList.Clear();
+                textureID = 0;
+                speedX = 0.0f;
+                speedY = 0.0f;
+                selectedObject = "";
+                selectedObjectIndex = 0;
+                this.comboBox1.Items.Clear();
+                this.comboBox2.Items.Clear();
+                resetEditor();
+            }
+            else if (result == DialogResult.No) {
+                return;
+            }            
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("JSB Level Editor - pre alpha", "JSB" , MessageBoxButtons.OK);
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string outputfile = "level.bin";
+            using (Stream stream = File.Open(outputfile, FileMode.Create))
+            {
+                var binaryOutput = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                binaryOutput.Serialize(stream, itemList);
+            }
+        }
+
+        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string inputfile = "level.bin";
+
+            using (Stream stream = File.Open(inputfile, FileMode.Open))
+            {
+                itemList.Clear();
+                toolTipList.Clear();
+                var binaryInput = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                itemList = (List<Item>)binaryInput.Deserialize(stream);
+
+                for (int i = 0; i < itemList.Count(); i++)
+                {
+                    pictureBoxList[itemList[i].ObjectPositionNumber].Image = Image.FromFile(textureList[itemList[i].TextureNumber]);
+                    // TODO: fix later
+                    // toolTipList[itemList[i].ObjectPositionNumber].SetToolTip(pictureBoxList[i], "Obj Pos Number: " + itemList[i].ObjectPositionNumber + "Texutre ID: " + itemList[i].TextureNumber.ToString() + ", Object Type: " + itemList[i].ObjectOutput.ToString() + ", SpeedX: " + itemList[i].SpeedX.ToString() + ", SpeedY: " + itemList[i].SpeedY.ToString() + ", PositionX: " + itemList[i].PositionX + ", Position Y: " + itemList[i].PositionY);
+                }
+            }
         }
     }
 
+    [Serializable]
     public class Item
     {
         const string STATIC_OBJECT = "s", ENEMY = "e", STATIC_PLATFORM = "t", STATIC_STAIRS = "l", ENEMY_MOVING = "m", ENEMY_STATIC = "n", PICK_UP = "u";
@@ -287,7 +370,8 @@ namespace JSB_LevelEditor
                 return null;
             }
 
-            string output = "type:" + _objectTypeOutput +
+            string output = 
+                "type:" + _objectTypeOutput +
                 System.Environment.NewLine +
                 "texture:" + _textureNumber.ToString() +
                 System.Environment.NewLine +
