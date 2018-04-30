@@ -7,12 +7,13 @@ currently very early days...
 Currently supports: <br>
 * Collision detection for walls, enemies and collectables <br>
 * Stairs <br>
-* Loading of levels from external file in custom file format (needed for an editor!) <br>
+* Loading of levels from external file in custom file format <br>
 * Changes levels dynamically <br>
 * Music & sound effect support <br>
 * Textures loaded externally and applied based on the file format <br>
 * Spritesheets (currently a bit hacky and restricted) <br> 
-* Level Editor written in c# (very early version)
+* Level Editor written in c# - currently in pre-alpha but usable <br>
+* Compiler from level editor to game <br>
 <p>
 <p>
 Current TODO: <p>
@@ -24,11 +25,11 @@ Current TODO: <p>
 * <del> Sound support </del> done <br>
 * <del> Refactoring main into a game manager </del> done <br>
 * Gameplay logic, e.g. amount of collectables, lives etc. <br>
-* <del> Level Editor </del> very early version <p>
-* Content!
+* <del> Level Editor </del> (usable but not feature complete) <p>
+* Content - currently 2 levels partially built
 <p>
 added second screenshot with stairs support. Not much to see. The blue circles represent enemies <br>
 added level editor screenshot
 
 ![alt text](screenshot1.png)
-![alt text](screenshot_editor.png)
+![alt text](levelEditor/screenshot_editor2.png)
