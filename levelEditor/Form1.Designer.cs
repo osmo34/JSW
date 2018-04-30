@@ -972,6 +972,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.IdTextBox = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox920)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox919)).BeginInit();
@@ -1899,17 +1900,17 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.ForeColor = System.Drawing.Color.DarkGreen;
-            this.label1.Location = new System.Drawing.Point(22, 33);
+            this.label1.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.label1.Location = new System.Drawing.Point(25, 47);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.Size = new System.Drawing.Size(34, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "label1";
+            this.label1.Text = "Erase";
             // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.tableLayoutPanel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(31)))), ((int)(((byte)(31)))));
             this.tableLayoutPanel1.ColumnCount = 40;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30F));
@@ -10281,6 +10282,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.SystemColors.Highlight;
             this.label2.Location = new System.Drawing.Point(25, 83);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(35, 13);
@@ -10290,7 +10292,8 @@
             // SpeedX
             // 
             this.SpeedX.AutoSize = true;
-            this.SpeedX.Location = new System.Drawing.Point(1372, 246);
+            this.SpeedX.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.SpeedX.Location = new System.Drawing.Point(1369, 242);
             this.SpeedX.Name = "SpeedX";
             this.SpeedX.Size = new System.Drawing.Size(51, 13);
             this.SpeedX.TabIndex = 5;
@@ -10299,7 +10302,8 @@
             // SpeedY
             // 
             this.SpeedY.AutoSize = true;
-            this.SpeedY.Location = new System.Drawing.Point(1372, 287);
+            this.SpeedY.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.SpeedY.Location = new System.Drawing.Point(1369, 283);
             this.SpeedY.Name = "SpeedY";
             this.SpeedY.Size = new System.Drawing.Size(51, 13);
             this.SpeedY.TabIndex = 6;
@@ -10321,9 +10325,9 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(1381, 316);
+            this.button1.Location = new System.Drawing.Point(1375, 316);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(146, 23);
+            this.button1.Size = new System.Drawing.Size(152, 23);
             this.button1.TabIndex = 9;
             this.button1.Text = "Update Speed";
             this.button1.UseVisualStyleBackColor = true;
@@ -10331,9 +10335,9 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(1381, 680);
+            this.button2.Location = new System.Drawing.Point(1372, 680);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(178, 43);
+            this.button2.Size = new System.Drawing.Size(155, 43);
             this.button2.TabIndex = 10;
             this.button2.Text = "Create file";
             this.button2.UseVisualStyleBackColor = true;
@@ -10342,6 +10346,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
+            this.label3.ForeColor = System.Drawing.Color.Red;
             this.label3.Location = new System.Drawing.Point(105, 750);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(731, 13);
@@ -10410,13 +10415,14 @@
             // 
             this.outputFileBox.Location = new System.Drawing.Point(1459, 654);
             this.outputFileBox.Name = "outputFileBox";
-            this.outputFileBox.Size = new System.Drawing.Size(100, 20);
+            this.outputFileBox.Size = new System.Drawing.Size(68, 20);
             this.outputFileBox.TabIndex = 13;
             this.outputFileBox.Text = "output";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
+            this.label4.ForeColor = System.Drawing.SystemColors.Highlight;
             this.label4.Location = new System.Drawing.Point(1369, 657);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(81, 13);
@@ -10426,7 +10432,8 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(1372, 616);
+            this.label5.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.label5.Location = new System.Drawing.Point(1369, 617);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(47, 13);
             this.label5.TabIndex = 15;
@@ -10436,15 +10443,27 @@
             // 
             this.IdTextBox.Location = new System.Drawing.Point(1459, 616);
             this.IdTextBox.Name = "IdTextBox";
-            this.IdTextBox.Size = new System.Drawing.Size(100, 20);
+            this.IdTextBox.Size = new System.Drawing.Size(68, 20);
             this.IdTextBox.TabIndex = 16;
             this.IdTextBox.Text = "0";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.ForeColor = System.Drawing.Color.Red;
+            this.label6.Location = new System.Drawing.Point(25, 636);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(64, 13);
+            this.label6.TabIndex = 17;
+            this.label6.Text = "GROUND->";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(31)))), ((int)(((byte)(31)))));
             this.ClientSize = new System.Drawing.Size(1587, 803);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.IdTextBox);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
@@ -10462,6 +10481,7 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.menuStrip1);
+            this.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Level Editor";
@@ -12339,6 +12359,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox IdTextBox;
+        private System.Windows.Forms.Label label6;
     }
 }
 

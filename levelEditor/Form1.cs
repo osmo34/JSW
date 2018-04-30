@@ -13,6 +13,7 @@ using System.IO;
 // TODO: Tasks here
 // Refactor
 // Erase bug fixed at some point
+// fix item count on output
 // Add support for pickups
 // Add support for stairs - the game supports a specific angle - needs to be calculated in a method
 // Consider compile in editor to speed up workflow
@@ -103,10 +104,7 @@ namespace JSB_LevelEditor
             }
 
             this.comboBox1.SelectedIndex = 0;
-            this.label1.Text = this.comboBox1.SelectedIndex.ToString();
-
             this.comboBox2.SelectedIndex = 0;
-            this.label2.Text = this.comboBox2.SelectedIndex.ToString();
         }
 
         // event for clicking in a pixel. If it's erase then change texture number to 0 so it is ignored at output (0 is the player sprite in game so is never used)
