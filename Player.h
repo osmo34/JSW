@@ -24,7 +24,7 @@ private:
 
 	char m_currentDirection;
 	const float PLAYER_SPEED = 0.1f;
-	const float STAIR_SPEED = 4.0f;
+	const float STAIR_SPEED = 1.0f;
 	bool onStairsLeft = false;
 	bool onStairsRight = false;
 	float verticalSpeed = 0.0f;
@@ -52,7 +52,6 @@ private:
 	void checkStairs();
 	float horiztonalSpeed = 1.0f;
 	bool topStairs = false;
-	float calculateVerticalSpeed(float distance, float angle);
 	void updateStairs(bool &stairs, bool &stairsBottom, bool &stairsTop, sf::Vector2f bottom, sf::Vector2f top, float vs);
 
 public:

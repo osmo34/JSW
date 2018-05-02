@@ -42,7 +42,7 @@ void Player::update(float dt) {
 	//std::cout << "player " << m_sprite.getPosition().y << std::endl;
 	//std::cout << onStairsRight << std::endl;
 	//std::cout << landed << std::endl;
-	std::cout << state->getState() << std::endl;
+	//std::cout << state->getState() << std::endl;
 
 }
 
@@ -58,7 +58,7 @@ void Player::updateFall() {
 		isJumping = false;
 		landed = true;
 		m_grav = GRAVITY;
-		state->updateState('n');
+		state->updateState(NONE);
 	}
 }
 
@@ -305,15 +305,11 @@ void Player::updateStairs(bool &stairs, bool &stairsBottom, bool &stairsTop, sf:
 	}
 }
 
-float Player::calculateVerticalSpeed(float distance, float angle) {
-	return angle * distance;
-}
-
 void Player::onStairs(sf::Vector2f bottom, sf::Vector2f top, bool onStairsBottom, bool onStairsTop, bool isStairsLeft) {
-	const float angle = std::fabs(atan2(top.y - bottom.y, top.x - bottom.x) * 180 / PI);
+	const float angle = std::fabs(atan2(top.y - bottom.y, top.x - bottom.x) * PI / 180);
 	(isStairsLeft) ?
-		updateStairs(onStairsLeft, onStairsBottom, onStairsTop, bottom, top, calculateVerticalSpeed(STAIR_SPEED, std::sin(angle))) :
-		updateStairs(onStairsRight, onStairsBottom, onStairsTop, bottom, top, calculateVerticalSpeed(STAIR_SPEED, std::cos(angle)));
+		updateStairs(onStairsLeft, onStairsBottom, onStairsTop, bottom, top, std::cos(angle)) :
+		updateStairs(onStairsRight, onStairsBottom, onStairsTop, bottom, top, std::cos(angle));
 }
 
 char Player::externalCheckState() {
