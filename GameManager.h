@@ -12,6 +12,7 @@
 #include "EnemyMoving.h"
 #include "EnemyStatic.h"
 #include "Pickup.h"
+#include "StaticFloorGap.h"
 #include "DataRoom.h"
 #include "LoadRoom.h"
 #include "WriteRoom.h"
@@ -27,6 +28,7 @@ struct LevelObjects {
 	std::vector<std::shared_ptr<StaticObject>> levelStaticObjects;
 	std::vector<std::shared_ptr<StaticPlatform>> levelStaticPlatforms;
 	std::vector<std::shared_ptr<StaticStairs>> levelStaticStairs;
+	std::vector <std::shared_ptr<StaticFloorGap>> levelFloorGaps;
 	std::vector<std::shared_ptr<EnemyStatic>> enemiesStatic;
 	std::vector <std::shared_ptr<StaticSprite>> spritesStatic;
 	std::vector<std::shared_ptr<EnemyMoving>> enemiesMoving;
@@ -77,7 +79,7 @@ private:
 			it->update(dt);
 			collision->updateObjectPosition([&](char c) -> float { return it->getCollision(c); }, it->objectId);
 			if (collision->checkCollision()) {
-				player->collisionEntity(it->isHarmful());
+				player->collisionEntity(it->isHarmful(), it->isGap());
 			}
 		}
 	}

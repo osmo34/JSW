@@ -29,7 +29,7 @@ void Collision::updatePositions(ObjectPositions m_objectPositions) {
 
 // Update position (can be live or set prior to main loop)
 void Collision::updateObjectPosition(std::function<double(char c)> position, char t) {
-	const char PLAYER = 'p', STATIC_OBJECT = 's', STATIC_PLATFORM = 't', ENEMY = 'e', ENEMY_MOVING = 'm', ENEMY_STATIC = 'n', PICK_UP = 'u';
+	const char PLAYER = 'p', STATIC_OBJECT = 's', STATIC_PLATFORM = 't', ENEMY = 'e', ENEMY_MOVING = 'm', ENEMY_STATIC = 'n', PICK_UP = 'u', GAP = 'g';
 	ObjectPositions m_objectPosition;
 	m_objectPosition.top = position(TOP);
 	m_objectPosition.bottom = position(BOTTOM);
@@ -52,6 +52,9 @@ void Collision::updateObjectPosition(std::function<double(char c)> position, cha
 		collisionRectangle = updatePositions(entityPositions, m_objectPosition, collisionRectangle);
 		break;
 	case PICK_UP:
+		collisionRectangle = updatePositions(entityPositions, m_objectPosition, collisionRectangle);
+		break;
+	case GAP:
 		collisionRectangle = updatePositions(entityPositions, m_objectPosition, collisionRectangle);
 		break;
 	default: // This should never happen!

@@ -20,7 +20,7 @@ private:
 
 	std::unique_ptr <PlayerInput> input = nullptr;
 	std::unique_ptr <PlayerState> state = nullptr;
-	const char DEAD = 'd', PICK_UP = 'u', NONE = 'n';
+	const char DEAD = 'd', PICK_UP = 'u', GAP = 'g', NONE = 'n';
 
 	char m_currentDirection;
 	const float PLAYER_SPEED = 0.1f;
@@ -63,7 +63,7 @@ public:
 	void setStartPosition();
 	void collision(char c, float gh);
 	void updateGroundHeight(float gh);
-	void collisionEntity(bool isHarmful);
+	void collisionEntity(bool isHarmful, bool isGap);
 	void onStairs(sf::Vector2f bottom, sf::Vector2f top, bool onStairsBottom, bool onStairsTop, bool isStairsLeft);
 	char externalCheckState();
 	void externalResetState();

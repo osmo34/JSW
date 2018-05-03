@@ -225,7 +225,7 @@ void Player::updateGroundHeight(float gh) {
 }
 
 void Player::checkState() {
-	const char DEAD = 'd', PICK_UP = 'u', NONE = 'n', LEFT = 'l', RIGHT = 'r';
+	const char DEAD = 'd', PICK_UP = 'u', NONE = 'n', LEFT = 'l', RIGHT = 'r', GAP = 'g';
 	char c = state->getState();
 
 	switch (c) {
@@ -244,14 +244,23 @@ void Player::checkState() {
 	case RIGHT:
 		m_sprite.setPosition(sf::Vector2f(0, m_sprite.getPosition().y));
 		break;
+	case GAP:
+		std::cout << "gap!" << std::endl;
+		state->updateState(NONE);
+		break;
 	case NONE:
 	default:
 		break;
 	}
 }
 
-void Player::collisionEntity(bool isHarmful) {
-	(isHarmful) ? state->updateState(DEAD) : state->updateState(PICK_UP);
+void Player::collisionEntity(bool isHarmful, bool isGap) {
+	if (isGap) {
+		state->updateState(GAP);
+	}
+	else {
+		(isHarmful) ? state->updateState(DEAD) : state->updateState(PICK_UP);
+	}
 }
 
 void Player::checkScreenEdge() {

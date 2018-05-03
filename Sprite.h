@@ -19,6 +19,7 @@ public:
 	virtual void setStartPosition() = 0;
 	virtual float getCollision(const char side);
 	virtual bool isHarmful();
+	virtual bool isGap();
 	char objectId;
 
 protected:

@@ -14,7 +14,7 @@ public:
 	char objectId;
 	void update(const float dt);
 
-private:							
+protected:							
 	void setStartPosition();
 	float posX;
 	float posY;

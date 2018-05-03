@@ -34,6 +34,13 @@ bool Sprite::isHarmful() {
 	return false;
 }
 
+bool Sprite::isGap()
+{
+	return false;
+}
+
+
+
 sf::Sprite Sprite::createSprite() {
 	m_sourceRect = createSourceRect();
 	sf::Sprite sprite(m_texture, m_sourceRect);
