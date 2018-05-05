@@ -16,7 +16,7 @@ Player::Player(int screenWidth, int screenHeight, sf::Texture texture) :
 }
 
 void Player::setStartPosition() {
-	m_sprite.setPosition(sf::Vector2f(800, groundHeightOld));
+	m_sprite.setPosition(sf::Vector2f(800, 606));
 	m_sprite.setOrigin(sf::Vector2f(0, 0));
 }
 
@@ -38,7 +38,7 @@ void Player::update(float dt) {
 	currentHeight = m_sprite.getPosition().y;
 	checkStairs();
 	updateFall();
-	//std::cout << "gh " << groundHeightPlatform << std::endl;
+	//std::cout << "gh " << groundHeight << std::endl;
 	//std::cout << "player " << m_sprite.getPosition().y << std::endl;
 	//std::cout << onStairsRight << std::endl;
 	//std::cout << landed << std::endl;
@@ -226,8 +226,7 @@ void Player::updateGroundHeight(float gh) {
 
 void Player::checkState() {
 	const char DEAD = 'd', PICK_UP = 'u', NONE = 'n', LEFT = 'l', RIGHT = 'r', GAP = 'g';
-	char c = state->getState();
-
+	char c = state->getState();	
 	switch (c) {
 	case DEAD:
 		std::cout << "dead" << std::endl;
@@ -245,10 +244,20 @@ void Player::checkState() {
 		m_sprite.setPosition(sf::Vector2f(0, m_sprite.getPosition().y));
 		break;
 	case GAP:
-		std::cout << "gap!" << std::endl;
-		state->updateState(NONE);
+		if (canFall) { // TODO: possibly onstairs?
+			std::cout << "gap!" << std::endl;
+			updateGroundHeight(700.0);
+			groundHeightPlatform = 700.0;
+			fall(deltaTime);
+			fallCheck();
+			state->updateState(NONE);
+		}
+		else {
+			state->updateState(NONE);
+		}
 		break;
 	case NONE:
+		state->updateState(NONE);
 	default:
 		break;
 	}

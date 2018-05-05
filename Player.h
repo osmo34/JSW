@@ -33,7 +33,7 @@ private:
 	const float JUMP_HEIGHT = 100.0f;
 	bool landed = true;
 	float currentSpeed;
-	float groundHeight = 606.0f;  // 606
+	float groundHeight = 700.0f;  // 606
 	float groundHeightOld;
 	float groundHeightPlatform = 0.0f; // fix to retain ground height when jumping into walls when on a platform
 	float maxJumpHeight;
@@ -52,6 +52,8 @@ private:
 	void checkStairs();
 	float horiztonalSpeed = 1.0f;
 	bool topStairs = false;
+	bool canFall = true; // TODO - change to false on stairs
+
 	void updateStairs(bool &stairs, bool &stairsBottom, bool &stairsTop, sf::Vector2f bottom, sf::Vector2f top, float vs);
 
 public:
