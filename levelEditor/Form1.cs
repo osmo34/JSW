@@ -46,9 +46,14 @@ namespace JSB_LevelEditor
         static string outputTextFileName = "output";
         static string levelID = "0";
 
+        string currentFileName;
+        bool isSaved = false;
+
         public Form1() {           
             InitializeComponent();
             resetEditor();
+            openFileDialog1.Filter = "Level files (*.bin)|*.bin|All files (*.*)|*.*";
+            saveFileDialog1.Filter = "Level files (*.bin)|*.bin|All files (*.*)|*.*";
         }
         
         void resetEditor()
@@ -215,6 +220,8 @@ namespace JSB_LevelEditor
             DialogResult result = MessageBox.Show("Are you sure you want to start over? You will lose any unsaved work", "Reset?", MessageBoxButtons.YesNo);
 
             if (result == DialogResult.Yes) {
+                isSaved = false;
+                currentFileName = "";
                 itemList.Clear();
                 textureList.Clear();
                 objectList.Clear();
@@ -235,43 +242,61 @@ namespace JSB_LevelEditor
             }            
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e) {
             Application.Exit();
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e) {
             MessageBox.Show("JSB Level Editor - pre alpha", "JSB" , MessageBoxButtons.OK);
         }
 
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string outputfile = "level.bin";
-            using (Stream stream = File.Open(outputfile, FileMode.Create))
-            {
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e) {
+            string outputfile;
+            DialogResult result;
+
+            if (!isSaved) {
+                result = saveFileDialog1.ShowDialog();
+                if (result == DialogResult.OK) {
+                    outputfile = saveFileDialog1.FileName;
+                    isSaved = true;
+                    currentFileName = outputfile;
+                }
+                else {
+                    return;
+                }
+            }
+            else {
+                outputfile = currentFileName;
+            }
+            
+            using (Stream stream = File.Open(outputfile, FileMode.Create)) {
                 var binaryOutput = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
                 binaryOutput.Serialize(stream, itemList);
             }
         }
 
-        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string inputfile = "level.bin";
+        private void loadToolStripMenuItem_Click(object sender, EventArgs e) {
+            string inputfile;            
+            DialogResult result = openFileDialog1.ShowDialog();
+            if (result == DialogResult.OK) {
+                inputfile = openFileDialog1.FileName;
+                currentFileName = inputfile;                
+                using (Stream stream = File.Open(inputfile, FileMode.Open)) {
+                    itemList.Clear();
+                    toolTipList.Clear();
+                    var binaryInput = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                    itemList = (List<Item>)binaryInput.Deserialize(stream);
 
-            using (Stream stream = File.Open(inputfile, FileMode.Open))
-            {
-                itemList.Clear();
-                toolTipList.Clear();
-                var binaryInput = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                itemList = (List<Item>)binaryInput.Deserialize(stream);
-
-                for (int i = 0; i < itemList.Count(); i++)
-                {
-                    pictureBoxList[itemList[i].ObjectPositionNumber].Image = Image.FromFile(textureList[itemList[i].TextureNumber]);
-                    // TODO: fix later
-                    // toolTipList[itemList[i].ObjectPositionNumber].SetToolTip(pictureBoxList[i], "Obj Pos Number: " + itemList[i].ObjectPositionNumber + "Texutre ID: " + itemList[i].TextureNumber.ToString() + ", Object Type: " + itemList[i].ObjectOutput.ToString() + ", SpeedX: " + itemList[i].SpeedX.ToString() + ", SpeedY: " + itemList[i].SpeedY.ToString() + ", PositionX: " + itemList[i].PositionX + ", Position Y: " + itemList[i].PositionY);
+                    for (int i = 0; i < itemList.Count(); i++) {
+                        pictureBoxList[itemList[i].ObjectPositionNumber].Image = Image.FromFile(textureList[itemList[i].TextureNumber]);
+                        // TODO: fix later
+                        // toolTipList[itemList[i].ObjectPositionNumber].SetToolTip(pictureBoxList[i], "Obj Pos Number: " + itemList[i].ObjectPositionNumber + "Texutre ID: " + itemList[i].TextureNumber.ToString() + ", Object Type: " + itemList[i].ObjectOutput.ToString() + ", SpeedX: " + itemList[i].SpeedX.ToString() + ", SpeedY: " + itemList[i].SpeedY.ToString() + ", PositionX: " + itemList[i].PositionX + ", Position Y: " + itemList[i].PositionY);
+                    }
                 }
+                isSaved = true;
+            }
+            else {
+                return;
             }
         }
     }
