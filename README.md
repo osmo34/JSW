@@ -1,7 +1,7 @@
 # JSW
 Remake of a Spectrum platform game - Lets call it Jet Set Billy - SFML framework for rendering but game engine written from scratch
 <p>
-Going to remake this hopefully with a level editor. Used to enjoy this as a child so thought it would be fun to re-make it
+Going to remake this with a level editor. Used to enjoy this as a child so thought it would be fun to re-make it
 currently very early days...
 <p>
 Currently supports: <br>
@@ -19,7 +19,7 @@ Currently supports: <br>
 Current TODO: <p>
 * <del>Platforms which can be jumped through from the underside and walked on</del> done <br>
 * <del> Stairs </del> done <br>
-* <del> Loading multiple rooms </del> done (although only left and right at this current time) <br>
+* <del> Loading multiple rooms </del> done <br>
 * Ropes <br>
 * improve spritesheets (this wont be done until there is more content!) <br>  
 * <del> Sound support </del> done <br>
