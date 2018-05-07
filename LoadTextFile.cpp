@@ -17,3 +17,5 @@ void LoadTextFile::loadFile(std::vector<std::string> &v)
 		v.push_back(textName);		
 	}
 }
+
+

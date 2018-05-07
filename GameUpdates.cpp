@@ -53,13 +53,19 @@ Room GameUpdates::createRoom(std::string fileName, LevelObjects & levelObjects) 
 
 void GameUpdates::checkLevelChange(LevelObjects &levelObjects) {
 	char playerState = levelObjects.player->externalCheckState();
-	const char LEFT = 'l', RIGHT = 'r';
+	const char LEFT = 'l', RIGHT = 'r', UP = 'U', DOWN = 'D';
 	switch (playerState) {
 	case LEFT:
 		changeLevel(nextRoomLeft, levelObjects);
 		break;
 	case RIGHT:
 		changeLevel(nextRoomRight, levelObjects);
+		break;
+	case DOWN:
+		changeLevel(nextRoomDown, levelObjects);
+		break;
+	case UP:
+		changeLevel(nextRoomUp, levelObjects);
 		break;
 	default:
 		break;
@@ -80,9 +86,13 @@ void GameUpdates::clearRoomObjects(LevelObjects &levelObjects) {
 void GameUpdates::changeLevel(int nextRoom, LevelObjects &levelObjects) {
 	clearRoomObjects(levelObjects);
 	levelObjects.collision->clearCollisionData();
+
 	levelObjects.room = createRoom(levelObjects.world.fileNames[nextRoom], levelObjects);
 	nextRoomRight = levelObjects.room.roomId + 1;
 	nextRoomLeft = levelObjects.room.roomId - 1;
+	nextRoomUp = levelObjects.room.roomId - 10;
+	nextRoomDown = levelObjects.room.roomId + 10;
+	
 	firstLoopComplete = false;
 	inLevel = true;
 	levelObjects.player->externalResetState();
@@ -103,6 +113,8 @@ void GameUpdates::updateGame(float dt, LevelObjects &levelObjects, Game &game) {
 			levelObjects.room = createRoom(levelObjects.world.fileNames[currentRoom], levelObjects);
 			nextRoomRight = levelObjects.room.roomId + 1;
 			nextRoomLeft = levelObjects.room.roomId - 1;
+			nextRoomUp = levelObjects.room.roomId - 10;
+			nextRoomDown = levelObjects.room.roomId + 10;
 			isFirstRun = false;
 		}
 

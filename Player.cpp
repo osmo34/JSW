@@ -37,10 +37,12 @@ void Player::update(float dt) {
 
 	currentHeight = m_sprite.getPosition().y;
 	checkStairs();
-	updateFall();
-	//std::cout << "gh " << groundHeight << std::endl;
+	//updateFall();	// TODO - explore. Stairs left bug re-appears from time to time
+	//std::cout << m_grav << std::endl;
+	//std::cout << "gh " << groundHeightOld << std::endl;
 	//std::cout << "player " << m_sprite.getPosition().y << std::endl;
-	//std::cout << onStairsRight << std::endl;
+	//std::cout << onStairsLeft << std::endl;
+	//std::cout << groundHeightPlatform << std::endl;
 	//std::cout << landed << std::endl;
 	//std::cout << state->getState() << std::endl;
 
@@ -54,7 +56,7 @@ void Player::updateFall() {
 		return;
 	}
 
-	if (m_sprite.getPosition().y > groundHeightPlatform && m_sprite.getPosition().y < groundHeightOld && !onStairsLeft && !onStairsRight) {		
+	if (m_sprite.getPosition().y > groundHeightPlatform && m_sprite.getPosition().y < groundHeightOld && !onStairsLeft && !onStairsRight) {				
 		isJumping = false;
 		landed = true;
 		m_grav = GRAVITY;
@@ -214,7 +216,7 @@ void Player::collision(char c, float gh) {
 }
 
 void Player::updateGroundHeight(float gh) {
-	if (gh == 0.0) {
+	if (gh == 0.0) {		
 		groundHeight = groundHeightOld;
 		maxJumpHeight = maxJumpHeightOld;
 	}
@@ -225,7 +227,7 @@ void Player::updateGroundHeight(float gh) {
 }
 
 void Player::checkState() {
-	const char DEAD = 'd', PICK_UP = 'u', NONE = 'n', LEFT = 'l', RIGHT = 'r', GAP = 'g';
+	const char DEAD = 'd', PICK_UP = 'u', NONE = 'n', LEFT = 'l', RIGHT = 'r', DOWN = 'D', UP = 'U', GAP = 'g';
 	char c = state->getState();	
 	switch (c) {
 	case DEAD:
@@ -243,11 +245,20 @@ void Player::checkState() {
 	case RIGHT:
 		m_sprite.setPosition(sf::Vector2f(0, m_sprite.getPosition().y));
 		break;
+	case DOWN:		
+		m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, 0));
+		isJumping = true;
+		m_grav = 0.001;
+		//groundHeightPlatform = 700;
+		updateGroundHeight(0.0);
+		fall(deltaTime);
+		fallCheck();
+		break;
 	case GAP:
 		if (canFall) { // TODO: possibly onstairs?
 			std::cout << "gap!" << std::endl;
 			updateGroundHeight(700.0);
-			groundHeightPlatform = 700.0;
+			//groundHeightPlatform = 700.0;
 			fall(deltaTime);
 			fallCheck();
 			state->updateState(NONE);
@@ -273,12 +284,15 @@ void Player::collisionEntity(bool isHarmful, bool isGap) {
 }
 
 void Player::checkScreenEdge() {
-	const char LEFT = 'l', RIGHT = 'r';
+	const char LEFT = 'l', RIGHT = 'r', UP = 'U', DOWN = 'D';
 	if (m_sprite.getPosition().x < 0.0) {
 		state->updateState(LEFT);
 	}
 	else if (m_sprite.getPosition().x > m_screenWidth) {
 		state->updateState(RIGHT);
+	}
+	else if (m_sprite.getPosition().y + 32 >= groundHeightOld) {
+		state->updateState(DOWN);			
 	}
 }
 
@@ -287,7 +301,7 @@ void Player::checkStairs() {
 	const float pixelOffset = 6.0f;
 
 	if (onStairsLeft) {
-		if (m_sprite.getPosition().x >= currentStairsBottom.x + pixelOffset) {
+		if (m_sprite.getPosition().x >= currentStairsBottom.x + 32) {
 			onStairsLeft = false;
 		}
 	}

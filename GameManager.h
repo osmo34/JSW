@@ -36,7 +36,7 @@ struct LevelObjects {
 	std::shared_ptr<Player> player;
 	std::shared_ptr<Collision> collision;
 	std::shared_ptr<TitleScreen> titleScreen;
-	std::map<int, sf::Texture> textures;
+	std::map<int, sf::Texture> textures;	
 	Room room;
 	World world;
 };

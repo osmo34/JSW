@@ -27,7 +27,7 @@ void GameManager::initializeGame() {
 	loadWorld->loadFile(worldList);
 
 	for (int i = 0; i < worldList.size(); i++) {
-		levelObjects.world.fileNames[i] = worldList[i];
+		levelObjects.world.fileNames[i] = worldList[i];		
 	}
 
 	// create player

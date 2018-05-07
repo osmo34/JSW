@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <unordered_map>
 
 #pragma pack(push, 2)
 struct RoomData {
@@ -27,10 +28,9 @@ struct Room {
 };
 #pragma pack(pop)
 
-// TODO: likely use this when we have more levels
 #pragma pack(push, 2)
 struct World {
-	std::string fileNames[256];
+	std::string fileNames[256];	
 };
 #pragma pack(pop)
 
