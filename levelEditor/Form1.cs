@@ -118,22 +118,25 @@ namespace JSB_LevelEditor
                 pictureBox.Image = Image.FromFile(textureList[textureID]);                
                 int i = Int32.Parse(pictureBox.Tag.ToString());
                 this.label2.Text = itemList[i - 1].TextureNumber.ToString();
-                if (selectedObject == "Erase") {   
+                if (selectedObject == "Erase")
+                {
                     itemList[i - 1].TextureNumber = 0;
                     itemList[i - 1].ObjectPositionNumber = i - 1;
-                    itemList[i - 1].ObjectType = selectedObject;                
-                    toolTipList[i - 1].SetToolTip(pictureBoxList[i - 1], "Obj Pos Number: " + itemList[i - 1].ObjectPositionNumber + "Texutre ID: " + itemList[i - 1].TextureNumber.ToString() + "ERASED ITEM");
+                    itemList[i - 1].ObjectType = selectedObject;
+                    //toolTipList[i - 1].SetToolTip(pictureBoxList[i - 1], "Obj Pos Number: " + itemList[i - 1].ObjectPositionNumber + "Texutre ID: " + itemList[i - 1].TextureNumber.ToString() + "ERASED ITEM");
                     return;
                 }
-
-                itemList[i - 1].TextureNumber = textureID;
-                itemList[i - 1].ObjectPositionNumber = i - 1;
-                itemList[i - 1].ObjectType = selectedObject;
-                itemList[i - 1].SpeedX = speedX;
-                itemList[i - 1].SpeedY = speedY;
-                itemList[i - 1].calculatePosition();
-                itemList[i - 1].convertObjectType();
-                toolTipList[i - 1].SetToolTip(pictureBoxList[i - 1], "Obj Pos Number: " + itemList[i - 1].ObjectPositionNumber + "Texutre ID: " + itemList[i - 1].TextureNumber.ToString() + ", Object Type: " + itemList[i - 1].ObjectOutput.ToString() + ", SpeedX: " + itemList[i - 1].SpeedX.ToString() + ", SpeedY: " + itemList[i - 1].SpeedY.ToString() + ", PositionX: " + itemList[i - 1].PositionX + ", Position Y: " + itemList[i - 1].PositionY);
+                else
+                {
+                    itemList[i - 1].TextureNumber = textureID;
+                    itemList[i - 1].ObjectPositionNumber = i - 1;
+                    itemList[i - 1].ObjectType = selectedObject;
+                    itemList[i - 1].SpeedX = speedX;
+                    itemList[i - 1].SpeedY = speedY;
+                    itemList[i - 1].calculatePosition();
+                    itemList[i - 1].convertObjectType();
+                    //toolTipList[i - 1].SetToolTip(pictureBoxList[i - 1], "Obj Pos Number: " + itemList[i - 1].ObjectPositionNumber + "Texutre ID: " + itemList[i - 1].TextureNumber.ToString() + ", Object Type: " + itemList[i - 1].ObjectOutput.ToString() + ", SpeedX: " + itemList[i - 1].SpeedX.ToString() + ", SpeedY: " + itemList[i - 1].SpeedY.ToString() + ", PositionX: " + itemList[i - 1].PositionX + ", Position Y: " + itemList[i - 1].PositionY);
+                }
             }
         }
 
@@ -282,8 +285,9 @@ namespace JSB_LevelEditor
                 inputfile = openFileDialog1.FileName;
                 currentFileName = inputfile;                
                 using (Stream stream = File.Open(inputfile, FileMode.Open)) {
-                    itemList.Clear();
-                    toolTipList.Clear();
+                    //itemList.Clear();
+                    //toolTipList.Clear();
+                    resetEditor();
                     var binaryInput = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
                     itemList = (List<Item>)binaryInput.Deserialize(stream);
 
@@ -315,7 +319,7 @@ namespace JSB_LevelEditor
         private int _positionX;
         private int _positionY;
 
-        public Item(){}
+        public Item(){ _textureNumber = 0; }
 
         public string ObjectType { set { _objectType = value; } get { return _objectType; } }
         public int ObjectPositionNumber { set { _objectPostionNumber = value; } get { return _objectPostionNumber; } }
