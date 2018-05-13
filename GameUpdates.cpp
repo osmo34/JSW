@@ -9,7 +9,7 @@ GameUpdates::GameUpdates(int screenWidth, int screenHeight) : screenWidth(screen
 GameUpdates::~GameUpdates() {}
 
 Room GameUpdates::createRoom(std::string fileName, LevelObjects & levelObjects) {
-	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY = 'e', STATIC_PLATFORM = 't', STATIC_STAIRS = 'l', STATIC_SPRITE = '#', ENEMY_MOVING = 'm', ENEMY_STATIC = 'n', PICK_UP = 'u', GAP = 'g';
+	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY = 'e', STATIC_PLATFORM = 't', STATIC_STAIRS = 'l', STATIC_SPRITE = '#', ENEMY_MOVING = 'm', ENEMY_STATIC = 'n', PICK_UP = 'u';
 	Room room{};
 
 	std::unique_ptr<LoadRoom> loadLevel(new LoadRoom);
@@ -41,8 +41,6 @@ Room GameUpdates::createRoom(std::string fileName, LevelObjects & levelObjects) 
 		case PICK_UP:
 			createObject(levelObjects.pickups, room.roomData[i], texture);
 			break;
-		case GAP:
-			createObject(levelObjects.levelFloorGaps, room.roomData[i], texture);
 		default:
 			//std::cout << "error in room data" << std::endl;
 			break;
@@ -78,7 +76,6 @@ void GameUpdates::clearRoomObjects(LevelObjects &levelObjects) {
 	clearVector(levelObjects.levelStaticObjects);
 	clearVector(levelObjects.levelStaticPlatforms);
 	clearVector(levelObjects.levelStaticStairs);
-	clearVector(levelObjects.levelFloorGaps);
 	clearVector(levelObjects.pickups);
 	clearVector(levelObjects.spritesStatic);
 }
@@ -99,6 +96,7 @@ void GameUpdates::changeLevel(int nextRoom, LevelObjects &levelObjects) {
 }
 
 void GameUpdates::updateGame(float dt, LevelObjects &levelObjects, Game &game) {
+																  
 	switch (game) {
 	case Game::TITLE_SCREEN:		 
 	 	levelObjects.titleScreen->update(dt);
@@ -114,7 +112,7 @@ void GameUpdates::updateGame(float dt, LevelObjects &levelObjects, Game &game) {
 			nextRoomRight = levelObjects.room.roomId + 1;
 			nextRoomLeft = levelObjects.room.roomId - 1;
 			nextRoomUp = levelObjects.room.roomId - 10;
-			nextRoomDown = levelObjects.room.roomId + 10;
+			nextRoomDown = levelObjects.room.roomId + 10; 
 			isFirstRun = false;
 		}
 
@@ -128,7 +126,6 @@ void GameUpdates::updateGame(float dt, LevelObjects &levelObjects, Game &game) {
 			update(levelObjects.enemiesMoving, levelObjects.collision, levelObjects.player, dt);
 			update(levelObjects.enemiesStatic, levelObjects.collision, levelObjects.player, dt);
 			update(levelObjects.pickups, levelObjects.collision, levelObjects.player, dt);
-			update(levelObjects.levelFloorGaps, levelObjects.collision, levelObjects.player, dt);
 			update(levelObjects.spritesStatic, dt);
 		}
 		checkLevelChange(levelObjects);

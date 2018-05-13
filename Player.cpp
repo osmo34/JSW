@@ -44,10 +44,10 @@ void Player::update(float dt) {
 	//std::cout << onStairsLeft << std::endl;
 	//std::cout << groundHeightPlatform << std::endl;
 	//std::cout << landed << std::endl;
-	//std::cout << state->getState() << std::endl;
-
+	//std::cout << state->getState() << std::endl; 
 }
 
+// currently unused
 void Player::updateFall() {
 
 	// fixes bug preventing jumping on stairs
@@ -142,8 +142,7 @@ void Player::jump(float dt, float speed) {
 }
 
 void Player::fall(const float dt) {
-		m_sprite.move(sf::Vector2f(0.0, (JUMP_SPEED * m_grav) * dt));
-		m_grav += GRAVITY_CALCULATION;
+	m_sprite.move(sf::Vector2f(0.0, FALL_SPEED * dt));	
 }
 
 void Player::fallCheck() {	
@@ -168,7 +167,7 @@ void Player::collision(char c, float gh) {
 		NO_COLLISION = 'n', ENEMY = 'e', POWER_UP = 'p',
 		STAIR_LEFT = 'z', STAIR_RIGHT = 'x', STAIR_NONE = 'c';
 
-	if (gh == 0.0) { gh = groundHeight; }
+	if (gh == 0.0) { gh = groundHeightOld; }
 	switch (c) {
 	case LEFT:
 		collideLeft = true;
@@ -227,7 +226,7 @@ void Player::updateGroundHeight(float gh) {
 }
 
 void Player::checkState() {
-	const char DEAD = 'd', PICK_UP = 'u', NONE = 'n', LEFT = 'l', RIGHT = 'r', DOWN = 'D', UP = 'U', GAP = 'g';
+	const char DEAD = 'd', PICK_UP = 'u', NONE = 'n', LEFT = 'l', RIGHT = 'r', DOWN = 'D', UP = 'U';
 	char c = state->getState();	
 	switch (c) {
 	case DEAD:
@@ -249,38 +248,19 @@ void Player::checkState() {
 		m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, 0));
 		isJumping = true;
 		m_grav = 0.001;
-		//groundHeightPlatform = 700;
 		updateGroundHeight(0.0);
 		fall(deltaTime);
 		fallCheck();
 		break;
-	case GAP:
-		if (canFall) { // TODO: possibly onstairs?
-			std::cout << "gap!" << std::endl;
-			updateGroundHeight(700.0);
-			//groundHeightPlatform = 700.0;
-			fall(deltaTime);
-			fallCheck();
-			state->updateState(NONE);
-		}
-		else {
-			state->updateState(NONE);
-		}
-		break;
 	case NONE:
-		state->updateState(NONE);
+		//state->updateState(NONE);
 	default:
 		break;
 	}
 }
 
-void Player::collisionEntity(bool isHarmful, bool isGap) {
-	if (isGap) {
-		state->updateState(GAP);
-	}
-	else {
-		(isHarmful) ? state->updateState(DEAD) : state->updateState(PICK_UP);
-	}
+void Player::collisionEntity(bool isHarmful) {
+	(isHarmful) ? state->updateState(DEAD) : state->updateState(PICK_UP);
 }
 
 void Player::checkScreenEdge() {

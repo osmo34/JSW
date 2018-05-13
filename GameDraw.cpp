@@ -9,8 +9,7 @@ void GameDraw::draw(sf::RenderWindow *window, LevelObjects &levelObjects, Game &
 	case Game::TITLE_SCREEN:
 		levelObjects.titleScreen->draw(window);
 		break;
-	case Game::GAME:
-		//draw(levelObjects.levelFloorGaps, window); // TODO: Delete this, for testing only so I can see floor gaps!
+	case Game::GAME:		
 		draw(levelObjects.spritesStatic, window);
 		draw(levelObjects.levelStaticObjects, window);
 		draw(levelObjects.levelStaticPlatforms, window);
