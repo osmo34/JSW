@@ -5,7 +5,7 @@
 #include "MediaPlayer.h"
 #include <cmath>
 
-#define PI 3.141
+#define PI 3.14159265359
 
 class Player : public Sprite
 {
@@ -23,7 +23,7 @@ private:
 	const char DEAD = 'd', PICK_UP = 'u', NONE = 'n';
 
 	char m_currentDirection;
-	const float PLAYER_SPEED = 0.1f;
+	const float PLAYER_SPEED = 0.17f;
 	const float STAIR_SPEED = 1.0f;
 	bool onStairsLeft = false;
 	bool onStairsRight = false;
@@ -33,7 +33,7 @@ private:
 	const float JUMP_HEIGHT = 100.0f;
 	bool landed = true;
 	float currentSpeed;
-	float groundHeight = 700.0f;  // 606
+	float groundHeight = 700.0f;
 	float groundHeightOld;
 	float groundHeightPlatform = 0.0f; // fix to retain ground height when jumping into walls when on a platform
 	float maxJumpHeight;
@@ -42,7 +42,7 @@ private:
 	bool isJumping = false;
 	bool isAtMaxJumpHeight = false;
 	const float GRAVITY = 2.0;
-	const float GRAVITY_CALCULATION = 0.04f;
+	const float GRAVITY_CALCULATION = 0.06f;
 	const float FALL_SPEED = 0.005f;
 	float m_grav;
 	bool collideLeft;
@@ -54,8 +54,14 @@ private:
 	float horiztonalSpeed = 1.0f;
 	bool topStairs = false;
 	bool canFall = true; // TODO - change to false on stairs
+	bool canJump = true;
 
 	void updateStairs(bool &stairs, bool &stairsBottom, bool &stairsTop, sf::Vector2f bottom, sf::Vector2f top, float vs);
+
+	// prevent jumping whilst falling
+	float lastPositionY;
+	bool isFalling = false;
+	void checkFall();
 
 public:
 	const char objectId = 'p';

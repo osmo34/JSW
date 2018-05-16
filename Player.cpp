@@ -37,14 +37,16 @@ void Player::update(float dt) {
 
 	currentHeight = m_sprite.getPosition().y;
 	checkStairs();
+	checkFall();
 	//updateFall();	// TODO - explore. Stairs left bug re-appears from time to time
+	// Uncomment for debugging
 	//std::cout << m_grav << std::endl;
 	//std::cout << "gh " << groundHeightOld << std::endl;
 	//std::cout << "player " << m_sprite.getPosition().y << std::endl;
 	//std::cout << onStairsLeft << std::endl;
 	//std::cout << groundHeightPlatform << std::endl;
 	//std::cout << landed << std::endl;
-	//std::cout << state->getState() << std::endl; 
+	//std::cout << state->getState() << std::endl;	
 }
 
 // currently unused
@@ -83,7 +85,7 @@ void Player::checkMovement(float dt) {
 		}
 		break;
 	case JUMP:
-		if (!isJumping) {
+		if (!isJumping && !isFalling) {
 			isJumping = true;
 			state->updateState(JUMP);
 			animation->updateAnimation(dt, m_sourceRect, &m_sprite);
@@ -117,6 +119,7 @@ void Player::moveHorizontal(float dt, float speed) {
 
 void Player::jump(float dt, float speed) {
 	landed = false;
+
 	if (!isMoving) {
 		if (!isAtMaxJumpHeight) {
 			m_sprite.move(sf::Vector2f(0.0, (-JUMP_SPEED * m_grav) * dt));
@@ -142,7 +145,7 @@ void Player::jump(float dt, float speed) {
 }
 
 void Player::fall(const float dt) {
-	m_sprite.move(sf::Vector2f(0.0, FALL_SPEED * dt));	
+	m_sprite.move(sf::Vector2f(0.0, FALL_SPEED * dt));
 }
 
 void Player::fallCheck() {	
@@ -187,6 +190,7 @@ void Player::collision(char c, float gh) {
 		updateGroundHeight(gh);
 		groundHeightPlatform = gh;
 		m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, gh));
+		lastPositionY = m_sprite.getPosition().y;
 		break;
 	case BOTTOM:
 		isJumping = false;
@@ -247,6 +251,7 @@ void Player::checkState() {
 	case DOWN:		
 		m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, 0));
 		isJumping = true;
+		isFalling = true;
 		m_grav = 0.001;
 		updateGroundHeight(0.0);
 		fall(deltaTime);
@@ -275,7 +280,6 @@ void Player::checkScreenEdge() {
 		state->updateState(DOWN);			
 	}
 }
-
 
 void Player::checkStairs() {
 	const float pixelOffset = 6.0f;
@@ -310,11 +314,20 @@ void Player::updateStairs(bool &stairs, bool &stairsBottom, bool &stairsTop, sf:
 		currentStairsTop = top;
 		verticalSpeed = vs;
 	}
-	else if (stairs && stairsTop) {
+	else if (stairs && stairsTop) {		
 		topStairs = true;
 		stairs = false;
 		verticalSpeed = 0.0f;
 	}
+}
+
+// check if falling and if so disable jumping
+void Player::checkFall() {	
+	if (verticalSpeed > 0) { // make sure this only works if we are not on stairs
+		isFalling = false;
+		return;
+	}
+	(m_sprite.getPosition().y > lastPositionY) ? isFalling = true : isFalling = false;	
 }
 
 void Player::onStairs(sf::Vector2f bottom, sf::Vector2f top, bool onStairsBottom, bool onStairsTop, bool isStairsLeft) {
