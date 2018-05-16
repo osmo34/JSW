@@ -975,6 +975,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.buttonItemExplore = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox920)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox919)).BeginInit();
@@ -10465,12 +10466,23 @@
             this.openFileDialog1.FileName = "openFileDialog1";
             this.openFileDialog1.Title = "Load file";
             // 
+            // buttonItemExplore
+            // 
+            this.buttonItemExplore.Location = new System.Drawing.Point(1385, 546);
+            this.buttonItemExplore.Name = "buttonItemExplore";
+            this.buttonItemExplore.Size = new System.Drawing.Size(142, 23);
+            this.buttonItemExplore.TabIndex = 18;
+            this.buttonItemExplore.Text = "Open Item explorer";
+            this.buttonItemExplore.UseVisualStyleBackColor = true;
+            this.buttonItemExplore.Click += new System.EventHandler(this.buttonItemExplore_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(31)))), ((int)(((byte)(31)))));
             this.ClientSize = new System.Drawing.Size(1587, 803);
+            this.Controls.Add(this.buttonItemExplore);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.IdTextBox);
             this.Controls.Add(this.label5);
@@ -12370,6 +12382,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.Button buttonItemExplore;
     }
 }
 

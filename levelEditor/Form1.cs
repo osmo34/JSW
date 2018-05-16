@@ -23,6 +23,7 @@ namespace JSB_LevelEditor
 {
     public partial class Form1 : Form
     {
+        bool firstRun = true;
         const int totalPixels = 921;        
         ObservableCollection<PictureBox> pictureBoxList = new ObservableCollection<PictureBox>();
         List<Item> itemList = new List<Item>();
@@ -52,12 +53,13 @@ namespace JSB_LevelEditor
         public Form1() {           
             InitializeComponent();
             resetEditor();
+            firstRun = false;
             openFileDialog1.Filter = "Level files (*.bin)|*.bin|All files (*.*)|*.*";
             saveFileDialog1.Filter = "Level files (*.bin)|*.bin|All files (*.*)|*.*";
         }
         
         void resetEditor()
-        {
+        {            
             for (int i = 1; i < totalPixels; i++)
             {
                 pictureBoxList.Add((PictureBox)Controls.Find("pictureBox" + i, true)[0]);
@@ -78,7 +80,7 @@ namespace JSB_LevelEditor
                 item.Image = Image.FromFile(defaultTexture);
                 item.MouseClick += new MouseEventHandler(PixelClickEvent);
             }
-
+            
             textureList.Add("Default_Blank.png");
             textureList.Add("brick.png");
             textureList.Add("ball.png");
@@ -93,13 +95,14 @@ namespace JSB_LevelEditor
             objectList.Add("Enemy Move Horizontal");
             objectList.Add("Enemy Move Vertical");
             objectList.Add("Pick Up");
+          
 
             for (int i = 0; i < objectList.Count(); i++)
-            {
-                objectComboBoxList.Add(new ComboBoxItem());
-                objectComboBoxList[i].Text = objectList[i];
-                this.comboBox1.Items.Add(objectComboBoxList[i]);
-            }
+                {
+                    objectComboBoxList.Add(new ComboBoxItem());
+                    objectComboBoxList[i].Text = objectList[i];
+                    this.comboBox1.Items.Add(objectComboBoxList[i]);
+                }
 
             for (int i = 0; i < textureList.Count(); i++)
             {
@@ -107,9 +110,10 @@ namespace JSB_LevelEditor
                 textureComboBoxList[i].Text = textureList[i];
                 this.comboBox2.Items.Add(textureComboBoxList[i]);
             }
-
+           
             this.comboBox1.SelectedIndex = 0;
             this.comboBox2.SelectedIndex = 0;
+            
         }
 
         // event for clicking in a pixel. If it's erase then change texture number to 0 so it is ignored at output (0 is the player sprite in game so is never used)
@@ -284,9 +288,20 @@ namespace JSB_LevelEditor
             if (result == DialogResult.OK) {
                 inputfile = openFileDialog1.FileName;
                 currentFileName = inputfile;                
-                using (Stream stream = File.Open(inputfile, FileMode.Open)) {
-                    //itemList.Clear();
-                    //toolTipList.Clear();
+                using (Stream stream = File.Open(inputfile, FileMode.Open)) {                                        
+                    itemList.Clear();
+                    textureList.Clear();
+                    objectList.Clear();
+                    pictureBoxList.Clear();
+                    objectComboBoxList.Clear();
+                    textureComboBoxList.Clear();
+                    textureID = 0;
+                    speedX = 0.0f;
+                    speedY = 0.0f;
+                    selectedObject = "";
+                    selectedObjectIndex = 0;
+                    this.comboBox1.Items.Clear();
+                    this.comboBox2.Items.Clear();
                     resetEditor();
                     var binaryInput = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
                     itemList = (List<Item>)binaryInput.Deserialize(stream);
@@ -302,6 +317,12 @@ namespace JSB_LevelEditor
             else {
                 return;
             }
+        }
+
+        private void buttonItemExplore_Click(object sender, EventArgs e)
+        {
+            ItemExplorer itemExplorer = new ItemExplorer(ref itemList);
+            itemExplorer.Show();
         }
     }
 
@@ -324,7 +345,7 @@ namespace JSB_LevelEditor
         public string ObjectType { set { _objectType = value; } get { return _objectType; } }
         public int ObjectPositionNumber { set { _objectPostionNumber = value; } get { return _objectPostionNumber; } }
         public int TextureNumber { set { _textureNumber = value; } get { return _textureNumber; } }
-        public string ObjectOutput { get { return _objectTypeOutput; } }
+        public string ObjectOutput { set { _objectTypeOutput = value; } get { return _objectTypeOutput; } }
         public float SpeedX { get { return _speedX; } set { _speedX = value; } }
         public float SpeedY { get { return _speedY; } set { _speedY = value; } }
         public int PositionX { get { return _positionX; } }
