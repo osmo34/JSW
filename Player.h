@@ -42,7 +42,7 @@ private:
 	bool isJumping = false;
 	bool isAtMaxJumpHeight = false;
 	const float GRAVITY = 2.0;
-	const float GRAVITY_CALCULATION = 0.06f;
+	const float GRAVITY_CALCULATION = 0.004f;
 	const float FALL_SPEED = 0.005f;
 	float m_grav;
 	bool collideLeft;
@@ -62,6 +62,12 @@ private:
 	float lastPositionY;
 	bool isFalling = false;
 	void checkFall();
+
+	const float START_POSITION_X = 800;
+	const float START_POSITION_Y = 606;
+	float resetPositionX;
+	float resetPositionY;
+
 
 public:
 	const char objectId = 'p';

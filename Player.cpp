@@ -10,13 +10,15 @@ Player::Player(int screenWidth, int screenHeight, sf::Texture texture) :
 	maxJumpHeight = groundHeight - JUMP_HEIGHT;
 	maxJumpHeightOld = maxJumpHeight;
 	m_grav = GRAVITY;
+	resetPositionX = START_POSITION_X;
+	resetPositionY = START_POSITION_Y;
 	setStartPosition();
 	collideLeft = false;
-	collideRight = false;
+	collideRight = false; 
 }
 
 void Player::setStartPosition() {
-	m_sprite.setPosition(sf::Vector2f(800, 606));
+	m_sprite.setPosition(sf::Vector2f(resetPositionX, resetPositionY));
 	m_sprite.setOrigin(sf::Vector2f(0, 0));
 }
 
@@ -38,8 +40,10 @@ void Player::update(float dt) {
 	currentHeight = m_sprite.getPosition().y;
 	checkStairs();
 	checkFall();
-	//updateFall();	// TODO - explore. Stairs left bug re-appears from time to time
 	// Uncomment for debugging
+	//std::cout << "collide right " << collideRight << std::endl;
+	//std::cout << "jumping " << isJumping << std::endl;
+	//updateFall();	// TODO - explore. Stairs left bug re-appears from time to times
 	//std::cout << m_grav << std::endl;
 	//std::cout << "gh " << groundHeightOld << std::endl;
 	//std::cout << "player " << m_sprite.getPosition().y << std::endl;
@@ -119,28 +123,15 @@ void Player::moveHorizontal(float dt, float speed) {
 
 void Player::jump(float dt, float speed) {
 	landed = false;
-
-	if (!isMoving) {
-		if (!isAtMaxJumpHeight) {
-			m_sprite.move(sf::Vector2f(0.0, (-JUMP_SPEED * m_grav) * dt));
-			m_grav -= GRAVITY_CALCULATION;
-		}
-		else {
-			//m_sprite.move(sf::Vector2f(0.0, (JUMP_SPEED * m_grav) * dt));
-			//m_grav += GRAVITY_CALCULATION;
-		}
-	}
-
-	if (isMoving) {
-		if (!isAtMaxJumpHeight) {
-			m_sprite.move(sf::Vector2f(speed * dt, (-JUMP_SPEED * m_grav) * dt));
-			m_grav -= GRAVITY_CALCULATION;
-		}
-		else {
-			//m_sprite.move(sf::Vector2f(speed * dt, (JUMP_SPEED * m_grav) * dt));
-			//m_grav += GRAVITY_CALCULATION;
-		}
-	}
+	if (!collideRight && !collideLeft) {
+		m_sprite.move(sf::Vector2f(speed * dt, (-JUMP_SPEED * m_grav) * dt));
+		m_grav -= std::sin((GRAVITY_CALCULATION) * dt);
+	} 
+	else if (collideRight || collideLeft) {
+		currentSpeed = 0;
+		m_sprite.move(sf::Vector2f(speed * dt, (-JUMP_SPEED * m_grav) * dt));
+		m_grav -= std::sin((GRAVITY_CALCULATION) * dt);
+	}	
 	fallCheck();
 }
 
@@ -198,8 +189,6 @@ void Player::collision(char c, float gh) {
 		break;
 	case NO_COLLISION:
 		if (!onStairsLeft && !onStairsRight) {
-			collideLeft = false;
-			collideRight = false;
 			if (topStairs) {
 				topStairs = false;
 				break;
@@ -231,7 +220,8 @@ void Player::updateGroundHeight(float gh) {
 
 void Player::checkState() {
 	const char DEAD = 'd', PICK_UP = 'u', NONE = 'n', LEFT = 'l', RIGHT = 'r', DOWN = 'D', UP = 'U';
-	char c = state->getState();	
+	char c = state->getState();
+	auto resetStartPosition = [&]() { resetPositionX = m_sprite.getPosition().x; resetPositionY = m_sprite.getPosition().y; }; // reset position in case of death
 	switch (c) {
 	case DEAD:
 		std::cout << "dead" << std::endl;
@@ -243,16 +233,19 @@ void Player::checkState() {
 		state->updateState(NONE);
 		break;
 	case LEFT:
-		m_sprite.setPosition(sf::Vector2f(m_screenWidth, m_sprite.getPosition().y));
+		m_sprite.setPosition(sf::Vector2f(m_screenWidth - 50, m_sprite.getPosition().y));
+		resetStartPosition(); 
 		break;
 	case RIGHT:
-		m_sprite.setPosition(sf::Vector2f(0, m_sprite.getPosition().y));
+		m_sprite.setPosition(sf::Vector2f(20, m_sprite.getPosition().y));
+		resetStartPosition();
 		break;
 	case DOWN:		
 		m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, 0));
-		isJumping = true;
+		resetStartPosition();
+		//isJumping = true;
 		isFalling = true;
-		m_grav = 0.001;
+		//m_grav = 0.001;
 		updateGroundHeight(0.0);
 		fall(deltaTime);
 		fallCheck();
