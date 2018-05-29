@@ -96,7 +96,6 @@ void GameUpdates::changeLevel(int nextRoom, LevelObjects &levelObjects) {
 }
 
 void GameUpdates::updateGame(float dt, LevelObjects &levelObjects, Game &game) {
-																  
 	switch (game) {
 	case Game::TITLE_SCREEN:		 
 	 	levelObjects.titleScreen->update(dt);

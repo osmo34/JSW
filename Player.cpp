@@ -45,7 +45,7 @@ void Player::update(float dt) {
 	//std::cout << "jumping " << isJumping << std::endl;
 	//updateFall();	// TODO - explore. Stairs left bug re-appears from time to times
 	//std::cout << m_grav << std::endl;
-	//std::cout << "gh " << groundHeightOld << std::endl;
+	//std::cout << "gh " << groundHeight << std::endl;
 	//std::cout << "player " << m_sprite.getPosition().y << std::endl;
 	//std::cout << onStairsLeft << std::endl;
 	//std::cout << groundHeightPlatform << std::endl;
@@ -105,15 +105,15 @@ void Player::checkMovement(float dt) {
 }
 
 void Player::moveHorizontal(float dt, float speed) {
-
 	currentSpeed = speed;
 	if (!isJumping) {
 		if (onStairsLeft)
 			m_sprite.move(sf::Vector2f(verticalSpeed * speed * dt, verticalSpeed * speed * dt));
 		else if (onStairsRight)
 			m_sprite.move(sf::Vector2f(verticalSpeed * speed * dt, verticalSpeed * -speed * dt));
-		else
+		else {
 			m_sprite.move(sf::Vector2f(speed * dt, 0.0));
+		}
 		
 		groundHeight = m_sprite.getPosition().y;
 		updateGroundHeight(groundHeight);
@@ -136,7 +136,7 @@ void Player::jump(float dt, float speed) {
 }
 
 void Player::fall(const float dt) {
-	m_sprite.move(sf::Vector2f(0.0, FALL_SPEED * dt));
+	m_sprite.move(sf::Vector2f(0, FALL_SPEED * dt));
 }
 
 void Player::fallCheck() {	
@@ -241,7 +241,7 @@ void Player::checkState() {
 		resetStartPosition();
 		break;
 	case DOWN:		
-		m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, 0));
+		m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, 32));
 		resetStartPosition();
 		isJumping = true;
 		isFalling = true;
@@ -249,6 +249,13 @@ void Player::checkState() {
 		updateGroundHeight(0.0);
 		fall(deltaTime);
 		fallCheck();
+		break;
+	case UP:
+		m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, 664)); // TODO: Hacky
+		isJumping = false;
+		isFalling = false;
+		updateGroundHeight(0.0);
+		resetStartPosition();
 		break;
 	case NONE:
 		//state->updateState(NONE);
@@ -269,8 +276,11 @@ void Player::checkScreenEdge() {
 	else if (m_sprite.getPosition().x > m_screenWidth) {
 		state->updateState(RIGHT);
 	}
-	else if (m_sprite.getPosition().y + 32 >= groundHeightOld) {
+	else if (m_sprite.getPosition().y >= groundHeightOld) {
 		state->updateState(DOWN);			
+	}
+	else if (m_sprite.getPosition().y <= 32) {
+		state->updateState(UP);
 	}
 }
 

@@ -33,7 +33,7 @@ private:
 	const float JUMP_HEIGHT = 100.0f;
 	bool landed = true;
 	float currentSpeed;
-	float groundHeight = 700.0f;
+	float groundHeight = 764.0f;
 	float groundHeightOld;
 	float groundHeightPlatform = 0.0f; // fix to retain ground height when jumping into walls when on a platform
 	float maxJumpHeight;
