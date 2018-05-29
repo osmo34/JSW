@@ -26,7 +26,7 @@ Current TODO: <p>
 * <del> Refactoring main into a game manager </del> done <br>
 * Gameplay logic, e.g. amount of collectables, lives etc. <br>
 * <del> Level Editor </del> (usable but not feature complete) <p>
-* Content - currently 2 levels partially built
+* Content - currently approx 20 levels partially built
 <p>
 added second screenshot with stairs support. Not much to see. The blue circles represent enemies <br>
 added level editor screenshot
