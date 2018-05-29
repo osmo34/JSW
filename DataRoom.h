@@ -23,8 +23,8 @@ struct RoomData {
 #pragma pack(push, 2)
 struct Room {
 	std::int32_t roomId;
-	RoomData roomData[256];
-	std::uint8_t numObjects;
+	RoomData roomData[920];
+	std::uint32_t numObjects;
 };
 #pragma pack(pop)
 

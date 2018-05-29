@@ -243,9 +243,9 @@ void Player::checkState() {
 	case DOWN:		
 		m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, 0));
 		resetStartPosition();
-		//isJumping = true;
+		isJumping = true;
 		isFalling = true;
-		//m_grav = 0.001;
+		m_grav = 0.001;
 		updateGroundHeight(0.0);
 		fall(deltaTime);
 		fallCheck();

@@ -15,9 +15,9 @@ Room GameUpdates::createRoom(std::string fileName, LevelObjects & levelObjects) 
 	std::unique_ptr<LoadRoom> loadLevel(new LoadRoom);
 	room = loadLevel->loadRoom(fileName);
 
-	for (int i = 0; i < room.numObjects; i++) {
+	for (int i = 0; i < room.numObjects; i++) {	 //  room.numObjects
 		sf::Texture texture;
-		texture = levelObjects.textures.find(room.roomData[i].textureId)->second;
+		texture = levelObjects.textures.find(room.roomData[i].textureId)->second;		
 
 		switch (room.roomData[i].objectType) {
 		case STATIC_OBJECT:
@@ -45,7 +45,7 @@ Room GameUpdates::createRoom(std::string fileName, LevelObjects & levelObjects) 
 			//std::cout << "error in room data" << std::endl;
 			break;
 		}
-	}
+	}	
 	return room;
 }
 
