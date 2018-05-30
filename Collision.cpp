@@ -145,18 +145,17 @@ void Collision::checkCollision(std::function<void(char c, float i)> playerCollis
 		float playerCentreY = playerBottom - 16;
 		float distanceX = playerCentreX - blockCentreX;
 		float distanceY = playerCentreY - blockCentreY;
-				
+		
 		if (COLLISION_TOP) {
 			playerCollision(TOP, it.top);
-			//std::cout << "distance x: " << distanceX << std::endl;
-			//std::cout << "distance y: " << distanceY << std::endl;
-			//continue;
 			return;
 		}
-		else if (distanceX < -32 || distanceX > 32 || distanceY > 40) {
+		
+		else if (distanceX < -32 || distanceX > 32 || distanceY < 40) {
 			playerCollision(NO_COLLISION, NO_CHANGE_GROUND_HEIGHT);
 			continue;
 		}
+		
 		else {
 			playerCollision(NO_COLLISION, NO_CHANGE_GROUND_HEIGHT);
 			continue;
