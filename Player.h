@@ -43,7 +43,7 @@ private:
 	bool isAtMaxJumpHeight = false;
 	const float GRAVITY = 2.0;
 	const float GRAVITY_CALCULATION = 0.004f;
-	const float FALL_SPEED = 0.005f;
+	const float FALL_SPEED = 0.25f;
 	float m_grav;
 	bool collideLeft;
 	bool collideRight;

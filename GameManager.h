@@ -50,6 +50,11 @@ public:
 	~GameUpdates();
 	void updateGame(float dt, LevelObjects &levelObjects, Game &game);
 private:
+	// clear vectors
+	template <typename T>
+	void clearVector(std::vector<std::shared_ptr<T>> &t) {
+		t.clear();
+	}
 
 	// Templates for creating objects, updates and drawing:
 	template <typename T>
@@ -175,6 +180,7 @@ private:
 
 	// private methods	
 	void loadTexture(std::map<int, sf::Texture> &textures, std::string fileName, int id); 
+	void pauseGameCheck();
 	
 	// member variables
 	const std::string TEXTURES_FILE_NAME = "textures.txt";

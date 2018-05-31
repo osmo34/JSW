@@ -16,7 +16,7 @@ Player::Player(int screenWidth, int screenHeight, sf::Texture texture) :
 }
 
 void Player::setStartPosition() {
-	m_sprite.setPosition(sf::Vector2f(resetPositionX, resetPositionY));
+	m_sprite.setPosition(sf::Vector2f(resetPositionX, resetPositionY - 256)); // TODO: temp to prevent falling through floor on first start (platform not loaded!)
 	m_sprite.setOrigin(sf::Vector2f(0, 0));
 }
 
@@ -37,8 +37,6 @@ void Player::update(float dt) {
 	checkStairs();
 	checkFall();
 
-	//std::cout << fallcalc << std::endl;
-
 	// Uncomment for debugging
 	//std::cout << "collide right " << collideRight << std::endl;
 	//std::cout << "jumping " << isJumping << std::endl;
@@ -53,6 +51,7 @@ void Player::update(float dt) {
 	//std::cout << groundHeightPlatform << std::endl;
 	//std::cout << lastPositionY << std::endl;
 	//std::cout << "is falling " << isFalling << std::endl;
+	//std::cout << lastPositionY << std::endl;
 }
 
 
@@ -118,13 +117,12 @@ void Player::jump(float dt, float speed) {
 }
 
 void Player::fall(const float dt) {
-	m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, (m_sprite.getPosition().y) + (FALL_SPEED * deltaTime)));
+	m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, (m_sprite.getPosition().y) + (FALL_SPEED * dt)));
 }
 
 void Player::fallCheck() {	
 	const char NONE = 'n';
 	if (m_sprite.getPosition().y > groundHeight) {
-		std::cout << "here " << std::endl;
 		m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, groundHeight));
 		updateGroundHeight(0.0);
 		m_grav = GRAVITY;
@@ -176,8 +174,8 @@ void Player::collision(char c, float gh) {
 			else if (isJumping) { 
 				groundHeight = groundHeightOld;
 			}
-			else {			
-				fall(deltaTime);
+			else if (!isFalling) {			
+				fall(0.01 * deltaTime);	// hopefully prevent jolting on initial fall
 			}
 		}
 		break;
@@ -198,7 +196,7 @@ void Player::updateGroundHeight(float gh) {
 void Player::checkState() {
 	const char DEAD = 'd', PICK_UP = 'u', NONE = 'n', LEFT = 'l', RIGHT = 'r', DOWN = 'D', UP = 'U';
 	char c = state->getState();
-	auto resetStartPosition = [&]() { resetPositionX = m_sprite.getPosition().x; resetPositionY = m_sprite.getPosition().y; }; // reset position in case of death
+	auto resetStartPosition = [&]() { resetPositionX = m_sprite.getPosition().x; resetPositionY = m_sprite.getPosition().y; }; // reset position
 	switch (c) {
 	case DEAD:
 		std::cout << "dead" << std::endl;
@@ -230,6 +228,7 @@ void Player::checkState() {
 		break;
 	case NONE:
 		//state->updateState(NONE);
+		break;
 	default:
 		break;
 	}
@@ -301,7 +300,12 @@ void Player::checkFall() {
 		isFalling = false;
 		return;
 	}
-	(m_sprite.getPosition().y > lastPositionY) ? isFalling = true : isFalling = false;	
+	(m_sprite.getPosition().y > lastPositionY) ? isFalling = true : isFalling = false;
+	// make character fall
+	if (isFalling) {
+		fall(deltaTime);
+	}
+
 }
 
 void Player::onStairs(sf::Vector2f bottom, sf::Vector2f top, bool onStairsBottom, bool onStairsTop, bool isStairsLeft) {
@@ -315,8 +319,7 @@ char Player::externalCheckState() {
 	return state->getState();
 }
 
-void Player::externalResetState()
-{
+void Player::externalResetState() {
 	state->updateState(NONE);
 }
 

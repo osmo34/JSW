@@ -105,7 +105,7 @@ void GameUpdates::updateGame(float dt, LevelObjects &levelObjects, Game &game) {
 		}
 		break;
 	case Game::GAME:
-		update(levelObjects.player, levelObjects.collision, dt);
+		
 		if (isFirstRun) {
 			levelObjects.room = createRoom(levelObjects.world.fileNames[currentRoom], levelObjects);
 			nextRoomRight = levelObjects.room.roomId + 1;
@@ -116,6 +116,7 @@ void GameUpdates::updateGame(float dt, LevelObjects &levelObjects, Game &game) {
 		}
 
 		if (inLevel) {
+			update(levelObjects.player, levelObjects.collision, dt);
 			if (!firstLoopComplete) {
 				update(levelObjects.levelStaticObjects, levelObjects.collision);
 				update(levelObjects.levelStaticPlatforms, levelObjects.collision);				
