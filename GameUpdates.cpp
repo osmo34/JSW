@@ -115,18 +115,18 @@ void GameUpdates::updateGame(float dt, LevelObjects &levelObjects, Game &game) {
 			isFirstRun = false;
 		}
 
-		if (inLevel) {		
+		if (inLevel) {	
 			update(levelObjects.player, levelObjects.collision, dt);
-			if (!firstLoopComplete) {
+			if (!firstLoopComplete) { 
+				update(levelObjects.levelStaticPlatforms, levelObjects.collision);
 				update(levelObjects.levelStaticObjects, levelObjects.collision);
-				update(levelObjects.levelStaticPlatforms, levelObjects.collision);				
 				firstLoopComplete = true;
-			}
+			}  
 			update(levelObjects.levelStaticStairs, levelObjects.collision, levelObjects.player);
 			update(levelObjects.enemiesMoving, levelObjects.collision, levelObjects.player, dt);
 			update(levelObjects.enemiesStatic, levelObjects.collision, levelObjects.player, dt);
 			update(levelObjects.pickups, levelObjects.collision, levelObjects.player, dt);
-			update(levelObjects.spritesStatic, dt);
+			update(levelObjects.spritesStatic, dt);	
 		}
 		checkLevelChange(levelObjects);
 		break;

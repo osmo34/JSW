@@ -10,17 +10,19 @@ Player::Player(int screenWidth, int screenHeight, sf::Texture texture) :
 	m_grav = GRAVITY;
 	resetPositionX = START_POSITION_X;
 	resetPositionY = START_POSITION_Y;
+	groundHeightPlatform = resetPositionY;
 	setStartPosition();
 	collideLeft = false;
 	collideRight = false; 
 }
 
 void Player::setStartPosition() {
-	m_sprite.setPosition(sf::Vector2f(resetPositionX, resetPositionY - 256)); // TODO: temp to prevent falling through floor on first start (platform not loaded!)
+	m_sprite.setPosition(sf::Vector2f(resetPositionX, resetPositionY)); // TODO: temp to prevent falling through floor on first start (platform not loaded!)
 	m_sprite.setOrigin(sf::Vector2f(0, 0));
 }
 
 void Player::update(float dt) {
+
 	deltaTime = dt;
 	m_currentDirection = input->update(deltaTime, isJumping);
 	checkMovement(deltaTime);
@@ -38,6 +40,7 @@ void Player::update(float dt) {
 	checkFall();
 
 	// Uncomment for debugging
+	//std::cout << dt << std::endl;
 	//std::cout << "collide right " << collideRight << std::endl;
 	//std::cout << "jumping " << isJumping << std::endl;
 	//updateFall();	// TODO - explore. Stairs left bug re-appears from time to times
@@ -116,7 +119,10 @@ void Player::jump(float dt, float speed) {
 	fallCheck();
 }
 
-void Player::fall(const float dt) {
+void Player::fall(float dt) {
+	if (dt >= 55) { // delta time bug when loading new levels. Wont work below 20fps
+		dt = 0;
+	}
 	m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, (m_sprite.getPosition().y) + (FALL_SPEED * dt)));
 }
 
@@ -208,16 +214,15 @@ void Player::checkState() {
 		state->updateState(NONE);
 		break;
 	case LEFT:
-		m_sprite.setPosition(sf::Vector2f(m_screenWidth - 50, m_sprite.getPosition().y - 10));
+		m_sprite.setPosition(sf::Vector2f(m_screenWidth - 50, m_sprite.getPosition().y));
 		resetStartPosition(); 
 		break;
 	case RIGHT:
-		m_sprite.setPosition(sf::Vector2f(20, m_sprite.getPosition().y - 10));
+		m_sprite.setPosition(sf::Vector2f(20, m_sprite.getPosition().y));
 		resetStartPosition();
 		break;
 	case DOWN:		
 		m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, 32));
-		isFalling = true;
 		resetStartPosition();
 		break;
 	case UP:

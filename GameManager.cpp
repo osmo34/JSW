@@ -30,10 +30,6 @@ void GameManager::initializeGame() {
 	for (int i = 0; i < worldList.size(); i++) {
 		levelObjects.world.fileNames[i] = worldList[i];		
 	}
-
-	// create player
-	levelObjects.player = std::shared_ptr <Player>(new Player(m_screenWidth, m_screenHeight, levelObjects.textures[0]));
-
 	// create collision
 	levelObjects.collision = std::shared_ptr <Collision>(new Collision());
 
@@ -46,6 +42,9 @@ void GameManager::initializeGame() {
 
 	// set up drawing
 	gameDraw = std::unique_ptr<GameDraw>(new GameDraw());
+
+	// create player
+	levelObjects.player = std::shared_ptr <Player>(new Player(m_screenWidth, m_screenHeight, levelObjects.textures[0]));
 }
 
 void GameManager::update(float dt, bool isPaused) {

@@ -13,7 +13,7 @@ private:
 	void checkMovement(const float dt);
 	void moveHorizontal(const float dt, const float speed);
 	void jump(const float dt, const float speed);
-	void fall(const float dt);
+	void fall(float dt);
 	void fallCheck();
 	void checkState();
 	void checkScreenEdge();
@@ -35,7 +35,7 @@ private:
 	float currentSpeed;
 	float groundHeight = 764.0f;
 	float groundHeightOld;
-	float groundHeightPlatform = 0.0f; // fix to retain ground height when jumping into walls when on a platform
+	float groundHeightPlatform; // fix to retain ground height when jumping into walls when on a platform
 	float maxJumpHeight;
 	float maxJumpHeightOld;
 	bool isMoving = false;
@@ -68,13 +68,14 @@ private:
 	float resetPositionX;
 	float resetPositionY;
 
+	bool isFirstRun = true;
+
 
 public:
 	const char objectId = 'p';
 	using Sprite::Sprite;
 	Player(const int screenWidth, const int screenHeight, sf::Texture texture);
 	void update(const float dt);
-	void updateFall();
 	void setStartPosition();
 	void collision(char c, float gh);
 	void updateGroundHeight(float gh);
