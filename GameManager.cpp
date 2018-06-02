@@ -9,11 +9,6 @@ void GameManager::loadTexture(std::map<int, sf::Texture>& textures, std::string 
 	textures[id] = texture;	
 }
 
-void GameManager::pauseGameCheck() {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) { // TODO: change to event handling
-		isGamePaused ^= true;
-	}
-}
 
 void GameManager::initializeGame() {
 	//set up title screen
@@ -53,12 +48,11 @@ void GameManager::initializeGame() {
 	gameDraw = std::unique_ptr<GameDraw>(new GameDraw());
 }
 
-void GameManager::update(float dt) {
-	if (!isGamePaused) {
+void GameManager::update(float dt, bool isPaused) {
+	if (!isPaused) {
 		gameUpdates->updateGame(dt, levelObjects, game);
 		gameSounds->checkPlayerSoundEffects(levelObjects);
 	}
-	pauseGameCheck();  
 }
 
 // TODO: refactor into draw class

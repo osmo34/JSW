@@ -17,7 +17,5 @@ public:
 	PlayerInput();
 	~PlayerInput();
 	char update(const float dt, bool isJumping);
-
-
 };
 

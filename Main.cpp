@@ -2,10 +2,12 @@
 
 #include <SFML\Graphics.hpp>
 #include "GameManager.h"
+#include "LevelInfo.h"
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
 const int FPS = 60;
+static bool isGamePaused = false;
 
 void handlePollEvents(sf::RenderWindow *window) {
 	sf::Event event;
@@ -14,6 +16,17 @@ void handlePollEvents(sf::RenderWindow *window) {
 		case sf::Event::Closed:
 			window->close();
 			break;
+		case sf::Event::LostFocus:
+			isGamePaused = true;
+			break;
+		case sf::Event::GainedFocus:
+			isGamePaused = false;
+			break;
+		case sf::Event::KeyPressed:
+			if (event.key.code == sf::Keyboard::P) { 				
+				isGamePaused ^= true;
+			}
+			break;			
 		}
 	}
 }
@@ -31,7 +44,7 @@ int main() {
 		handlePollEvents(&window);
 		sf::Time time = clock.getElapsedTime();
 		clock.restart().asSeconds();
-		gameManager->update(time.asMilliseconds());	 
+		gameManager->update(time.asMilliseconds(), isGamePaused);	 
 		window.clear(sf::Color::Color(217, 217, 217, 255));		
 		gameManager->draw(&window);		
 		window.display();

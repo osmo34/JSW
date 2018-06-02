@@ -122,6 +122,11 @@ private:
 	bool firstLoopComplete;
 	int screenWidth;
 	int screenHeight;
+	unsigned int currentRoom = 6;
+	unsigned int nextRoomRight;
+	unsigned int nextRoomLeft;
+	unsigned int nextRoomUp;
+	unsigned int nextRoomDown;
 };
 
 // responsible for sound & music
@@ -171,7 +176,7 @@ public:
 	GameManager(int screenWidth, int screenHeight);
 	~GameManager();
 	void initializeGame();
-	void update(float dt);
+	void update(float dt, bool isPaused);
 	void draw(sf::RenderWindow *window);
 
 private:	
@@ -180,9 +185,9 @@ private:
 
 	// private methods	
 	void loadTexture(std::map<int, sf::Texture> &textures, std::string fileName, int id); 
-	void pauseGameCheck();
 	
 	// member variables
+	sf::Event event;
 	const std::string TEXTURES_FILE_NAME = "textures.txt";
 	const std::string WORLD_FILE_NAME = "world.txt";
 	int m_screenWidth = 0;

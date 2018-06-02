@@ -3,7 +3,7 @@
 GameUpdates::GameUpdates(int screenWidth, int screenHeight) : screenWidth(screenWidth), screenHeight(screenHeight) {
 	isFirstRun = true;
 	inLevel = true;
-	firstLoopComplete = false;	
+	firstLoopComplete = false;
 }
 
 GameUpdates::~GameUpdates() {}
@@ -115,7 +115,7 @@ void GameUpdates::updateGame(float dt, LevelObjects &levelObjects, Game &game) {
 			isFirstRun = false;
 		}
 
-		if (inLevel) {
+		if (inLevel) {		
 			update(levelObjects.player, levelObjects.collision, dt);
 			if (!firstLoopComplete) {
 				update(levelObjects.levelStaticObjects, levelObjects.collision);

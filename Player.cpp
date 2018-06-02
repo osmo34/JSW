@@ -208,15 +208,16 @@ void Player::checkState() {
 		state->updateState(NONE);
 		break;
 	case LEFT:
-		m_sprite.setPosition(sf::Vector2f(m_screenWidth - 50, m_sprite.getPosition().y));
+		m_sprite.setPosition(sf::Vector2f(m_screenWidth - 50, m_sprite.getPosition().y - 10));
 		resetStartPosition(); 
 		break;
 	case RIGHT:
-		m_sprite.setPosition(sf::Vector2f(20, m_sprite.getPosition().y));
+		m_sprite.setPosition(sf::Vector2f(20, m_sprite.getPosition().y - 10));
 		resetStartPosition();
 		break;
 	case DOWN:		
 		m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, 32));
+		isFalling = true;
 		resetStartPosition();
 		break;
 	case UP:
