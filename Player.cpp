@@ -119,10 +119,7 @@ void Player::jump(float dt, float speed) {
 	fallCheck();
 }
 
-void Player::fall(float dt) {
-	if (dt >= 55) { // delta time bug when loading new levels. Wont work below 20fps
-		dt = 0;
-	}
+void Player::fall(float dt) {	
 	m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, (m_sprite.getPosition().y) + (FALL_SPEED * dt)));
 }
 
@@ -223,6 +220,7 @@ void Player::checkState() {
 		break;
 	case DOWN:		
 		m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, 32));
+		lastPositionY = 0;
 		resetStartPosition();
 		break;
 	case UP:

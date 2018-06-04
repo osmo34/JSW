@@ -49,6 +49,9 @@ void GameManager::initializeGame() {
 
 void GameManager::update(float dt, bool isPaused) {
 	if (!isPaused) {
+		if (dt >= 55) { // delta time bug when loading new levels. TODO: low priority set specific to frame rate
+			dt = 0;
+		}
 		gameUpdates->updateGame(dt, levelObjects, game);
 		gameSounds->checkPlayerSoundEffects(levelObjects);
 	}
