@@ -47,10 +47,12 @@ sf::IntRect Sprite::createSourceRect() {
 	return sourceRect;
 }
 
-void Sprite::flipSprite(bool isflipLeft) {	
+void Sprite::flipSprite(bool isflipLeft) {
+	this->isflipLeft = isflipLeft;
 	(isflipLeft) ?
 		m_sourceRect.width = -TEXTURE_SIZE_X :
 		m_sourceRect.width = TEXTURE_SIZE_X;
+
 	m_sprite.setTextureRect(m_sourceRect);
 }
 

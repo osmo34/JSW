@@ -33,5 +33,6 @@ protected:
 	void flipSprite(bool isFlipLeft);
 	int TEXTURE_SIZE_X = 32;
 	int TEXTURE_SIZE_Y = 32;
+	bool isflipLeft = false;
 
 };

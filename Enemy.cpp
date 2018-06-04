@@ -4,8 +4,7 @@ Enemy::Enemy(int screenWidth, int screenHeight,	sf::Texture texture,
 	RoomData &roomData) :
 	posX(roomData.positionX), posY(roomData.positionY), 
 	speedX(roomData.speedX), speedY(roomData.speedY), objectId(roomData.objectType),
-	Sprite(screenWidth, screenHeight, texture) {
-	std::cout << objectId << std::endl;
+	Sprite(screenWidth, screenHeight, texture) {	
 	setStartPosition();
 	setUpEnemy();
 }

@@ -7,7 +7,7 @@ class Animation
 public:
 	Animation();
 	~Animation();
-	void updateAnimation(float dt, sf::IntRect &rect, sf::Sprite *sprite);
+	void updateAnimation(float dt, sf::IntRect &rect, sf::Sprite *sprite, bool isFlipped);
 	void update(float dt);
 
 private:

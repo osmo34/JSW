@@ -28,7 +28,7 @@ void Player::update(float dt) {
 	checkMovement(deltaTime);
 	checkScreenEdge();
 	checkState();
-	animation->update(deltaTime);
+	animation->update(deltaTime);	
 
 	if (isJumping) {
 		jump(dt, currentSpeed);
@@ -57,7 +57,6 @@ void Player::update(float dt) {
 	//std::cout << lastPositionY << std::endl;
 }
 
-
 void Player::checkMovement(float dt) {
 	const char LEFT = 'l', RIGHT = 'r', JUMP = 'j', STATIONARY = 's';
 	
@@ -66,26 +65,25 @@ void Player::checkMovement(float dt) {
 		if (!collideLeft) {
 			moveHorizontal(dt, -PLAYER_SPEED);
 			flipSprite(true);
-			animation->updateAnimation(dt, m_sourceRect, &m_sprite);
+			animation->updateAnimation(dt, m_sourceRect, &m_sprite, isflipLeft);
 		}
 		break;
 	case RIGHT:
 		if (!collideRight) {
 			moveHorizontal(dt, PLAYER_SPEED);
 			flipSprite(false);
-			animation->updateAnimation(dt, m_sourceRect, &m_sprite);
+			animation->updateAnimation(dt, m_sourceRect, &m_sprite, isflipLeft);
 		}
 		break;
 	case JUMP:
 		if (!isJumping && !isFalling) {
 			isJumping = true;
 			state->updateState(JUMP);
-			animation->updateAnimation(dt, m_sourceRect, &m_sprite);
+			animation->updateAnimation(dt, m_sourceRect, &m_sprite, isflipLeft);
 		}
 		break;
 	case STATIONARY:
 		moveHorizontal(dt, 0.0f);
-		animation->updateAnimation(dt, m_sourceRect, &m_sprite);
 		break;
 	default:
 		break;
