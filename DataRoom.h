@@ -13,6 +13,10 @@ struct RoomData {
 	float positionY;
 	float speedX;
 	float speedY;
+	float clampXRight;
+	float clampXLeft;
+	float clampYTop;
+	float clampYBottom;
 	float stairBottomX;
 	float stairBottomY;
 	float stairTopX;

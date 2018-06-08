@@ -1,9 +1,11 @@
 #include "Enemy.h"
 
-Enemy::Enemy(int screenWidth, int screenHeight,	sf::Texture texture,
+Enemy::Enemy(int screenWidth, int screenHeight, sf::Texture texture,
 	RoomData &roomData) :
-	posX(roomData.positionX), posY(roomData.positionY), 
+	posX(roomData.positionX), posY(roomData.positionY),
 	speedX(roomData.speedX), speedY(roomData.speedY), objectId(roomData.objectType),
+	clampXRight(roomData.clampXRight), clampXLeft(roomData.clampXLeft), 
+	clampYTop(roomData.clampYTop), clampYBottom(roomData.clampYBottom),
 	Sprite(screenWidth, screenHeight, texture) {	
 	setStartPosition();
 	setUpEnemy();

@@ -17,19 +17,19 @@ void EnemyMoving::update(const float dt) {
 void EnemyMoving::reverseDirection() {
 	// TODO: this is for testing only, this would be dependent on the length of the platform
 	
-	if (m_sprite.getPosition().x >= m_screenWidth) {
+	if (m_sprite.getPosition().x >= clampXRight) {
 		movementSpeed.x = -speedX;
 		flipSprite(true);
 	}
-	else if (m_sprite.getPosition().x <= 0) {
+	else if (m_sprite.getPosition().x <= clampXLeft) {
 		movementSpeed.x = speedX;
 		flipSprite(false);
 	}
 
-	if (m_sprite.getPosition().y >= m_screenHeight) {
+	if (m_sprite.getPosition().y >= clampYTop) {
 		movementSpeed.y = -speedY;
 	}
-	else if (m_sprite.getPosition().y <= 0) {
+	else if (m_sprite.getPosition().y <= clampYBottom) {
 		movementSpeed.y = speedY;
 	}
 }

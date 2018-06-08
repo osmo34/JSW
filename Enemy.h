@@ -18,6 +18,10 @@ public:
 protected:
 	float posX;
 	float posY;
+	float clampXRight; 
+	float clampXLeft;
+	float clampYTop;  
+	float clampYBottom;
 	float speedX;
 	float speedY;
 	sf::Vector2f movementSpeed;
