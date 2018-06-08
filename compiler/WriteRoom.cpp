@@ -57,6 +57,18 @@ Room WriteRoom::createRoomData()
 		else if (type == "sy") {
 			roomData.speedY = std::stof(value);
 		}
+		else if (type == "clampXLeft") {
+			roomData.clampXLeft = std::stof(value);
+		}
+		else if (type == "clampXRight") {
+			roomData.clampXRight = std::stof(value);
+		}
+		else if (type == "clampYTop") {
+			roomData.clampYTop = std::stof(value);
+		}
+		else if (type == "clampYBottom") {
+			roomData.clampYBottom = std::stof(value);
+		}
 		else if (type == "stbx") {
 			roomData.stairBottomX = std::stof(value);
 		}
