@@ -35,6 +35,10 @@ namespace JSB_LevelEditor
         static int textureID = 0;
         static float speedX = 0.0f;
         static float speedY = 0.0f;
+        static float clampXLeft = 0.0f;
+        static float clampXRight = 0.0f;
+        static float clampYTop = 0.0f;
+        static float clampYBottom = 0.0f;
 
         static string selectedObject = "";
         static int selectedObjectIndex = 0;
@@ -137,6 +141,10 @@ namespace JSB_LevelEditor
                     itemList[i - 1].ObjectType = selectedObject;
                     itemList[i - 1].SpeedX = speedX;
                     itemList[i - 1].SpeedY = speedY;
+                    itemList[i - 1].clampXLeft = clampXLeft;
+                    itemList[i - 1].clampXRight = clampXRight;
+                    itemList[i - 1].clampYTop = clampYTop;
+                    itemList[i - 1].clampYBottom = clampYBottom;
                     itemList[i - 1].calculatePosition();
                     itemList[i - 1].convertObjectType();
                     //toolTipList[i - 1].SetToolTip(pictureBoxList[i - 1], "Obj Pos Number: " + itemList[i - 1].ObjectPositionNumber + "Texutre ID: " + itemList[i - 1].TextureNumber.ToString() + ", Object Type: " + itemList[i - 1].ObjectOutput.ToString() + ", SpeedX: " + itemList[i - 1].SpeedX.ToString() + ", SpeedY: " + itemList[i - 1].SpeedY.ToString() + ", PositionX: " + itemList[i - 1].PositionX + ", Position Y: " + itemList[i - 1].PositionY);
@@ -158,6 +166,10 @@ namespace JSB_LevelEditor
         private void button1_Click(object sender, EventArgs e) {
             speedX = float.Parse(SpeedXBox.Text);
             speedY = float.Parse(SpeedYBox.Text);
+            clampXLeft = float.Parse(clampLeftBox.Text);
+            clampXRight = float.Parse(clampRightBox.Text);
+            clampYTop = float.Parse(clampTopBox.Text);
+            clampYBottom = float.Parse(clampBottomBox.Text);
         }
         // output text file
         private void button2_Click(object sender, EventArgs e) {
@@ -238,6 +250,10 @@ namespace JSB_LevelEditor
                 textureID = 0;
                 speedX = 0.0f;
                 speedY = 0.0f;
+                clampXLeft = 0.0f;
+                clampXRight = 0.0f;
+                clampYTop = 0.0f;
+                clampYBottom = 0.0f;
                 selectedObject = "";
                 selectedObjectIndex = 0;
                 this.comboBox1.Items.Clear();
@@ -298,6 +314,10 @@ namespace JSB_LevelEditor
                     textureID = 0;
                     speedX = 0.0f;
                     speedY = 0.0f;
+                    clampXLeft = 0.0f;
+                    clampXRight = 0.0f;
+                    clampYTop = 0.0f;
+                    clampYBottom = 0.0f;
                     selectedObject = "";
                     selectedObjectIndex = 0;
                     this.comboBox1.Items.Clear();
@@ -336,6 +356,11 @@ namespace JSB_LevelEditor
         private int _objectPostionNumber;
         private float _speedX;
         private float _speedY;
+        private float _clampXLeft;
+        private float _clampXRight;
+        private float _clampYTop;
+        private float _clampYBottom;
+
 
         private int _positionX;
         private int _positionY;
@@ -348,6 +373,12 @@ namespace JSB_LevelEditor
         public string ObjectOutput { set { _objectTypeOutput = value; } get { return _objectTypeOutput; } }
         public float SpeedX { get { return _speedX; } set { _speedX = value; } }
         public float SpeedY { get { return _speedY; } set { _speedY = value; } }
+        public float clampXLeft { get { return _clampXLeft; } set { _clampXLeft = value; } }
+        public float clampXRight { get { return _clampXRight; } set { _clampXRight = value; } }
+        public float clampYTop { get { return _clampYTop; } set { _clampYTop = value; } }
+        public float clampYBottom { get { return _clampYBottom; } set { _clampYBottom = value; } }
+
+
         public int PositionX { get { return _positionX; } }
         public int PositionY { get { return _positionY; } }
 
@@ -430,6 +461,14 @@ namespace JSB_LevelEditor
                 "sx:" + _speedX.ToString() +
                 System.Environment.NewLine +
                 "sy:" + _speedY.ToString() +
+                System.Environment.NewLine +
+                "clampXLeft:" + _clampXLeft.ToString() +
+                System.Environment.NewLine +
+                "clampXRight:" + _clampXRight.ToString() +
+                System.Environment.NewLine +
+                "clampYTop:" + _clampYTop.ToString() +
+                System.Environment.NewLine +
+                "clampYBottom:" + _clampYBottom.ToString() +
                 System.Environment.NewLine +
                 "end:0.0";
             return output;

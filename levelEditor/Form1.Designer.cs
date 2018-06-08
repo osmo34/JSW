@@ -976,6 +976,14 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.buttonItemExplore = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.clampLeftBox = new System.Windows.Forms.TextBox();
+            this.clampRightBox = new System.Windows.Forms.TextBox();
+            this.clampTopBox = new System.Windows.Forms.TextBox();
+            this.clampBottomBox = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox920)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox919)).BeginInit();
@@ -10296,7 +10304,7 @@
             // 
             this.SpeedX.AutoSize = true;
             this.SpeedX.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.SpeedX.Location = new System.Drawing.Point(1369, 242);
+            this.SpeedX.Location = new System.Drawing.Point(1369, 246);
             this.SpeedX.Name = "SpeedX";
             this.SpeedX.Size = new System.Drawing.Size(51, 13);
             this.SpeedX.TabIndex = 5;
@@ -10314,21 +10322,23 @@
             // 
             // SpeedXBox
             // 
-            this.SpeedXBox.Location = new System.Drawing.Point(1429, 239);
+            this.SpeedXBox.Location = new System.Drawing.Point(1459, 246);
             this.SpeedXBox.Name = "SpeedXBox";
             this.SpeedXBox.Size = new System.Drawing.Size(52, 20);
             this.SpeedXBox.TabIndex = 7;
+            this.SpeedXBox.Text = "0.0";
             // 
             // SpeedYBox
             // 
-            this.SpeedYBox.Location = new System.Drawing.Point(1429, 280);
+            this.SpeedYBox.Location = new System.Drawing.Point(1459, 276);
             this.SpeedYBox.Name = "SpeedYBox";
             this.SpeedYBox.Size = new System.Drawing.Size(52, 20);
             this.SpeedYBox.TabIndex = 8;
+            this.SpeedYBox.Text = "0.0";
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(1375, 316);
+            this.button1.Location = new System.Drawing.Point(1372, 457);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(152, 23);
             this.button1.TabIndex = 9;
@@ -10476,12 +10486,92 @@
             this.buttonItemExplore.UseVisualStyleBackColor = true;
             this.buttonItemExplore.Click += new System.EventHandler(this.buttonItemExplore_Click);
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.label7.Location = new System.Drawing.Point(1369, 317);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(64, 13);
+            this.label7.TabIndex = 19;
+            this.label7.Text = "ClampXLeft:";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.label8.Location = new System.Drawing.Point(1369, 347);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(71, 13);
+            this.label8.TabIndex = 20;
+            this.label8.Text = "ClampXRight:";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.label9.Location = new System.Drawing.Point(1369, 377);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(65, 13);
+            this.label9.TabIndex = 21;
+            this.label9.Text = "ClampYTop:";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.label10.Location = new System.Drawing.Point(1369, 407);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(79, 13);
+            this.label10.TabIndex = 22;
+            this.label10.Text = "ClampYBottom:";
+            // 
+            // clampLeftBox
+            // 
+            this.clampLeftBox.Location = new System.Drawing.Point(1459, 310);
+            this.clampLeftBox.Name = "clampLeftBox";
+            this.clampLeftBox.Size = new System.Drawing.Size(52, 20);
+            this.clampLeftBox.TabIndex = 23;
+            this.clampLeftBox.Text = "0.0";
+            // 
+            // clampRightBox
+            // 
+            this.clampRightBox.Location = new System.Drawing.Point(1459, 344);
+            this.clampRightBox.Name = "clampRightBox";
+            this.clampRightBox.Size = new System.Drawing.Size(52, 20);
+            this.clampRightBox.TabIndex = 24;
+            this.clampRightBox.Text = "0.0";
+            // 
+            // clampTopBox
+            // 
+            this.clampTopBox.Location = new System.Drawing.Point(1459, 377);
+            this.clampTopBox.Name = "clampTopBox";
+            this.clampTopBox.Size = new System.Drawing.Size(52, 20);
+            this.clampTopBox.TabIndex = 25;
+            this.clampTopBox.Text = "0.0";
+            // 
+            // clampBottomBox
+            // 
+            this.clampBottomBox.Location = new System.Drawing.Point(1459, 407);
+            this.clampBottomBox.Name = "clampBottomBox";
+            this.clampBottomBox.Size = new System.Drawing.Size(52, 20);
+            this.clampBottomBox.TabIndex = 26;
+            this.clampBottomBox.Text = "0.0";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(31)))), ((int)(((byte)(31)))));
             this.ClientSize = new System.Drawing.Size(1587, 803);
+            this.Controls.Add(this.clampBottomBox);
+            this.Controls.Add(this.clampTopBox);
+            this.Controls.Add(this.clampRightBox);
+            this.Controls.Add(this.clampLeftBox);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.buttonItemExplore);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.IdTextBox);
@@ -12383,6 +12473,14 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Button buttonItemExplore;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox clampLeftBox;
+        private System.Windows.Forms.TextBox clampRightBox;
+        private System.Windows.Forms.TextBox clampTopBox;
+        private System.Windows.Forms.TextBox clampBottomBox;
     }
 }
 
