@@ -81,6 +81,16 @@ Room WriteRoom::createRoomData()
 		else if (type == "stty") {
 			roomData.stairTopY = std::stof(value);
 		}
+		else if (type == "ropeX") {
+			roomData.ropeX = std::stof(value);
+		}
+		else if (type == "ropeY") {
+			roomData.ropeY = std::stof(value);
+		}
+		else if (type == "ropeTop") {
+			roomData.ropeTopY = std::stof(value);
+		}
+
 		else if (type == "end") {
 			room.roomData[i] = roomData;
 			i++;
