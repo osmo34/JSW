@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "StaticObject.h"
 #include "StaticPlatform.h"
+#include "Rope.h"
 #include "Collision.h"
 #include "EnemyMoving.h"
 #include "EnemyStatic.h"
@@ -31,6 +32,7 @@ struct LevelObjects {
 	std::vector <std::shared_ptr<StaticSprite>> spritesStatic;
 	std::vector<std::shared_ptr<EnemyMoving>> enemiesMoving;
 	std::vector<std::shared_ptr<Pickup>> pickups;
+	std::vector<std::shared_ptr<Rope>> ropes;
 	std::shared_ptr<Player> player;
 	std::shared_ptr<Collision> collision;
 	std::shared_ptr<TitleScreen> titleScreen;

@@ -9,7 +9,9 @@ GameUpdates::GameUpdates(int screenWidth, int screenHeight) : screenWidth(screen
 GameUpdates::~GameUpdates() {}
 
 Room GameUpdates::createRoom(std::string fileName, LevelObjects & levelObjects) {
-	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY = 'e', STATIC_PLATFORM = 't', STATIC_STAIRS = 'l', STATIC_SPRITE = '#', ENEMY_MOVING = 'm', ENEMY_STATIC = 'n', PICK_UP = 'u';
+	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY = 'e', STATIC_PLATFORM = 't', 
+		STATIC_STAIRS = 'l', STATIC_SPRITE = '#', ENEMY_MOVING = 'm', 
+		ENEMY_STATIC = 'n', PICK_UP = 'u', ROPE = 'r';
 	Room room{};
 
 	std::unique_ptr<LoadRoom> loadLevel(new LoadRoom);
@@ -40,6 +42,9 @@ Room GameUpdates::createRoom(std::string fileName, LevelObjects & levelObjects) 
 			break;
 		case PICK_UP:
 			createObject(levelObjects.pickups, room.roomData[i], texture);
+			break;
+		case ROPE:
+			createObject(levelObjects.ropes, room.roomData[i], texture);
 			break;
 		default:
 			//std::cout << "error in room data" << std::endl;
@@ -78,6 +83,7 @@ void GameUpdates::clearRoomObjects(LevelObjects &levelObjects) {
 	clearVector(levelObjects.levelStaticStairs);
 	clearVector(levelObjects.pickups);
 	clearVector(levelObjects.spritesStatic);
+	clearVector(levelObjects.ropes);
 }
 
 void GameUpdates::changeLevel(int nextRoom, LevelObjects &levelObjects) {

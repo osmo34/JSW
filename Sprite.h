@@ -14,7 +14,7 @@ public:
 	Sprite();
 	Sprite(const int screenWidth, const int screenHeight, sf::Texture);
 	~Sprite();
-	void draw(sf::RenderWindow *window);
+	virtual void draw(sf::RenderWindow *window);
 	virtual void update(const float dt) = 0;
 	virtual void setStartPosition() = 0;
 	virtual float getCollision(const char side);

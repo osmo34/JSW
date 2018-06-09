@@ -21,6 +21,9 @@ struct RoomData {
 	float stairBottomY;
 	float stairTopX;
 	float stairTopY;
+	float ropeX;
+	float ropeY;
+	float ropeTopY;
 };
 #pragma pack(pop)
 

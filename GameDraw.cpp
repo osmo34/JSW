@@ -17,6 +17,7 @@ void GameDraw::draw(sf::RenderWindow *window, LevelObjects &levelObjects, Game &
 		draw(levelObjects.enemiesMoving, window);
 		draw(levelObjects.enemiesStatic, window);
 		draw(levelObjects.pickups, window);
+		draw(levelObjects.ropes, window);
 		draw(levelObjects.player, window);
 		break;
 	case Game::DEAD:
