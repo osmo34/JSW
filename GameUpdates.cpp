@@ -132,7 +132,12 @@ void GameUpdates::updateGame(float dt, LevelObjects &levelObjects, Game &game) {
 			update(levelObjects.enemiesMoving, levelObjects.collision, levelObjects.player, dt);
 			update(levelObjects.enemiesStatic, levelObjects.collision, levelObjects.player, dt);
 			update(levelObjects.pickups, levelObjects.collision, levelObjects.player, dt);
-			update(levelObjects.spritesStatic, dt);	
+			update(levelObjects.spritesStatic, dt);
+			
+			// TODO: temp before template
+			for (auto i : levelObjects.ropes) {
+				i->update(dt);
+			}			
 		}
 		checkLevelChange(levelObjects);
 		break;
