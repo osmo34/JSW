@@ -90,6 +90,14 @@ Room WriteRoom::createRoomData()
 		else if (type == "ropeTop") {
 			roomData.ropeTopY = std::stof(value);
 		}
+		else if (type == "travelator") {
+			if (value == "1") {
+				roomData.isTravelator = 1;
+			}
+			else {
+				roomData.isTravelator = 0;
+			}
+		}
 
 		else if (type == "end") {
 			room.roomData[i] = roomData;
