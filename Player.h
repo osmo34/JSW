@@ -56,6 +56,8 @@ private:
 	bool canFall = true; // TODO - change to false on stairs
 	bool canJump = true;
 
+	bool collideBottom = false;
+
 	void updateStairs(bool &stairs, bool &stairsBottom, bool &stairsTop, sf::Vector2f bottom, sf::Vector2f top, float vs);
 
 	// prevent jumping whilst falling
@@ -69,7 +71,6 @@ private:
 	float resetPositionY;
 
 	bool isFirstRun = true;
-
 
 public:
 	const char objectId = 'p';

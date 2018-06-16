@@ -13,6 +13,7 @@ struct RoomData {
 	float positionY;
 	float speedX;
 	float speedY;
+	std::uint16_t isTravelator;
 	float clampXRight;
 	float clampXLeft;
 	float clampYTop;

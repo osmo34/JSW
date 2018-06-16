@@ -9,7 +9,7 @@
 // collision static objects
 #define COLLISION_TOP playerBottom >= it.top && playerBottom < it.top + COLLISION_OFFSET && playerLeft <= it.right && playerRight >= it.left
 #define COLLISION_NONE playerTop >= it.bottom && playerBottom >= it.top
-#define COLLISION_BOTTOM playerTop <= it.bottom && playerTop >= it.bottom - COLLISION_OFFSET && playerLeft <= it.right && playerRight >= it.left
+#define COLLISION_BOTTOM playerTop <= it.bottom && playerTop >= it.bottom - COLLISION_OFFSET && playerLeft <= it.right - 5 && playerRight >= it.left + 5
 #define COLLISION_LEFT playerLeft <= it.right && playerRight >= it.right
 #define COLLISION_RIGHT playerRight >= it.left && playerLeft <= it.left
 

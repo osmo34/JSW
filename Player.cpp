@@ -55,6 +55,7 @@ void Player::update(float dt) {
 	//std::cout << lastPositionY << std::endl;
 	//std::cout << "is falling " << isFalling << std::endl;
 	//std::cout << lastPositionY << std::endl;
+	//std::cout << collideBottom << std::endl;
 }
 
 void Player::checkMovement(float dt) {
@@ -76,7 +77,7 @@ void Player::checkMovement(float dt) {
 		}
 		break;
 	case JUMP:
-		if (!isJumping && !isFalling) {
+		if (!isJumping && !isFalling && !collideBottom) {
 			isJumping = true;
 			state->updateState(JUMP);
 			animation->updateAnimation(dt, m_sourceRect, &m_sprite, isflipLeft);
@@ -146,16 +147,19 @@ void Player::collision(char c, float gh) {
 	if (gh == 0.0) { gh = groundHeightOld; }
 	switch (c) {
 	case LEFT:
+		collideBottom = false;
 		collideLeft = true;
 		collideRight = false;
 		groundHeight = groundHeightPlatform;
 		break;
 	case RIGHT:
+		collideBottom = false;
 		collideRight = true;
 		collideLeft = false;
 		groundHeight = groundHeightPlatform;
 		break;
 	case TOP:
+		collideBottom = false;
 		collideLeft = false;
 		collideRight = false;
 		updateGroundHeight(gh);
@@ -164,7 +168,11 @@ void Player::collision(char c, float gh) {
 		lastPositionY = m_sprite.getPosition().y;		
 		break;
 	case BOTTOM:
-		isJumping = false;
+		collideBottom = true;
+		isJumping = false;		
+		isFalling = true;
+		m_grav = GRAVITY;
+		fall(deltaTime);
 		break;
 	case NO_COLLISION:
 		if (!onStairsLeft && !onStairsRight) {

@@ -103,18 +103,7 @@ void Collision::checkCollisionStairs(sf::Vector2f bottom, sf::Vector2f top, std:
 void Collision::checkCollision(std::function<void(char c, float i)> playerCollision) { 
 
 	for (auto it : staticObjectPositions) {
-		// TODO: this may go
-		//if (COLLISION_TOP) { 
-			//playerCollision(TOP, it.top);
-			//temp = it.top;
-			//return;
-		//}
-		//if (COLLISION_BOTTOM) {
-		//	playerCollision(BOTTOM, 0.0);
-		//	return;
-		//}
-		//if (playerTop >= it.top && playerBottom <= it.bottom) {
-	
+
 		// some hacky distance calculation - TODO: Refactor this.
 		float blockCentreX = it.left + 16;
 		float playerCentreX = playerLeft + 16;
@@ -125,7 +114,13 @@ void Collision::checkCollision(std::function<void(char c, float i)> playerCollis
 		float distanceX = std::fabsf(blockCentreX - playerCentreX);
 		float distanceY = std::fabsf(playerCentreY - blockCentreY);
 
+
+
 		if (distanceX <= 32 && distanceX >= 0 && distanceY <= 32 && distanceY >= 0) {
+			if (COLLISION_BOTTOM) {
+				playerCollision(BOTTOM, NO_CHANGE_GROUND_HEIGHT);
+				return;
+			}
 			if (COLLISION_LEFT) {
 				playerCollision(LEFT, NO_CHANGE_GROUND_HEIGHT);
 				return;
@@ -133,8 +128,9 @@ void Collision::checkCollision(std::function<void(char c, float i)> playerCollis
 			else if (COLLISION_RIGHT) {
 				playerCollision(RIGHT, NO_CHANGE_GROUND_HEIGHT);
 				return;
-			}
-		}		
+			}			
+		}
+
 	}
 	
 	for (auto it : staticPlatformPositions) {
