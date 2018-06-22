@@ -65,7 +65,7 @@ private:
 	bool isFalling = false;
 	void checkFall();
 
-	const float START_POSITION_X = 800;
+	const float START_POSITION_X = 1000;
 	const float START_POSITION_Y = 606;
 	float resetPositionX;
 	float resetPositionY;
@@ -78,7 +78,7 @@ public:
 	Player(const int screenWidth, const int screenHeight, sf::Texture texture);
 	void update(const float dt);
 	void setStartPosition();
-	void collision(char c, float gh);
+	void collision(char c, float gh, float speed);
 	void updateGroundHeight(float gh);
 	void collisionEntity(bool isHarmful);
 	void onStairs(sf::Vector2f bottom, sf::Vector2f top, bool onStairsBottom, bool onStairsTop, bool isStairsLeft);

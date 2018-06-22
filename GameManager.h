@@ -9,6 +9,7 @@
 #include "StaticObject.h"
 #include "StaticPlatform.h"
 #include "Rope.h"
+#include "Travelator.h"
 #include "Collision.h"
 #include "EnemyMoving.h"
 #include "EnemyStatic.h"
@@ -33,6 +34,7 @@ struct LevelObjects {
 	std::vector<std::shared_ptr<EnemyMoving>> enemiesMoving;
 	std::vector<std::shared_ptr<Pickup>> pickups;
 	std::vector<std::shared_ptr<Rope>> ropes;
+	std::vector<std::shared_ptr<Travelator>> travelators;
 	std::shared_ptr<Player> player;
 	std::shared_ptr<Collision> collision;
 	std::shared_ptr<TitleScreen> titleScreen;
@@ -73,7 +75,8 @@ private:
 		const float dt) {
 		t->update(dt);
 		collision->updateObjectPosition([&](char c) -> float { return t->getCollision(c); }, t->objectId);
-		collision->checkCollision([&](char c, float i) { t->collision(c, i); });
+		collision->checkCollision([&](char c, float i, float s) { t->collision(c, i, s); });
+
 	}
 
 	// moving objects that kill our player - e.g. enemies
@@ -102,6 +105,13 @@ private:
 	void update(const std::vector<std::shared_ptr<T>> &t, std::shared_ptr<Collision> &collision) {
 		for (auto it : t) {
 			collision->updateObjectPosition([&](char c) -> float { return it->getCollision(c); }, it->objectId);
+		}
+	}
+
+	// travelators
+	void update(const std::vector<std::shared_ptr<Travelator>> & travelator, std::shared_ptr<Collision> &collision, char null) {
+		for (auto it : travelator) {
+			collision->updateObjectPosition([&](char c) -> float { return it->getCollision(c); }, it->objectId, it->getSpeed());
 		}
 	}
 

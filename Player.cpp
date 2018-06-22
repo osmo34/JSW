@@ -139,10 +139,10 @@ void Player::fallCheck() {
 	}
 }
 
-void Player::collision(char c, float gh) {
+void Player::collision(char c, float gh, float speed) {
 	const char LEFT = 'l', RIGHT = 'r', TOP = 't', BOTTOM = 'b',
 		NO_COLLISION = 'n', ENEMY = 'e', POWER_UP = 'p',
-		STAIR_LEFT = 'z', STAIR_RIGHT = 'x', STAIR_NONE = 'c';
+		STAIR_LEFT = 'z', STAIR_RIGHT = 'x', STAIR_NONE = 'c', TRAVELATOR = '£';;
 
 	if (gh == 0.0) { gh = groundHeightOld; }
 	switch (c) {
@@ -174,6 +174,17 @@ void Player::collision(char c, float gh) {
 		m_grav = GRAVITY;
 		fall(deltaTime);
 		break;
+	case TRAVELATOR:
+		collideBottom = false;
+		collideLeft = false;
+		collideRight = false;
+		updateGroundHeight(gh);
+		groundHeightPlatform = gh;
+		m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, gh));
+		m_sprite.move(-1.5f, 0); // TODO: just a test, we will of course use speed
+		lastPositionY = m_sprite.getPosition().y;
+		std::cout << "TEST here" << std::endl;
+		break;
 	case NO_COLLISION:
 		if (!onStairsLeft && !onStairsRight) {
 			if (topStairs) {
@@ -192,7 +203,7 @@ void Player::collision(char c, float gh) {
 		break;
 	}
 }
-
+   
 void Player::updateGroundHeight(float gh) {
 	if (gh == 0.0) {		
 		groundHeight = groundHeightOld;

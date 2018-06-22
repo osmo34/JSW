@@ -26,6 +26,10 @@ Room GameUpdates::createRoom(std::string fileName, LevelObjects & levelObjects) 
 			createObject(levelObjects.levelStaticObjects, room.roomData[i], texture);
 			break;
 		case STATIC_PLATFORM:
+			if (room.roomData[i].isTravelator) {
+				createObject(levelObjects.travelators, room.roomData[i], texture);
+				break;
+			}			
 			createObject(levelObjects.levelStaticPlatforms, room.roomData[i], texture);
 			break;
 		case STATIC_STAIRS:
@@ -84,6 +88,7 @@ void GameUpdates::clearRoomObjects(LevelObjects &levelObjects) {
 	clearVector(levelObjects.pickups);
 	clearVector(levelObjects.spritesStatic);
 	clearVector(levelObjects.ropes);
+	clearVector(levelObjects.travelators);
 }
 
 void GameUpdates::changeLevel(int nextRoom, LevelObjects &levelObjects) {
@@ -126,6 +131,7 @@ void GameUpdates::updateGame(float dt, LevelObjects &levelObjects, Game &game) {
 			if (!firstLoopComplete) { 
 				update(levelObjects.levelStaticPlatforms, levelObjects.collision);
 				update(levelObjects.levelStaticObjects, levelObjects.collision);
+				update(levelObjects.travelators, levelObjects.collision, NULL);
 				firstLoopComplete = true;
 			}  
 			update(levelObjects.levelStaticStairs, levelObjects.collision, levelObjects.player);

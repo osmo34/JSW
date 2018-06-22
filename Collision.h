@@ -28,6 +28,7 @@ struct ObjectPositions {
 	float bottom;
 	float left;
 	float right;
+	float speed;
 	bool isAngleRight;
 };
 
@@ -46,6 +47,7 @@ private:
 
 	std::vector<ObjectPositions> staticObjectPositions;
 	std::vector<ObjectPositions> staticPlatformPositions;
+	std::vector<ObjectPositions> travelatorPositions;
 	std::vector<ObjectPositions> stairs;
 	std::vector<ObjectPositions> entityPositions;
 
@@ -56,8 +58,9 @@ public:
 	Collision();
 	~Collision();
 	void updateObjectPosition(std::function<double(char c)> position, char t);
-	void updateObjectPosition(std::function<double(char c)> position, bool isRightAngle);
-	void checkCollision(std::function<void(char c, float i)> playerCollision);
+	void updateObjectPosition(std::function<double(char c)> position, char t, float speed);
+	void updateObjectPosition(std::function<double(char c)> position, bool isRightAngle); 
+	void checkCollision(std::function<void(char c, float i, float s)> playerCollision);
 	bool checkCollision();
 	void checkCollisionStairs(sf::Vector2f bottom, sf::Vector2f top, std::function<void(sf::Vector2f b, sf::Vector2f t, bool onStairsBottom, bool onStairsTop, bool isStairsLeft)> playerCheckStairs, bool isLeft);
 	void clearCollisionData();

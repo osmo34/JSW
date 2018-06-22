@@ -59,6 +59,25 @@ void Collision::updateObjectPosition(std::function<double(char c)> position, cha
 		break;
 	}
 }
+void Collision::updateObjectPosition(std::function<double(char c)> position, char t, float speed) {
+	const char TRAVELATOR = '£';
+	ObjectPositions m_objectPosition;
+	m_objectPosition.top = position(TOP);
+	m_objectPosition.bottom = position(BOTTOM);
+	m_objectPosition.left = position(LEFT);
+	m_objectPosition.right = position(RIGHT);
+	m_objectPosition.speed = speed;
+
+	switch (t) {
+	case TRAVELATOR:
+		travelatorPositions.push_back(m_objectPosition);
+		break;
+	default: // This should never happen!
+		std::cout << "error in update object position, check object id" << std::endl;
+		break;
+	}
+}
+
 // update position for stairs, overridden as we need to know which direction they are facing
 void Collision::updateObjectPosition(std::function<double(char c)> position, bool isRightAngle) {
 	ObjectPositions m_objectPosition;
@@ -100,41 +119,34 @@ void Collision::checkCollisionStairs(sf::Vector2f bottom, sf::Vector2f top, std:
 }
 
 // check static blocks
-void Collision::checkCollision(std::function<void(char c, float i)> playerCollision) { 
+void Collision::checkCollision(std::function<void(char c, float i, float s)> playerCollision) { 
 
-	for (auto it : staticObjectPositions) {
-
+	for (auto it : staticObjectPositions) {	
 		// some hacky distance calculation - TODO: Refactor this.
 		float blockCentreX = it.left + 16;
-		float playerCentreX = playerLeft + 16;
-		
+		float playerCentreX = playerLeft + 16;		
 		float blockCentreY = it.bottom - 16;
 		float playerCentreY = playerBottom - 16;
-
 		float distanceX = std::fabsf(blockCentreX - playerCentreX);
 		float distanceY = std::fabsf(playerCentreY - blockCentreY);
 
-
-
 		if (distanceX <= 32 && distanceX >= 0 && distanceY <= 32 && distanceY >= 0) {
 			if (COLLISION_BOTTOM) {
-				playerCollision(BOTTOM, NO_CHANGE_GROUND_HEIGHT);
+				playerCollision(BOTTOM, NO_CHANGE_GROUND_HEIGHT, 0);
 				return;
 			}
 			if (COLLISION_LEFT) {
-				playerCollision(LEFT, NO_CHANGE_GROUND_HEIGHT);
+				playerCollision(LEFT, NO_CHANGE_GROUND_HEIGHT, 0);
 				return;
 			}
 			else if (COLLISION_RIGHT) {
-				playerCollision(RIGHT, NO_CHANGE_GROUND_HEIGHT);
+				playerCollision(RIGHT, NO_CHANGE_GROUND_HEIGHT, 0);
 				return;
 			}			
 		}
-
 	}
 	
-	for (auto it : staticPlatformPositions) {
-		
+	for (auto it : staticPlatformPositions) {	 		
 		float blockCentreX = it.left + 16;
 		float playerCentreX = playerLeft + 16;	
 		float blockCentreY = it.top - 16;
@@ -143,20 +155,45 @@ void Collision::checkCollision(std::function<void(char c, float i)> playerCollis
 		float distanceY = playerCentreY - blockCentreY;
 		
 		if (COLLISION_TOP) {
-			playerCollision(TOP, it.top);
+			playerCollision(TOP, it.top, 0);
 			return;
 		}
 		
 		else if (distanceX < -32 || distanceX > 32 || distanceY < 40) {
-			playerCollision(NO_COLLISION, NO_CHANGE_GROUND_HEIGHT);
+			playerCollision(NO_COLLISION, NO_CHANGE_GROUND_HEIGHT, 0);
 			continue;
 		}
 		
 		else {
-			playerCollision(NO_COLLISION, NO_CHANGE_GROUND_HEIGHT);
+			playerCollision(NO_COLLISION, NO_CHANGE_GROUND_HEIGHT, 0);
 			continue;
 		}
-	}	
+	}
+
+	for (auto it : travelatorPositions) {
+		float blockCentreX = it.left + 16;
+		float playerCentreX = playerLeft + 16;
+		float blockCentreY = it.top - 16;
+		float playerCentreY = playerBottom - 16;
+		float distanceX = playerCentreX - blockCentreX;
+		float distanceY = playerCentreY - blockCentreY;
+		float speed = it.speed;
+
+		if (COLLISION_TOP) {
+			playerCollision('£', it.top, speed);
+			return;
+		}
+
+		else if (distanceX < -32 || distanceX > 32 || distanceY < 40) {
+			playerCollision(NO_COLLISION, NO_CHANGE_GROUND_HEIGHT, 0);
+			continue;
+		}
+
+		else {
+			playerCollision(NO_COLLISION, NO_CHANGE_GROUND_HEIGHT, 0);
+			continue;
+		}
+	}
 }
 
 void Collision::clearCollisionData() {
