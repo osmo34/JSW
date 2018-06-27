@@ -134,7 +134,7 @@ private:
 	bool firstLoopComplete;
 	int screenWidth;
 	int screenHeight;
-	unsigned int currentRoom = 6;
+	unsigned int currentRoom = 36;
 	unsigned int nextRoomRight;
 	unsigned int nextRoomLeft;
 	unsigned int nextRoomUp;

@@ -1,6 +1,7 @@
 #include "Player.h"
 
 //TODO: this is getting bloated - break up into smaller classes
+//TODO: fix bug found when jumping from a really high platform - calls fall too many times
 
 Player::Player(int screenWidth, int screenHeight, sf::Texture texture) :
 	Sprite(screenWidth, screenHeight, texture) {
@@ -22,7 +23,6 @@ void Player::setStartPosition() {
 }
 
 void Player::update(float dt) {
-
 	deltaTime = dt;
 	m_currentDirection = input->update(deltaTime, isJumping);
 	checkMovement(deltaTime);
@@ -165,7 +165,7 @@ void Player::collision(char c, float gh, float speed) {
 		updateGroundHeight(gh);
 		groundHeightPlatform = gh;
 		m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, gh));
-		lastPositionY = m_sprite.getPosition().y;		
+		lastPositionY = m_sprite.getPosition().y;
 		break;
 	case BOTTOM:
 		collideBottom = true;
@@ -173,6 +173,7 @@ void Player::collision(char c, float gh, float speed) {
 		isFalling = true;
 		m_grav = GRAVITY;
 		fall(deltaTime);
+		state->updateState(NONE);
 		break;
 	case TRAVELATOR:
 		collideBottom = false;
@@ -182,8 +183,8 @@ void Player::collision(char c, float gh, float speed) {
 		groundHeightPlatform = gh;
 		m_sprite.setPosition(sf::Vector2f(m_sprite.getPosition().x, gh));
 		m_sprite.move(-1.5f, 0); // TODO: just a test, we will of course use speed
-		lastPositionY = m_sprite.getPosition().y;
-		std::cout << "TEST here" << std::endl;
+		lastPositionY = m_sprite.getPosition().y;		
+		//std::cout << "TEST here" << std::endl;
 		break;
 	case NO_COLLISION:
 		if (!onStairsLeft && !onStairsRight) {
