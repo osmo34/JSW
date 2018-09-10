@@ -1,5 +1,7 @@
 # JSW
-Remake of a Spectrum platform game - Lets call it Jet Set Billy - SFML framework for rendering but game engine written from scratch
+Remake of a Spectrum platform game - Lets call it Jet Set Billy - SFML framework for rendering but game engine written from scratch.
+<p>
+<b>NOTE 10/09/2018</b> - project isn't dead. I've taken a break over summer as I'm working on a CS Course
 <p>
 Going to remake this with a level editor. Used to enjoy this as a child so thought it would be fun to re-make it
 currently very early days...
