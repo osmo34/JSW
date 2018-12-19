@@ -1,10 +1,10 @@
 # JSW
-Remake of a Spectrum platform game - Lets call it Jet Set Billy - SFML framework for rendering but game engine written from scratch.
+Platform game engine in the style of Jet Set Willy - SFML framework for rendering but game engine written from scratch.
+<p>
+<p>
+<b> 19/12/2018 </b> - Restarted work on this. Will be concentrating on editor improvements. I'll be moving away from a remake and make this an original game in the style of Jet Set Willy
 <p>
 <b>NOTE 10/09/2018</b> - project isn't dead. I've taken a break over summer as I'm working on a CS Course
-<p>
-Going to remake this with a level editor. Used to enjoy this as a child so thought it would be fun to re-make it
-currently very early days...
 <p>
 Currently supports: <br>
 * Collision detection for walls, enemies and collectables <br>
@@ -28,7 +28,7 @@ Current TODO: <p>
 * <del> Refactoring main into a game manager </del> done <br>
 * Gameplay logic, e.g. amount of collectables, lives etc. <br>
 * <del> Level Editor </del> (usable but not feature complete) <p>
-* Content - currently approx 20 levels partially built
+* Content
 <p>
 Latest screenshot having worked on content (graphics from https://opengameart.org/content/simple-broad-purpose-tileset) - note the line is a test rope and the blue tiles under the toilet is a test travelator <br>
 added level editor screenshot
