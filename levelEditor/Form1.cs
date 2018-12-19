@@ -84,40 +84,38 @@ namespace JSB_LevelEditor
                 item.Image = Image.FromFile(defaultTexture);
                 item.MouseClick += new MouseEventHandler(PixelClickEvent);
             }
-            
-            textureList.Add("Default_Blank.png");
-            textureList.Add("brick.png");
-            textureList.Add("ball.png");
-            textureList.Add("collect.png");
-            textureList.Add("platform.png");
 
-            objectList.Add("Erase");
-            objectList.Add("Static Platform");
-            objectList.Add("Static Object");
-            objectList.Add("Static Stairs");
-            objectList.Add("Enemy Static");
-            objectList.Add("Enemy Move Horizontal");
-            objectList.Add("Enemy Move Vertical");
-            objectList.Add("Pick Up");
-          
+            // TODO: Do these better
+            this.textureList.Add("Default_Blank.png");
+            this.textureList.Add("brick.png");
+            this.textureList.Add("ball.png");
+            this.textureList.Add("collect.png");
+            this.textureList.Add("platform.png");
+            
+            this.objectList.Add("Erase");
+            this.objectList.Add("Static Platform");
+            this.objectList.Add("Static Object");
+            this.objectList.Add("Static Stairs");
+            this.objectList.Add("Enemy Static");
+            this.objectList.Add("Enemy Move Horizontal");
+            this.objectList.Add("Enemy Move Vertical");
+            this.objectList.Add("Pick Up");          
 
             for (int i = 0; i < objectList.Count(); i++)
-                {
-                    objectComboBoxList.Add(new ComboBoxItem());
-                    objectComboBoxList[i].Text = objectList[i];
-                    this.comboBox1.Items.Add(objectComboBoxList[i]);
-                }
+            {
+                objectComboBoxList.Add(new ComboBoxItem());
+                objectComboBoxList[i].Text = objectList[i];
+                this.comboBox1.Items.Add(objectComboBoxList[i]);
+            }
 
             for (int i = 0; i < textureList.Count(); i++)
             {
                 textureComboBoxList.Add(new ComboBoxItem());
                 textureComboBoxList[i].Text = textureList[i];
                 this.comboBox2.Items.Add(textureComboBoxList[i]);
-            }
-           
+            }           
             this.comboBox1.SelectedIndex = 0;
-            this.comboBox2.SelectedIndex = 0;
-            
+            this.comboBox2.SelectedIndex = 0;            
         }
 
         // event for clicking in a pixel. If it's erase then change texture number to 0 so it is ignored at output (0 is the player sprite in game so is never used)
@@ -126,30 +124,44 @@ namespace JSB_LevelEditor
                 pictureBox.Image = Image.FromFile(textureList[textureID]);                
                 int i = Int32.Parse(pictureBox.Tag.ToString());
                 this.label2.Text = itemList[i - 1].TextureNumber.ToString();
-                if (selectedObject == "Erase")
-                {
-                    itemList[i - 1].TextureNumber = 0;
-                    itemList[i - 1].ObjectPositionNumber = i - 1;
-                    itemList[i - 1].ObjectType = selectedObject;
-                    //toolTipList[i - 1].SetToolTip(pictureBoxList[i - 1], "Obj Pos Number: " + itemList[i - 1].ObjectPositionNumber + "Texutre ID: " + itemList[i - 1].TextureNumber.ToString() + "ERASED ITEM");
-                    return;
+                // overcomplicated if logic to ensure we don't create a new object in error!
+                if (this.itemList[i - 1].ObjectType == null) {
+                    if (selectedObject == "Erase") {
+                        return;
+                    }
+                    else {
+                        CreateObject(i);
+                    }
                 }
-                else
-                {
-                    itemList[i - 1].TextureNumber = textureID;
-                    itemList[i - 1].ObjectPositionNumber = i - 1;
-                    itemList[i - 1].ObjectType = selectedObject;
-                    itemList[i - 1].SpeedX = speedX;
-                    itemList[i - 1].SpeedY = speedY;
-                    itemList[i - 1].clampXLeft = clampXLeft;
-                    itemList[i - 1].clampXRight = clampXRight;
-                    itemList[i - 1].clampYTop = clampYTop;
-                    itemList[i - 1].clampYBottom = clampYBottom;
-                    itemList[i - 1].calculatePosition();
-                    itemList[i - 1].convertObjectType();
-                    //toolTipList[i - 1].SetToolTip(pictureBoxList[i - 1], "Obj Pos Number: " + itemList[i - 1].ObjectPositionNumber + "Texutre ID: " + itemList[i - 1].TextureNumber.ToString() + ", Object Type: " + itemList[i - 1].ObjectOutput.ToString() + ", SpeedX: " + itemList[i - 1].SpeedX.ToString() + ", SpeedY: " + itemList[i - 1].SpeedY.ToString() + ", PositionX: " + itemList[i - 1].PositionX + ", Position Y: " + itemList[i - 1].PositionY);
+                else {
+                    if (selectedObject == "Erase") {
+                        itemList[i - 1].TextureNumber = 0;
+                        itemList[i - 1].ObjectPositionNumber = i - 1;
+                        itemList[i - 1].ObjectType = null;
+                        toolTipList[i - 1].SetToolTip(pictureBoxList[i - 1], "Obj Pos Number: " + itemList[i - 1].ObjectPositionNumber + "Texutre ID: " + itemList[i - 1].TextureNumber.ToString() + "ERASED ITEM");
+                        return;
+                    }
+                    else {
+                        CreateObject(i);
+                    }
                 }
             }
+        }
+
+        private void CreateObject(int i)
+        {
+            this.itemList[i - 1].TextureNumber = textureID;
+            this.itemList[i - 1].ObjectPositionNumber = i - 1;
+            this.itemList[i - 1].ObjectType = selectedObject;
+            this.itemList[i - 1].SpeedX = speedX;
+            this.itemList[i - 1].SpeedY = speedY;
+            this.itemList[i - 1].clampXLeft = clampXLeft;
+            this.itemList[i - 1].clampXRight = clampXRight;
+            this.itemList[i - 1].clampYTop = clampYTop;
+            this.itemList[i - 1].clampYBottom = clampYBottom;
+            this.itemList[i - 1].calculatePosition();
+            this.itemList[i - 1].convertObjectType();
+            //toolTipList[i - 1].SetToolTip(pictureBoxList[i - 1], "Obj Pos Number: " + itemList[i - 1].ObjectPositionNumber + "Texutre ID: " + itemList[i - 1].TextureNumber.ToString() + ", Object Type: " + itemList[i - 1].ObjectOutput.ToString() + ", SpeedX: " + itemList[i - 1].SpeedX.ToString() + ", SpeedY: " + itemList[i - 1].SpeedY.ToString() + ", PositionX: " + itemList[i - 1].PositionX + ", Position Y: " + itemList[i - 1].PositionY);
         }
 
         // update combobox 1 (type of item)
@@ -189,14 +201,16 @@ namespace JSB_LevelEditor
             List<Item> staticEnemies = new List<Item>();
             List<Item> movingEnemies = new List<Item>();
 
+            List<Item> itemListDuplicate = new List<Item>(itemList); // we must duplicate itemlist, originally work was being done on the main list causing the erase bug - as it would reset itself!
+
             outputTextFileName = this.outputFileBox.Text;
             levelID = this.IdTextBox.Text;
 
             System.IO.File.Delete(outputTextFileName+".txt");            
-            itemList.Reverse(); // reverse the itemlist so it goes top to bottom - this seems to work better in game
+            itemListDuplicate.Reverse(); // reverse the itemlist so it goes top to bottom - this seems to work better in game
             
             // break up the itemlist into specific items so they are grouped together in output - again this works better in game
-            foreach (var item in itemList) {
+            foreach (var item in itemListDuplicate) {
                 if ((item.TextureNumber == 0)) { // ignore and continue
                     continue;
                 }
@@ -222,7 +236,7 @@ namespace JSB_LevelEditor
             }
             // complete text list
             textList.Add(
-                "num: " + itemList.Count() + // TODO: do a genuine count ignoring empty blocks!
+                "num: " + itemListDuplicate.Count() + // TODO: do a genuine count ignoring empty blocks!
                 System.Environment.NewLine +
                 "roomID:" + levelID);
 
@@ -241,9 +255,9 @@ namespace JSB_LevelEditor
             if (result == DialogResult.Yes) {
                 isSaved = false;
                 currentFileName = "";
-                itemList.Clear();
-                textureList.Clear();
-                objectList.Clear();
+                this.itemList.Clear();
+                this.textureList.Clear();
+                this.objectList.Clear();
                 pictureBoxList.Clear();
                 objectComboBoxList.Clear();
                 textureComboBoxList.Clear();
@@ -294,7 +308,7 @@ namespace JSB_LevelEditor
             
             using (Stream stream = File.Open(outputfile, FileMode.Create)) {
                 var binaryOutput = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                binaryOutput.Serialize(stream, itemList);
+                binaryOutput.Serialize(stream, this.itemList);
             }
         }
 
@@ -305,9 +319,9 @@ namespace JSB_LevelEditor
                 inputfile = openFileDialog1.FileName;
                 currentFileName = inputfile;                
                 using (Stream stream = File.Open(inputfile, FileMode.Open)) {                                        
-                    itemList.Clear();
-                    textureList.Clear();
-                    objectList.Clear();
+                    this.itemList.Clear();
+                    this.textureList.Clear();
+                    this.objectList.Clear();
                     pictureBoxList.Clear();
                     objectComboBoxList.Clear();
                     textureComboBoxList.Clear();
@@ -324,7 +338,7 @@ namespace JSB_LevelEditor
                     this.comboBox2.Items.Clear();
                     resetEditor();
                     var binaryInput = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                    itemList = (List<Item>)binaryInput.Deserialize(stream);
+                    this.itemList = (List<Item>)binaryInput.Deserialize(stream);
 
                     for (int i = 0; i < itemList.Count(); i++) {
                         pictureBoxList[itemList[i].ObjectPositionNumber].Image = Image.FromFile(textureList[itemList[i].TextureNumber]);
@@ -360,7 +374,6 @@ namespace JSB_LevelEditor
         private float _clampXRight;
         private float _clampYTop;
         private float _clampYBottom;
-
 
         private int _positionX;
         private int _positionY;
