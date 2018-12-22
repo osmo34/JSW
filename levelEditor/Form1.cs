@@ -31,7 +31,10 @@ namespace JSB_LevelEditor
         List<String> objectList = new List<string>();     
 
         ObservableCollection<ToolTip> toolTipList = new ObservableCollection<ToolTip>();
-        
+
+        string textureFileName = "textures.txt";
+        string objectTypesFileName = "object_types.txt";
+
         static int textureID = 0;
         static float speedX = 0.0f;
         static float speedY = 0.0f;
@@ -63,7 +66,7 @@ namespace JSB_LevelEditor
         }
         
         void resetEditor()
-        {            
+        {
             for (int i = 1; i < totalPixels; i++)
             {
                 pictureBoxList.Add((PictureBox)Controls.Find("pictureBox" + i, true)[0]);
@@ -85,22 +88,9 @@ namespace JSB_LevelEditor
                 item.MouseClick += new MouseEventHandler(PixelClickEvent);
             }
 
-            // TODO: Do these better
-            this.textureList.Add("Default_Blank.png");
-            this.textureList.Add("brick.png");
-            this.textureList.Add("ball.png");
-            this.textureList.Add("collect.png");
-            this.textureList.Add("platform.png");
+            textureList = UpdateEditorList(textureFileName);
+            objectList = UpdateEditorList(objectTypesFileName);        
             
-            this.objectList.Add("Erase");
-            this.objectList.Add("Static Platform");
-            this.objectList.Add("Static Object");
-            this.objectList.Add("Static Stairs");
-            this.objectList.Add("Enemy Static");
-            this.objectList.Add("Enemy Move Horizontal");
-            this.objectList.Add("Enemy Move Vertical");
-            this.objectList.Add("Pick Up");          
-
             for (int i = 0; i < objectList.Count(); i++)
             {
                 objectComboBoxList.Add(new ComboBoxItem());
@@ -113,9 +103,27 @@ namespace JSB_LevelEditor
                 textureComboBoxList.Add(new ComboBoxItem());
                 textureComboBoxList[i].Text = textureList[i];
                 this.comboBox2.Items.Add(textureComboBoxList[i]);
-            }           
+            }
             this.comboBox1.SelectedIndex = 0;
-            this.comboBox2.SelectedIndex = 0;            
+            this.comboBox2.SelectedIndex = 0;
+        }
+
+        // populate lists
+        private List<String> UpdateEditorList(string inputFile)
+        {
+            System.IO.StreamReader file = new System.IO.StreamReader(inputFile);
+            List<string> list = new List<string>();
+            while (!file.EndOfStream)
+            {
+                string word = file.ReadLine();
+                string[] words = word.Split(new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string t in words)
+                {                    
+                    list.Add(t);
+                }
+            }
+            file.Close();
+            return list;
         }
 
         // event for clicking in a pixel. If it's erase then change texture number to 0 so it is ignored at output (0 is the player sprite in game so is never used)
@@ -161,7 +169,7 @@ namespace JSB_LevelEditor
             this.itemList[i - 1].clampYBottom = clampYBottom;
             this.itemList[i - 1].calculatePosition();
             this.itemList[i - 1].convertObjectType();
-            //toolTipList[i - 1].SetToolTip(pictureBoxList[i - 1], "Obj Pos Number: " + itemList[i - 1].ObjectPositionNumber + "Texutre ID: " + itemList[i - 1].TextureNumber.ToString() + ", Object Type: " + itemList[i - 1].ObjectOutput.ToString() + ", SpeedX: " + itemList[i - 1].SpeedX.ToString() + ", SpeedY: " + itemList[i - 1].SpeedY.ToString() + ", PositionX: " + itemList[i - 1].PositionX + ", Position Y: " + itemList[i - 1].PositionY);
+            toolTipList[i - 1].SetToolTip(pictureBoxList[i - 1], "Obj Pos Number: " + itemList[i - 1].ObjectPositionNumber + "Texutre ID: " + itemList[i - 1].TextureNumber.ToString() + ", Object Type: " + itemList[i - 1].ObjectOutput.ToString() + ", SpeedX: " + itemList[i - 1].SpeedX.ToString() + ", SpeedY: " + itemList[i - 1].SpeedY.ToString() + ", PositionX: " + itemList[i - 1].PositionX + ", Position Y: " + itemList[i - 1].PositionY);
         }
 
         // update combobox 1 (type of item)
@@ -343,7 +351,7 @@ namespace JSB_LevelEditor
                     for (int i = 0; i < itemList.Count(); i++) {
                         pictureBoxList[itemList[i].ObjectPositionNumber].Image = Image.FromFile(textureList[itemList[i].TextureNumber]);
                         // TODO: fix later
-                        // toolTipList[itemList[i].ObjectPositionNumber].SetToolTip(pictureBoxList[i], "Obj Pos Number: " + itemList[i].ObjectPositionNumber + "Texutre ID: " + itemList[i].TextureNumber.ToString() + ", Object Type: " + itemList[i].ObjectOutput.ToString() + ", SpeedX: " + itemList[i].SpeedX.ToString() + ", SpeedY: " + itemList[i].SpeedY.ToString() + ", PositionX: " + itemList[i].PositionX + ", Position Y: " + itemList[i].PositionY);
+                        //toolTipList[itemList[i].ObjectPositionNumber].SetToolTip(pictureBoxList[i], "Obj Pos Number: " + itemList[i].ObjectPositionNumber + "Texutre ID: " + itemList[i].TextureNumber.ToString() + ", Object Type: " + itemList[i].ObjectOutput.ToString() + ", SpeedX: " + itemList[i].SpeedX.ToString() + ", SpeedY: " + itemList[i].SpeedY.ToString() + ", PositionX: " + itemList[i].PositionX + ", Position Y: " + itemList[i].PositionY);
                     }
                 }
                 isSaved = true;
