@@ -208,6 +208,8 @@ namespace JSB_LevelEditor
             List<Item> staticObjects = new List<Item>();
             List<Item> staticEnemies = new List<Item>();
             List<Item> movingEnemies = new List<Item>();
+            List<Item> scenery = new List<Item>();
+
 
             List<Item> itemListDuplicate = new List<Item>(itemList); // we must duplicate itemlist, originally work was being done on the main list causing the erase bug - as it would reset itself!
 
@@ -237,6 +239,9 @@ namespace JSB_LevelEditor
                         case "Enemy Move Vertical":
                             movingEnemies.Add(item);
                             break;
+                        case "Scenery":
+                            scenery.Add(item);
+                            break;
                         default:
                             continue;
                     }
@@ -248,6 +253,7 @@ namespace JSB_LevelEditor
                 System.Environment.NewLine +
                 "roomID:" + levelID);
 
+            updateTextList(ref scenery, ref textList);
             updateTextList(ref staticObjects, ref textList);
             updateTextList(ref staticPlatforms, ref textList);
             updateTextList(ref staticEnemies, ref textList);
@@ -371,7 +377,7 @@ namespace JSB_LevelEditor
     [Serializable]
     public class Item
     {
-        const string STATIC_OBJECT = "s", ENEMY = "e", STATIC_PLATFORM = "t", STATIC_STAIRS = "l", ENEMY_MOVING = "m", ENEMY_STATIC = "n", PICK_UP = "u";
+        const string STATIC_OBJECT = "s", ENEMY = "e", STATIC_PLATFORM = "t", STATIC_STAIRS = "l", ENEMY_MOVING = "m", ENEMY_STATIC = "n", PICK_UP = "u", SCENERY = "#";
         private string _objectType;
         private string _objectTypeOutput;
         private int _textureNumber;        
@@ -405,6 +411,10 @@ namespace JSB_LevelEditor
 
         public void convertObjectType() {
             switch (ObjectType) {
+
+                case "Scenery":
+                    _objectTypeOutput = SCENERY;
+                    break;
                 case "Static Platform":
                     _objectTypeOutput = STATIC_PLATFORM;
                     break;
