@@ -19,10 +19,10 @@ class WriteRoom
 public:
 	WriteRoom();
 	~WriteRoom();
-	void createRoom(const std::string fileName);
+	void createRoom(const std::string fileName, std::string inputTextFile);
 
 private:
-	Room createRoomData();
+	Room createRoomData(std::string inputTextFile);
 	void updateRoomData(RoomData *roomData, std::string textType, std::string value);
 
 };

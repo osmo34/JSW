@@ -45,15 +45,20 @@ void WriteRoom::updateRoomData(RoomData *roomData, std::string textType, std::st
 }
 
 
-Room WriteRoom::createRoomData()
+Room WriteRoom::createRoomData(std::string inputTextFile)
 {
-	Room room{};
+	Room room{};	
 
 	std::string file;	
-	std::cout << "Enter file name to compile including extension (*.txt): > ";
-	//std::string file = "testLevel.txt";
-	std::cin >> file;
-	std::cout << "" << std::endl;	
+
+	if (inputTextFile != "") {
+		file = inputTextFile;
+	}
+	else {
+		std::cout << "Enter file name to compile including extension (*.txt): > ";		
+		std::cin >> file;
+		std::cout << "" << std::endl;
+	}	
 
 	std::ifstream inFile;
 	inFile.open(file);
@@ -109,9 +114,9 @@ Room WriteRoom::createRoomData()
 	return room;
 }
 
-void WriteRoom::createRoom(std::string fileName)
+void WriteRoom::createRoom(std::string fileName, std::string inputTextFile)
 {
-	Room room = createRoomData();
+	Room room = createRoomData(inputTextFile);
 
 	std::ofstream outputFile;
 
