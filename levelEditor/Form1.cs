@@ -16,7 +16,6 @@ using System.IO;
 // fix item count on output
 // Add support for pickups
 // Add support for stairs - the game supports a specific angle - needs to be calculated in a method
-// Consider compile in editor to speed up workflow
 // consider play from editor
 
 namespace JSB_LevelEditor
@@ -56,6 +55,8 @@ namespace JSB_LevelEditor
 
         string currentFileName;
         bool isSaved = false;
+
+        bool isOutput = false;
 
         public Form1() {           
             InitializeComponent();
@@ -106,6 +107,8 @@ namespace JSB_LevelEditor
             }
             this.comboBox1.SelectedIndex = 0;
             this.comboBox2.SelectedIndex = 0;
+
+            isOutput = false;
         }
 
         // populate lists
@@ -203,6 +206,7 @@ namespace JSB_LevelEditor
         }
 
         private void outputFile() {
+            isOutput = true;
             List<String> textList = new List<String>();
             List<Item> staticPlatforms = new List<Item>();
             List<Item> staticObjects = new List<Item>();
@@ -361,6 +365,7 @@ namespace JSB_LevelEditor
                     }
                 }
                 isSaved = true;
+                isOutput = true;
             }
             else {
                 return;
@@ -371,6 +376,26 @@ namespace JSB_LevelEditor
         {
             ItemExplorer itemExplorer = new ItemExplorer(ref itemList);
             itemExplorer.Show();
+        }
+
+        // run compiler
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (isOutput)
+            {
+                string input = outputTextFileName + ".txt";
+                string output = outputTextFileName + ".jsb";
+                string argument = input + " " + output;
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                process.EnableRaisingEvents = false;
+                process.StartInfo.FileName = "JSWlevelCompiler";
+                process.StartInfo.Arguments = argument;
+                process.Start();
+            }
+            else
+            {
+                MessageBox.Show("Please output a file first");
+            }
         }
     }
 
