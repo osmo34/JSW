@@ -81,6 +81,9 @@ Room WriteRoom::createRoomData(std::string inputTextFile)
 		else if (type == "roomID") {
 			room.roomId = std::stoi(value);
 		}
+		else if (type == "roomIDVertical") {
+			room.roomLevelVertical = std::stoi(value);
+		}
 
 		else if (type == "type") {
 			char *c = new char[value.length() + 1];

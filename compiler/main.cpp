@@ -1,7 +1,3 @@
-#include "WriteRoom.h"
-#include <memory>
-#include <string>
-#include <iostream>
 #include "main.h"
 
 int main(int argc, char *argv[]) {
@@ -13,13 +9,27 @@ int main(int argc, char *argv[]) {
 			break;
 		}
 		else {
-			CreateRoom();
+			int input;
+			do {	  				
+				std::cout << "Compiler: " << std::endl;
+				std::cout << "(1) Compile room " << std::endl;
+				std::cout << "(2) Compile world file " << std::endl;
+
+				std::cin >> input;
+
+				if (input == 1) {
+					CreateRoom();
+				}
+				else if (input == 2) {
+					CreateWorld();
+				}
+			} while (input != 1 or input != 2);
 		}					  
 	}
 	system("pause");
 	return 0;
 }
-//
+// if no program arguments
 void CreateRoom() {
 	std::cout << "Enter compiled room file name including extension (*.jsb) >> ";
 	std::string fileName;
@@ -29,8 +39,18 @@ void CreateRoom() {
 	std::cout << "" << std::endl;
 }
 
+// with arguments, likely use from level editor
 void CreateRoom(std::string output, std::string input) {
 	std::shared_ptr <WriteRoom> writeRoom(new WriteRoom);
 	writeRoom->createRoom(output, input);
 }
+
+void CreateWorld()
+{
+	std::shared_ptr <WriteWorld> writeWorld(new WriteWorld);
+	writeWorld->createWorldFile();
+	//writeWorld->readRoomFile();
+}
+
+
 
