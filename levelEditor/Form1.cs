@@ -52,6 +52,7 @@ namespace JSB_LevelEditor
 
         static string outputTextFileName = "output";
         static string levelID = "0";
+        static string levelIDVertical = "0"; // determines room height in the world 
 
         string currentFileName;
         bool isSaved = false;
@@ -219,6 +220,7 @@ namespace JSB_LevelEditor
 
             outputTextFileName = this.outputFileBox.Text;
             levelID = this.IdTextBox.Text;
+            levelIDVertical = this.idTextV_Box.Text;
 
             System.IO.File.Delete(outputTextFileName+".txt");            
             itemListDuplicate.Reverse(); // reverse the itemlist so it goes top to bottom - this seems to work better in game
@@ -253,9 +255,11 @@ namespace JSB_LevelEditor
             }
             // complete text list
             textList.Add(
-                "num: " + itemListDuplicate.Count() + // TODO: do a genuine count ignoring empty blocks!
+                "num:" + itemListDuplicate.Count() + // TODO: do a genuine count ignoring empty blocks!
                 System.Environment.NewLine +
-                "roomID:" + levelID);
+                "roomID:" + levelID + 
+                System.Environment.NewLine + 
+                "roomIDVertical:" + levelIDVertical);
 
             updateTextList(ref scenery, ref textList);
             updateTextList(ref staticObjects, ref textList);

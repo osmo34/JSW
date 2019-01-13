@@ -985,6 +985,8 @@
             this.clampBottomBox = new System.Windows.Forms.TextBox();
             this.button3 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.idTextV_Box = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox920)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox919)).BeginInit();
@@ -10351,7 +10353,7 @@
             // button2
             // 
             this.button2.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button2.Location = new System.Drawing.Point(1372, 599);
+            this.button2.Location = new System.Drawing.Point(1372, 656);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(155, 43);
             this.button2.TabIndex = 10;
@@ -10419,7 +10421,7 @@
             // outputFileBox
             // 
             this.outputFileBox.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.outputFileBox.Location = new System.Drawing.Point(1459, 573);
+            this.outputFileBox.Location = new System.Drawing.Point(1459, 606);
             this.outputFileBox.Name = "outputFileBox";
             this.outputFileBox.Size = new System.Drawing.Size(68, 20);
             this.outputFileBox.TabIndex = 13;
@@ -10429,7 +10431,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.ForeColor = System.Drawing.Color.Red;
-            this.label4.Location = new System.Drawing.Point(1369, 576);
+            this.label4.Location = new System.Drawing.Point(1369, 606);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(81, 13);
             this.label4.TabIndex = 14;
@@ -10556,7 +10558,7 @@
             // button3
             // 
             this.button3.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button3.Location = new System.Drawing.Point(1372, 651);
+            this.button3.Location = new System.Drawing.Point(1372, 717);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(155, 48);
             this.button3.TabIndex = 27;
@@ -10570,11 +10572,30 @@
             this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
             this.label3.ForeColor = System.Drawing.Color.Red;
-            this.label3.Location = new System.Drawing.Point(1141, 726);
+            this.label3.Location = new System.Drawing.Point(792, 743);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(387, 22);
             this.label3.TabIndex = 28;
             this.label3.Text = "Ensure Level ID & Output are checked prior to compile!";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.ForeColor = System.Drawing.Color.Red;
+            this.label11.Location = new System.Drawing.Point(1369, 576);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(81, 13);
+            this.label11.TabIndex = 29;
+            this.label11.Text = "Level ID Height";
+            // 
+            // idTextV_Box
+            // 
+            this.idTextV_Box.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.idTextV_Box.Location = new System.Drawing.Point(1459, 573);
+            this.idTextV_Box.Name = "idTextV_Box";
+            this.idTextV_Box.Size = new System.Drawing.Size(68, 20);
+            this.idTextV_Box.TabIndex = 30;
+            this.idTextV_Box.Text = "0";
             // 
             // Form1
             // 
@@ -10582,6 +10603,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(31)))), ((int)(((byte)(31)))));
             this.ClientSize = new System.Drawing.Size(1587, 803);
+            this.Controls.Add(this.idTextV_Box);
+            this.Controls.Add(this.label11);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.clampBottomBox);
@@ -12501,6 +12524,8 @@
         private System.Windows.Forms.TextBox clampBottomBox;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox idTextV_Box;
     }
 }
 
