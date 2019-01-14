@@ -5,28 +5,25 @@
 #include <fstream>
 #include <vector>
 #include <filesystem>
-namespace fs = std::experimental::filesystem;
-
+namespace fs = std::experimental::filesystem; 
 
 #pragma warning(disable:4996)
 
 struct WorldFile {
-	std::string world[200][200];
-};
-
+	std::string world[200][200]; // vertical and then horizontal
+};											  
 
 class WriteWorld
 {
 public:
 	WriteWorld();
 	~WriteWorld();
-	void createWorldFile();
-	void getFileNamesString(std::vector<std::string> &filesStringFormat);
+	void createWorldFile();	
 	void readRoomFile(); // verification test
 
-
 private:
-	void writeRoomFile();
-
+	void readRooms(std::string room, WorldFile &world);
+	void writeWorldFile(WorldFile &world);
+	void getFileNamesString(std::vector<std::string> &filesStringFormat);
 };
 
