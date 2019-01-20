@@ -987,6 +987,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.idTextV_Box = new System.Windows.Forms.TextBox();
+            this.pictureBox921 = new System.Windows.Forms.PictureBox();
+            this.texturePreview = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox920)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox919)).BeginInit();
@@ -1909,6 +1911,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox921)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.texturePreview)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -10597,12 +10601,30 @@
             this.idTextV_Box.TabIndex = 30;
             this.idTextV_Box.Text = "0";
             // 
+            // pictureBox921
+            // 
+            this.pictureBox921.Location = new System.Drawing.Point(-23, -46);
+            this.pictureBox921.Name = "pictureBox921";
+            this.pictureBox921.Size = new System.Drawing.Size(100, 50);
+            this.pictureBox921.TabIndex = 31;
+            this.pictureBox921.TabStop = false;
+            // 
+            // texturePreview
+            // 
+            this.texturePreview.Location = new System.Drawing.Point(13, 126);
+            this.texturePreview.Name = "texturePreview";
+            this.texturePreview.Size = new System.Drawing.Size(64, 64);
+            this.texturePreview.TabIndex = 32;
+            this.texturePreview.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(31)))), ((int)(((byte)(31)))));
             this.ClientSize = new System.Drawing.Size(1587, 803);
+            this.Controls.Add(this.texturePreview);
+            this.Controls.Add(this.pictureBox921);
             this.Controls.Add(this.idTextV_Box);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.label3);
@@ -11560,6 +11582,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox921)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.texturePreview)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -12526,6 +12550,8 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox idTextV_Box;
+        private System.Windows.Forms.PictureBox pictureBox921;
+        private System.Windows.Forms.PictureBox texturePreview;
     }
 }
 

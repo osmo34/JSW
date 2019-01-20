@@ -184,7 +184,9 @@ namespace JSB_LevelEditor
         }
         // update combobox 2 (texture)
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e) {
-            textureID = this.comboBox2.SelectedIndex;            
+            textureID = this.comboBox2.SelectedIndex;
+            this.texturePreview.SizeMode = PictureBoxSizeMode.StretchImage;
+            this.texturePreview.Image = Image.FromFile(textureList[textureID]);            
         }
         // update speed used for enemies
         private void button1_Click(object sender, EventArgs e) {
