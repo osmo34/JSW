@@ -4,7 +4,7 @@ WriteWorld::WriteWorld() {}
 WriteWorld::~WriteWorld() {}
 
 void WriteWorld::createWorldFile() {																	
-	WorldFile world;
+	WorldFileMaster world;
 					  
 	// create a vector of jsb files in current directory by name only
 	std::vector <std::string> filesStringFormat;		
@@ -18,7 +18,7 @@ void WriteWorld::createWorldFile() {
 	writeWorldFile(world);	
 }
 
-void WriteWorld::writeWorldFile(WorldFile &world) {
+void WriteWorld::writeWorldFile(WorldFileMaster &world) {
 	std::ofstream outputFile;
 	outputFile.open("world.jsw", std::ios::binary);
 
@@ -51,7 +51,7 @@ void WriteWorld::getFileNamesString(std::vector<std::string> &filesStringFormat)
 	}
 }							
 
-void WriteWorld::readRooms(std::string roomName, WorldFile &world) {
+void WriteWorld::readRooms(std::string roomName, WorldFileMaster &worldFileMaster) {
 	Room room{}; // create a temporary room
 	std::ifstream inFile;
 	inFile.open(roomName, std::ios::binary);
@@ -66,15 +66,14 @@ void WriteWorld::readRooms(std::string roomName, WorldFile &world) {
 	}
 	// get our vertical and horizontal positions
 	int roomVert = room.roomLevelVertical;
-	int roomID = room.roomId;
-
-	// update the room
-	world.world[roomVert][roomID] = roomName;
+	int roomID = room.roomId; 		
+	strcpy(worldFileMaster.worldFile[roomVert][roomID].world, roomName.c_str()); // convert the string to char
 }
 
 // test method which will be used in game, copy in compiler for test purposes. Leaving in for verification
 void WriteWorld::readRoomFile()	{
-	WorldFile worldFile;
+	//WorldFile worldFile;
+	WorldFileMaster worldFile{};
 	std::ifstream inFile;
 	inFile.open("world.jsw", std::ios::binary);
 
@@ -88,7 +87,8 @@ void WriteWorld::readRoomFile()	{
 	std::cout << "Verification" << std::endl;
 	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 5; j++) {
-			std::cout << worldFile.world[i][j] << " : " << i << " " << j << std::endl;
+			std::string output = worldFile.worldFile[i][j].world;
+			std::cout << output << " : " << i << " " << j << std::endl;
 		}
 	}
 	std::cout << "World compile complete " << std::endl;

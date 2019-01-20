@@ -5,13 +5,18 @@
 #include <fstream>
 #include <vector>
 #include <filesystem>
+
 namespace fs = std::experimental::filesystem; 
 
 #pragma warning(disable:4996)
 
 struct WorldFile {
-	std::string world[200][200]; // vertical and then horizontal
-};											  
+	char world [25] = "";
+};			
+
+struct WorldFileMaster {
+	WorldFile worldFile[10][10];  // vertical and then horizontals
+};
 
 class WriteWorld
 {
@@ -22,8 +27,8 @@ public:
 	void readRoomFile(); // verification test
 
 private:
-	void readRooms(std::string room, WorldFile &world);
-	void writeWorldFile(WorldFile &world);
+	void readRooms(std::string room, WorldFileMaster &worldFileMaster);
+	void writeWorldFile(WorldFileMaster &world);
 	void getFileNamesString(std::vector<std::string> &filesStringFormat);
 };
 
