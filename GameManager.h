@@ -30,7 +30,8 @@ struct LevelObjects {
 	std::vector<std::shared_ptr<StaticPlatform>> levelStaticPlatforms;
 	std::vector<std::shared_ptr<StaticStairs>> levelStaticStairs;
 	std::vector<std::shared_ptr<EnemyStatic>> enemiesStatic;
-	std::vector <std::shared_ptr<StaticSprite>> spritesStatic;
+	std::vector<std::shared_ptr<StaticSprite>> spritesStatic;
+	std::vector<std::shared_ptr<StaticSprite>> spritesBackgroundLayer;
 	std::vector<std::shared_ptr<EnemyMoving>> enemiesMoving;
 	std::vector<std::shared_ptr<Pickup>> pickups;
 	std::vector<std::shared_ptr<Rope>> ropes;
@@ -42,6 +43,17 @@ struct LevelObjects {
 	Room room;
 	World world;
 };
+
+#pragma warning(disable:4996)
+// structs for loading world file. Currently 10x10 world which will of course be extended
+struct WorldFile {
+	char world[25] = "";
+};
+
+struct WorldFileMaster {
+	WorldFile worldFile[10][10];  // vertical and then horizontals
+};
+
 
 // Game state
 enum class Game { TITLE_SCREEN, GAME, DEAD };
@@ -127,14 +139,15 @@ private:
 	LevelObjects levelObjects{};
 	Room createRoom(std::string fileName, LevelObjects &levelObjects);
 	void checkLevelChange(LevelObjects &levelObjects);
-	void changeLevel(int nextRoom, LevelObjects &levelObjects);
+	void changeLevel(int nextRoomVertical, int nextRoomHorizontal, LevelObjects &levelObjects);
 	void clearRoomObjects(LevelObjects &levelObjects);
 	bool isFirstRun;
 	bool inLevel; // TODO: ?? Check this
 	bool firstLoopComplete;
 	int screenWidth;
 	int screenHeight;
-	unsigned int currentRoom = 36;
+	unsigned int currentRoomHorizontal = 0;	// default 36	
+	unsigned int currentRoomVertical = 0;
 	unsigned int nextRoomRight;
 	unsigned int nextRoomLeft;
 	unsigned int nextRoomUp;
@@ -186,22 +199,26 @@ class GameManager
 {
 public:
 	GameManager(int screenWidth, int screenHeight);
-	~GameManager();
+	~GameManager();	
 	void initializeGame();
 	void update(float dt, bool isPaused);
 	void draw(sf::RenderWindow *window);
+	WorldFileMaster readRoomFile();
 
 private:	
 	// set game state
 	Game game = Game::TITLE_SCREEN;
 
 	// private methods	
-	void loadTexture(std::map<int, sf::Texture> &textures, std::string fileName, int id); 
+	void loadTexture(std::map<int, sf::Texture> &textures, std::string fileName, int id);
+	void initializeWorld();
+	void initializeTextures();
+	void initializeTitleScreen();
 	
 	// member variables
 	sf::Event event;
 	const std::string TEXTURES_FILE_NAME = "textures.txt";
-	const std::string WORLD_FILE_NAME = "world.txt";
+	const std::string WORLD_FILE_NAME = "world.jsw";
 	int m_screenWidth = 0;
 	int m_screenHeight = 0;
 	LevelObjects levelObjects{};
@@ -212,11 +229,15 @@ private:
 	std::unique_ptr <MediaPlayer> mediaPlayer = nullptr;
 	std::unique_ptr <GameUpdates> gameUpdates = nullptr;
 	std::unique_ptr <GameSounds> gameSounds = nullptr;
-	std::unique_ptr <GameDraw> gameDraw = nullptr;
+	std::unique_ptr <GameDraw> gameDraw = nullptr; 
+
 	bool isFirstRun = true;
 	bool inLevel = true;
 	bool firstLoopComplete = false;
 	int musicVolume = 10;
 	int soundEffectVolume = 100;
 };
+
+
+
 

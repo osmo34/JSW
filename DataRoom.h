@@ -30,7 +30,8 @@ struct RoomData {
 
 #pragma pack(push, 2)
 struct Room {
-	std::int32_t roomId;
+	std::int32_t roomLevelVertical; // get room elevation
+	std::int32_t roomId;	
 	RoomData roomData[920];
 	std::uint32_t numObjects;
 };
@@ -38,7 +39,7 @@ struct Room {
 
 #pragma pack(push, 2)
 struct World {
-	std::string fileNames[256];	
+	std::string fileNames[200][200];	
 };
 #pragma pack(pop)
 

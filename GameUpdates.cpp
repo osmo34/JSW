@@ -10,7 +10,7 @@ GameUpdates::~GameUpdates() {}
 
 Room GameUpdates::createRoom(std::string fileName, LevelObjects & levelObjects) {
 	const char PLAYER = 'p', STATIC_OBJECT = 's', ENEMY = 'e', STATIC_PLATFORM = 't', 
-		STATIC_STAIRS = 'l', STATIC_SPRITE = '#', ENEMY_MOVING = 'm', 
+		STATIC_STAIRS = 'l', STATIC_SPRITE = '#', STATIC_BACKGROUND = '~', ENEMY_MOVING = 'm', 
 		ENEMY_STATIC = 'n', PICK_UP = 'u', ROPE = 'r';
 	Room room{};
 
@@ -44,6 +44,9 @@ Room GameUpdates::createRoom(std::string fileName, LevelObjects & levelObjects) 
 		case STATIC_SPRITE:
 			createObject(levelObjects.spritesStatic, room.roomData[i], texture);
 			break;
+		case STATIC_BACKGROUND:
+			createObject(levelObjects.spritesBackgroundLayer, room.roomData[i], texture);
+			break;
 		case PICK_UP:
 			createObject(levelObjects.pickups, room.roomData[i], texture);
 			break;
@@ -63,16 +66,16 @@ void GameUpdates::checkLevelChange(LevelObjects &levelObjects) {
 	const char LEFT = 'l', RIGHT = 'r', UP = 'U', DOWN = 'D';
 	switch (playerState) {
 	case LEFT:
-		changeLevel(nextRoomLeft, levelObjects);
+		changeLevel(currentRoomVertical, nextRoomLeft, levelObjects);
 		break;
 	case RIGHT:
-		changeLevel(nextRoomRight, levelObjects);
+		changeLevel(currentRoomVertical, nextRoomRight, levelObjects);
 		break;
 	case DOWN:
-		changeLevel(nextRoomDown, levelObjects);
+		changeLevel(nextRoomDown, currentRoomHorizontal, levelObjects);
 		break;
 	case UP:
-		changeLevel(nextRoomUp, levelObjects);
+		changeLevel(nextRoomUp, currentRoomHorizontal, levelObjects);
 		break;
 	default:
 		break;
@@ -83,6 +86,7 @@ void GameUpdates::clearRoomObjects(LevelObjects &levelObjects) {
 	clearVector(levelObjects.enemiesMoving);
 	clearVector(levelObjects.enemiesStatic);
 	clearVector(levelObjects.levelStaticObjects);
+	clearVector(levelObjects.spritesBackgroundLayer);
 	clearVector(levelObjects.levelStaticPlatforms);
 	clearVector(levelObjects.levelStaticStairs);
 	clearVector(levelObjects.pickups);
@@ -91,15 +95,15 @@ void GameUpdates::clearRoomObjects(LevelObjects &levelObjects) {
 	clearVector(levelObjects.travelators);
 }
 
-void GameUpdates::changeLevel(int nextRoom, LevelObjects &levelObjects) {
+void GameUpdates::changeLevel(int nextRoomVertical, int nextRoomHorizontal, LevelObjects &levelObjects) {
 	clearRoomObjects(levelObjects);
 	levelObjects.collision->clearCollisionData();
 
-	levelObjects.room = createRoom(levelObjects.world.fileNames[nextRoom], levelObjects);
+	levelObjects.room = createRoom(levelObjects.world.fileNames[nextRoomVertical][nextRoomHorizontal], levelObjects);
 	nextRoomRight = levelObjects.room.roomId + 1;
 	nextRoomLeft = levelObjects.room.roomId - 1;
-	nextRoomUp = levelObjects.room.roomId - 10;
-	nextRoomDown = levelObjects.room.roomId + 10;
+	nextRoomUp = levelObjects.room.roomLevelVertical - 1;
+	nextRoomDown = levelObjects.room.roomLevelVertical + 1;
 	
 	firstLoopComplete = false;
 	inLevel = true;
@@ -118,11 +122,11 @@ void GameUpdates::updateGame(float dt, LevelObjects &levelObjects, Game &game) {
 	case Game::GAME:
 		
 		if (isFirstRun) {
-			levelObjects.room = createRoom(levelObjects.world.fileNames[currentRoom], levelObjects);
+			levelObjects.room = createRoom(levelObjects.world.fileNames[currentRoomVertical][currentRoomHorizontal], levelObjects);
 			nextRoomRight = levelObjects.room.roomId + 1;
 			nextRoomLeft = levelObjects.room.roomId - 1;
-			nextRoomUp = levelObjects.room.roomId - 10;
-			nextRoomDown = levelObjects.room.roomId + 10; 
+			nextRoomUp = levelObjects.room.roomLevelVertical - 1;
+			nextRoomDown = levelObjects.room.roomLevelVertical + 1; 
 			isFirstRun = false;
 		}
 
