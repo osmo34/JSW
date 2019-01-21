@@ -92,7 +92,8 @@ Room WriteRoom::createRoomData(std::string inputTextFile)
 			delete[] c;
 		}
 		else if (type == "texture") {
-			roomData->textureId = std::stoi(value);
+			//roomData->textureId = std::stoi(value);
+			strcpy(roomData->textureFileName, value.c_str());
 		}
 		else if (type == "travelator") {
 			if (value == "1") {
@@ -137,5 +138,8 @@ void WriteRoom::createRoom(std::string fileName, std::string inputTextFile)
 	for (int i = 0; i < 5; i++) {
 		std::cout << room.roomData[i].objectType << std::endl;
 		std::cout << room.roomData[i].positionX << std::endl;
+		std::cout << room.roomData[i].textureFileName << std::endl;
 	}
+	system("pause");
+
 }
