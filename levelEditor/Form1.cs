@@ -163,6 +163,7 @@ namespace JSB_LevelEditor
         private void CreateObject(int i)
         {
             this.itemList[i - 1].TextureNumber = textureID;
+            this.itemList[i - 1].TextureFileName = textureList[textureID];
             this.itemList[i - 1].ObjectPositionNumber = i - 1;
             this.itemList[i - 1].ObjectType = selectedObject;
             this.itemList[i - 1].SpeedX = speedX;
@@ -423,6 +424,8 @@ namespace JSB_LevelEditor
         private int _positionX;
         private int _positionY;
 
+        private string _textureFileName;
+
         public Item(){ _textureNumber = 0; }
 
         public string ObjectType { set { _objectType = value; } get { return _objectType; } }
@@ -435,6 +438,7 @@ namespace JSB_LevelEditor
         public float clampXRight { get { return _clampXRight; } set { _clampXRight = value; } }
         public float clampYTop { get { return _clampYTop; } set { _clampYTop = value; } }
         public float clampYBottom { get { return _clampYBottom; } set { _clampYBottom = value; } }
+        public string TextureFileName { get { return _textureFileName; } set { _textureFileName = value; } }
 
 
         public int PositionX { get { return _positionX; } }
@@ -514,7 +518,7 @@ namespace JSB_LevelEditor
             string output = 
                 "type:" + _objectTypeOutput +
                 System.Environment.NewLine +
-                "texture:" + _textureNumber.ToString() +
+                "texture:" + _textureFileName +
                 System.Environment.NewLine +
                 "px:" + _positionX.ToString() + ".0" +
                 System.Environment.NewLine +
