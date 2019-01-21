@@ -15,8 +15,9 @@ int main(int argc, char *argv[]) {
 				std::cout << "==========================" << std::endl;
 				std::cout << "JSB Compiler: " << std::endl;
 				std::cout << "==========================" << std::endl;
-				std::cout << "(1) Compile room " << std::endl;
-				std::cout << "(2) Compile world file " << std::endl;
+				std::cout << "(1) Compile Room " << std::endl;
+				std::cout << "(2) Compile World File " << std::endl;
+				std::cout << "(3) Compile Texture File" << std::endl;
 				std::cout << "(0) Quit " << std::endl;
 
 				std::cin >> input;
@@ -27,6 +28,10 @@ int main(int argc, char *argv[]) {
 				else if (input == 2) {
 					CreateWorld();
 				}
+				else if (input == 3) {
+					CreateTexture();
+				}
+
 				else if (input == 0) {
 					return 0;
 				}
@@ -56,6 +61,12 @@ void CreateWorld() {
 	std::shared_ptr <WriteWorld> writeWorld(new WriteWorld);
 	writeWorld->createWorldFile();
 	writeWorld->readRoomFile();
+}
+
+void CreateTexture() {
+	std::shared_ptr <WriteTextures> writeTextures(new WriteTextures);
+	writeTextures->createWorldFile();
+	writeTextures->readRoomFile();
 }
 
 

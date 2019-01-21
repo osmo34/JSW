@@ -8,7 +8,7 @@ void WriteWorld::createWorldFile() {
 					  
 	// create a vector of jsb files in current directory by name only
 	std::vector <std::string> filesStringFormat;		
-	getFileNamesString(filesStringFormat);
+	getFileNamesString(filesStringFormat, JSW_FILE);
 
 	// update world file using the room names
 	for (auto &it : filesStringFormat) {
@@ -31,20 +31,19 @@ void WriteWorld::writeWorldFile(WorldFileMaster &world) {
 	}
 }
 
-void WriteWorld::getFileNamesString(std::vector<std::string> &filesStringFormat) {
+void WriteWorld::getFileNamesString(std::vector<std::string> &filesStringFormat, std::string fileType) {
 	for (const auto & entry : fs::directory_iterator(fs::current_path())) {
 		std::string file = entry.path().string(); // get all files initially including paths
 		std::string fileName; // full file name
 
 		char seperator = '\\';
-		std::string extension = "jsb";
 
 		// get rid of the path so we are working with the file name only
 		size_t i = file.rfind(seperator, file.length());
 		if (i != std::string::npos) {
 			fileName = file.substr(i + 1, file.length() - i); 
 			// check if jsb file format and if so add it to the vector
-			if (fileName.find(".jsb") != std::string::npos) {
+			if (fileName.find(fileType) != std::string::npos) {
 				filesStringFormat.push_back(fileName);
 			}
 		}		
@@ -82,7 +81,7 @@ void WriteWorld::readRoomFile()	{
 		inFile.close();
 	}
 	else {
-		std::cout << "Read failed";
+		std::cout << " World Read failed";
 	}
 	std::cout << "Verification" << std::endl;
 	for (int i = 0; i < 5; i++) {

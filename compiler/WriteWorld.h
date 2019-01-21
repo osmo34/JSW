@@ -10,6 +10,7 @@ namespace fs = std::experimental::filesystem;
 
 #pragma warning(disable:4996)
 
+// world structs
 struct WorldFile {
 	char world [25] = "";
 };			
@@ -23,12 +24,18 @@ class WriteWorld
 public:
 	WriteWorld();
 	~WriteWorld();
-	void createWorldFile();	
-	void readRoomFile(); // verification test
+	virtual void createWorldFile();	
+	virtual void readRoomFile(); // verification test
+
+	const std::string JSW_FILE = ".jsb";
 
 private:
 	void readRooms(std::string room, WorldFileMaster &worldFileMaster);
 	void writeWorldFile(WorldFileMaster &world);
-	void getFileNamesString(std::vector<std::string> &filesStringFormat);
+	
+protected:
+	void getFileNamesString(std::vector<std::string> &filesStringFormat, std::string fileType);
 };
+
+
 
