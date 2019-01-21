@@ -19,7 +19,8 @@ Room GameUpdates::createRoom(std::string fileName, LevelObjects & levelObjects) 
 
 	for (int i = 0; i < room.numObjects; i++) {	 //  room.numObjects
 		sf::Texture texture;
-		texture = levelObjects.textures.find(room.roomData[i].textureId)->second;		
+		std::string textureName = room.roomData[i].textureFileName;
+		texture = levelObjects.textures.find(textureName)->second;		
 
 		switch (room.roomData[i].objectType) {
 		case STATIC_OBJECT:

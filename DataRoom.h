@@ -8,7 +8,9 @@
 #pragma pack(push, 2)
 struct RoomData {
 	char objectType;
-	std::uint32_t textureId;
+	//std::uint32_t textureId;
+	char textureFileName[25]; // texture file name
+	char displayRoomName[50]; // display name for our room							   
 	float positionX;
 	float positionY;
 	float speedX;

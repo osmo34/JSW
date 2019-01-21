@@ -15,10 +15,27 @@ void GameManager::initializeWorld()
 	}
 }
 
+// read texture file
 void GameManager::initializeTextures()
 {
-	loadTextures = std::unique_ptr <LoadTextFile>(new LoadTextFile(TEXTURES_FILE_NAME));
-	loadTextures->loadFile(textureList);
+	TextureFileMaster textureFile{};
+
+	std::ifstream inFile;
+	inFile.open(TEXTURES_FILE_NAME, std::ios::binary);
+
+	if (inFile.is_open()) {
+		inFile.read(reinterpret_cast<char*>(&textureFile), sizeof(textureFile));
+		inFile.close();
+	}
+	else {
+		std::cout << "texture file read failed";
+	}
+	textureList.push_back(PLAYER_TEXTURE); // force player texture into element 0
+		
+	for (int i = 0; i < 8; i++) { // TODO: based on amount of textures
+		std::string output = textureFile.textureFile[i].texture;
+		textureList.push_back (output);
+	} 
 }
 
 void GameManager::initializeTitleScreen()
@@ -26,13 +43,13 @@ void GameManager::initializeTitleScreen()
 	sf::Texture titleTexture;
 	if (!titleTexture.loadFromFile("title.png")) { std::cout << "error with title screen image file"; }
 	levelObjects.titleScreen = std::unique_ptr <TitleScreen>(new TitleScreen(m_screenWidth, m_screenHeight, titleTexture));
-}
+} 
 
-void GameManager::loadTexture(std::map<int, sf::Texture>& textures, std::string fileName, int id) {
+void GameManager::loadTexture(std::map<std::string, sf::Texture> &textures, std::string fileName) {
 	sf::Texture texture;
 	if (!texture.loadFromFile(fileName)) { std::cout << "texture load failure - " << fileName; }
-	textures[id] = texture;	
-}
+	textures[fileName] = texture;	
+}	
 
 // read room file
 WorldFileMaster GameManager::readRoomFile() {
@@ -59,8 +76,8 @@ void GameManager::initializeGame() {
 	initializeTextures();
 	
 	for (int i = 0; i < textureList.size(); i++) {
-		loadTexture(levelObjects.textures, textureList[i], i);
-	}	
+		loadTexture(levelObjects.textures, textureList[i]);
+	}	  
 
 	// load world file
 	initializeWorld();
@@ -79,7 +96,7 @@ void GameManager::initializeGame() {
 	gameDraw = std::unique_ptr<GameDraw>(new GameDraw());
 
 	// create player
-	levelObjects.player = std::shared_ptr <Player>(new Player(m_screenWidth, m_screenHeight, levelObjects.textures[0]));
+	levelObjects.player = std::shared_ptr <Player>(new Player(m_screenWidth, m_screenHeight, levelObjects.textures[PLAYER_TEXTURE])); // TODO Player
 }
 
 void GameManager::update(float dt, bool isPaused) {

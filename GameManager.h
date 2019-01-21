@@ -39,7 +39,7 @@ struct LevelObjects {
 	std::shared_ptr<Player> player;
 	std::shared_ptr<Collision> collision;
 	std::shared_ptr<TitleScreen> titleScreen;
-	std::map<int, sf::Texture> textures;	
+	std::map<std::string, sf::Texture> textures;
 	Room room;
 	World world;
 };
@@ -52,6 +52,14 @@ struct WorldFile {
 
 struct WorldFileMaster {
 	WorldFile worldFile[10][10];  // vertical and then horizontals
+};
+
+// structs for loading textures
+struct Texture {
+	char texture[25] = "";
+};
+struct TextureFileMaster {
+	Texture textureFile[100]; // 100 textures for now
 };
 
 
@@ -210,21 +218,22 @@ private:
 	Game game = Game::TITLE_SCREEN;
 
 	// private methods	
-	void loadTexture(std::map<int, sf::Texture> &textures, std::string fileName, int id);
+	void loadTexture(std::map<std::string, sf::Texture> &textures, std::string fileName);
+
 	void initializeWorld();
 	void initializeTextures();
 	void initializeTitleScreen();
 	
 	// member variables
 	sf::Event event;
-	const std::string TEXTURES_FILE_NAME = "textures.txt";
+	const std::string TEXTURES_FILE_NAME = "textures.txx";
 	const std::string WORLD_FILE_NAME = "world.jsw";
+	const std::string PLAYER_TEXTURE = "Hat_man_spriteSheet.png"; // TODO: Consider a better way
 	int m_screenWidth = 0;
 	int m_screenHeight = 0;
 	LevelObjects levelObjects{};
 	std::vector<std::string> worldList;
-	std::vector<std::string> textureList;
-	std::shared_ptr <LoadTextFile> loadTextures = nullptr;
+	std::vector<std::string> textureList;	
 	std::shared_ptr <LoadTextFile> loadWorld = nullptr;
 	std::unique_ptr <MediaPlayer> mediaPlayer = nullptr;
 	std::unique_ptr <GameUpdates> gameUpdates = nullptr;
