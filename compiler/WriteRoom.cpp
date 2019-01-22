@@ -8,12 +8,12 @@ void WriteRoom::updateRoomData(RoomData *roomData, std::string textType, std::st
 {
 	types type;
 	std::string output;
-	int id;	
+	int id;
 
 	// floats that represent the roomData data structure, anything that isn't a float and is handled elsewhere is represented by a 0
-	float roomTypes[20] = {0.0f, 0.0f, 0.0f, 0.0f, roomData->positionX, roomData->positionY, roomData->speedX, roomData->speedY, 0.0f,
+	float roomTypes[20] = {0.0f, 0.0f, 0.0f, 0.0f, roomData->positionX, roomData->positionY, roomData->speedX, roomData->speedY,
 								roomData->clampXLeft, roomData->clampXRight, roomData->clampYTop, roomData->clampYBottom, roomData->stairBottomX,
-								roomData->stairBottomY, roomData->stairTopX, roomData->stairTopY, roomData->ropeX, roomData->ropeY, roomData->ropeTopY};
+								roomData->stairBottomY, roomData->stairTopX, roomData->stairTopY, roomData->ropeX, roomData->ropeY, roomData->ropeTopY, 0.0f};
 
 	// work out which bit of roomData we are working with
 	for (int i = 0; i < sizeof(type.type) / sizeof(type.type[0]); i++) {
@@ -30,17 +30,17 @@ void WriteRoom::updateRoomData(RoomData *roomData, std::string textType, std::st
 	roomData->positionY = roomTypes[5];
 	roomData->speedX = roomTypes[6];
 	roomData->speedY = roomTypes[7];
-	roomData->clampXLeft = roomTypes[9];
-	roomData->clampXRight = roomTypes[10];
-	roomData->clampYTop = roomTypes[11];
-	roomData->clampYBottom = roomTypes[12];
-	roomData->stairBottomX = roomTypes[13];
-	roomData->stairBottomY = roomTypes[14];
-	roomData->stairTopX = roomTypes[15];
-	roomData->stairTopY = roomTypes[16];
-	roomData->ropeX = roomTypes[17];
-	roomData->ropeY = roomTypes[18];
-	roomData->ropeTopY = roomTypes[19];
+	roomData->clampXLeft = roomTypes[8];
+	roomData->clampXRight = roomTypes[9];
+	roomData->clampYTop = roomTypes[10];
+	roomData->clampYBottom = roomTypes[11];
+	roomData->stairBottomX = roomTypes[12];
+	roomData->stairBottomY = roomTypes[13];
+	roomData->stairTopX = roomTypes[14];
+	roomData->stairTopY = roomTypes[15];
+	roomData->ropeX = roomTypes[16];
+	roomData->ropeY = roomTypes[17];
+	roomData->ropeTopY = roomTypes[18];
 	roomData->isTravelator = 0; // make sure we are not a travelator - this is handled elsewhere!
 }
 
