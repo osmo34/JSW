@@ -2,6 +2,8 @@
 Platform game engine in the style of Jet Set Willy - SFML framework for rendering but game engine written from scratch.
 <p>
 <p>
+<b> 22/01/2018 </b> - Added some new screenshots of the game and editor
+<p> 
 <b> 19/12/2018 </b> - Restarted work on this. Will be concentrating on editor improvements. I'll be moving away from a remake and make this an original game in the style of Jet Set Willy
 <p>
 <b>NOTE 10/09/2018</b> - project isn't dead. I've taken a break over summer as I'm working on a CS Course
