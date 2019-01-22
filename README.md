@@ -35,5 +35,5 @@ Current TODO: <p>
 Latest screenshot having worked on content (graphics from https://opengameart.org/content/simple-broad-purpose-tileset) - note the line is a test rope and the blue tiles under the toilet is a test travelator <br>
 added level editor screenshot
 
-![alt text](screenshot.png)
+![alt text](screenshot_new.png)
 ![alt text](levelEditor/screenshot_editor2.png)
