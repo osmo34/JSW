@@ -12,10 +12,8 @@ using System.IO;
 
 // TODO: Tasks here
 // Refactor
-// Erase bug fixed at some point
 // fix item count on output
 // Add support for pickups
-// Add support for stairs - the game supports a specific angle - needs to be calculated in a method
 // consider play from editor
 
 namespace JSB_LevelEditor
@@ -26,6 +24,8 @@ namespace JSB_LevelEditor
         const int totalPixels = 921;        
         ObservableCollection<PictureBox> pictureBoxList = new ObservableCollection<PictureBox>();
         List<Item> itemList = new List<Item>();
+        List<Item> stairList = new List<Item>();
+
         List<String> textureList = new List<String>();
         List<String> objectList = new List<string>();     
 
@@ -42,13 +42,22 @@ namespace JSB_LevelEditor
         static float clampYTop = 0.0f;
         static float clampYBottom = 0.0f;
 
+        // stairs
+        static float stairsBottomX = 0.0f;
+        static float stairsBottomY = 0.0f;
+        static float stairsTopX = 0.0f;
+        static float stairsTopY = 0.0f;
+
         static string selectedObject = "";
         static int selectedObjectIndex = 0;
+
+        static int selectedStairsIndex = 0;
                 
         string defaultTexture = "Default_Blank.png";
 
         List<ComboBoxItem> objectComboBoxList = new List<ComboBoxItem>();
         List<ComboBoxItem> textureComboBoxList = new List<ComboBoxItem>();
+        List<ComboBoxItem> stairsComboBoxList = new List<ComboBoxItem>();
 
         static string outputTextFileName = "output";
         static string levelID = "0";
@@ -172,10 +181,48 @@ namespace JSB_LevelEditor
             this.itemList[i - 1].clampXRight = clampXRight;
             this.itemList[i - 1].clampYTop = clampYTop;
             this.itemList[i - 1].clampYBottom = clampYBottom;
+
             this.itemList[i - 1].calculatePosition();
             this.itemList[i - 1].convertObjectType();
-            toolTipList[i - 1].SetToolTip(pictureBoxList[i - 1], "Obj Pos Number: " + itemList[i - 1].ObjectPositionNumber + "Texutre ID: " + itemList[i - 1].TextureNumber.ToString() + ", Object Type: " + itemList[i - 1].ObjectOutput.ToString() + ", SpeedX: " + itemList[i - 1].SpeedX.ToString() + ", SpeedY: " + itemList[i - 1].SpeedY.ToString() + ", PositionX: " + itemList[i - 1].PositionX + ", Position Y: " + itemList[i - 1].PositionY);
+            toolTipList[i - 1].SetToolTip(pictureBoxList[i - 1], "Obj Pos Number: " + itemList[i - 1].ObjectPositionNumber + "Texutre ID: " + itemList[i - 1].TextureNumber.ToString() + ", Object Type: " + itemList[i - 1].ObjectOutput.ToString() + ", SpeedX: " + itemList[i - 1].SpeedX.ToString() + ", SpeedY: " + itemList[i - 1].SpeedY.ToString() + ", PositionX: " + itemList[i - 1].PositionX + ", Position Y: " + itemList[i - 1].PositionY);            
         }
+
+        // stairs
+        private void CreateObject()
+        {
+            stairsBottomX = float.Parse(this.StairBottomXInputBox.Text);
+            stairsBottomY = float.Parse(this.StairBottomYInputBox.Text);
+            stairsTopX = float.Parse(this.StairTopXInputBox.Text);
+            stairsTopY = float.Parse(this.StairTopYInputBox.Text);
+
+            this.stairList.Add(new Item());
+            int stairListCount = stairList.Count() - 1;
+
+            this.stairList[stairListCount].TextureNumber = 1;
+            this.stairList[stairListCount].TextureFileName = "0";
+            this.stairList[stairListCount].ObjectPositionNumber = stairListCount;
+            this.stairList[stairListCount].ObjectType = "Static Stairs";
+            this.stairList[stairListCount].SpeedX = 0;
+            this.stairList[stairListCount].SpeedY = 0;
+            this.stairList[stairListCount].clampXLeft = 0;
+            this.stairList[stairListCount].clampXRight = 0;
+            this.stairList[stairListCount].clampYTop = 0;
+            this.stairList[stairListCount].clampYBottom = 0;
+
+            this.stairList[stairListCount].stairsBottomX = stairsBottomX;
+            this.stairList[stairListCount].stairsBottomY = stairsBottomY;
+            this.stairList[stairListCount].stairsTopX = stairsTopX;
+            this.stairList[stairListCount].stairsTopY = stairsTopY;
+
+            this.stairList[stairListCount].convertObjectType();
+
+            // update combo box
+            stairsComboBoxList.Add(new ComboBoxItem());
+            int nextPosition = stairsComboBoxList.Count() - 1;
+            stairsComboBoxList[nextPosition].Text = stairListCount.ToString();
+            this.stairListComboBox.Items.Add(stairsComboBoxList[nextPosition]);
+        }
+
 
         // update combobox 1 (type of item)
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e) {
@@ -189,6 +236,11 @@ namespace JSB_LevelEditor
             this.texturePreview.SizeMode = PictureBoxSizeMode.StretchImage;
             this.texturePreview.Image = Image.FromFile(textureList[textureID]);            
         }
+        // update stair combo list
+        private void stairListComboBox_SelectedIndexChanged(object sender, EventArgs e) {
+            selectedStairsIndex = this.stairListComboBox.SelectedIndex;
+        }
+
         // update speed used for enemies
         private void button1_Click(object sender, EventArgs e) {
             speedX = float.Parse(SpeedXBox.Text);
@@ -217,16 +269,17 @@ namespace JSB_LevelEditor
             List<Item> staticEnemies = new List<Item>();
             List<Item> movingEnemies = new List<Item>();
             List<Item> scenery = new List<Item>();
-
+            List<Item> stairs = new List<Item>();
 
             List<Item> itemListDuplicate = new List<Item>(itemList); // we must duplicate itemlist, originally work was being done on the main list causing the erase bug - as it would reset itself!
+            List<Item> stairListDuplicate = new List<Item>(stairList);
 
             outputTextFileName = this.outputFileBox.Text;
             levelID = this.IdTextBox.Text;
             levelIDVertical = this.idTextV_Box.Text;
 
             System.IO.File.Delete(outputTextFileName+".txt");            
-            itemListDuplicate.Reverse(); // reverse the itemlist so it goes top to bottom - this seems to work better in game
+            itemListDuplicate.Reverse(); // reverse the itemlist so it goes top to bottom - this seems to work better in game            
             
             // break up the itemlist into specific items so they are grouped together in output - again this works better in game
             foreach (var item in itemListDuplicate) {
@@ -250,12 +303,18 @@ namespace JSB_LevelEditor
                             break;
                         case "Scenery":
                             scenery.Add(item);
-                            break;
+                            break;                        
                         default:
                             continue;
                     }
                 }
             }
+
+            // go through stair list
+            foreach (var item in stairListDuplicate) {
+                stairs.Add(item);
+            }
+
             // complete text list
             textList.Add(
                 "num:" + itemListDuplicate.Count() + // TODO: do a genuine count ignoring empty blocks!
@@ -269,6 +328,7 @@ namespace JSB_LevelEditor
             updateTextList(ref staticPlatforms, ref textList);
             updateTextList(ref staticEnemies, ref textList);
             updateTextList(ref movingEnemies, ref textList);
+            updateTextList(ref stairs, ref textList);
             // write text list
             System.IO.File.WriteAllLines(outputTextFileName+".txt", textList.ToArray());
             textList.Clear();
@@ -281,6 +341,7 @@ namespace JSB_LevelEditor
                 isSaved = false;
                 currentFileName = "";
                 this.itemList.Clear();
+                this.stairList.Clear();
                 this.textureList.Clear();
                 this.objectList.Clear();
                 pictureBoxList.Clear();
@@ -334,6 +395,7 @@ namespace JSB_LevelEditor
             using (Stream stream = File.Open(outputfile, FileMode.Create)) {
                 var binaryOutput = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
                 binaryOutput.Serialize(stream, this.itemList);
+                binaryOutput.Serialize(stream, this.stairList);
             }
         }
 
@@ -345,6 +407,7 @@ namespace JSB_LevelEditor
                 currentFileName = inputfile;                
                 using (Stream stream = File.Open(inputfile, FileMode.Open)) {                                        
                     this.itemList.Clear();
+                    this.stairList.Clear();
                     this.textureList.Clear();
                     this.objectList.Clear();
                     pictureBoxList.Clear();
@@ -364,6 +427,7 @@ namespace JSB_LevelEditor
                     resetEditor();
                     var binaryInput = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
                     this.itemList = (List<Item>)binaryInput.Deserialize(stream);
+                    this.stairList = (List<Item>)binaryInput.Deserialize(stream);
 
                     for (int i = 0; i < itemList.Count(); i++) {
                         pictureBoxList[itemList[i].ObjectPositionNumber].Image = Image.FromFile(textureList[itemList[i].TextureNumber]);
@@ -379,17 +443,14 @@ namespace JSB_LevelEditor
             }
         }
 
-        private void buttonItemExplore_Click(object sender, EventArgs e)
-        {
+        private void buttonItemExplore_Click(object sender, EventArgs e) {
             ItemExplorer itemExplorer = new ItemExplorer(ref itemList);
             itemExplorer.Show();
         }
 
         // run compiler
-        private void button3_Click(object sender, EventArgs e)
-        {
-            if (isOutput)
-            {
+        private void button3_Click(object sender, EventArgs e) {
+            if (isOutput) {
                 string input = outputTextFileName + ".txt";
                 string output = outputTextFileName + ".jsb";
                 string argument = input + " " + output;
@@ -399,11 +460,19 @@ namespace JSB_LevelEditor
                 process.StartInfo.Arguments = argument;
                 process.Start();
             }
-            else
-            {
+            else {
                 MessageBox.Show("Please output a file first");
             }
         }
+
+        private void createStairsButton_Click(object sender, EventArgs e) {
+            CreateObject();
+        }
+
+        private void EraseStairsButton_Click(object sender, EventArgs e) {            
+            stairList.RemoveAt(selectedStairsIndex);
+            stairListComboBox.Items.RemoveAt(selectedStairsIndex);
+        }        
     }
 
     [Serializable]
@@ -420,6 +489,10 @@ namespace JSB_LevelEditor
         private float _clampXRight;
         private float _clampYTop;
         private float _clampYBottom;
+        private float _stairsBottomX;
+        private float _stairsBottomY;
+        private float _stairsTopX;
+        private float _stairsTopY;
 
         private int _positionX;
         private int _positionY;
@@ -432,14 +505,20 @@ namespace JSB_LevelEditor
         public int ObjectPositionNumber { set { _objectPostionNumber = value; } get { return _objectPostionNumber; } }
         public int TextureNumber { set { _textureNumber = value; } get { return _textureNumber; } }
         public string ObjectOutput { set { _objectTypeOutput = value; } get { return _objectTypeOutput; } }
+
         public float SpeedX { get { return _speedX; } set { _speedX = value; } }
         public float SpeedY { get { return _speedY; } set { _speedY = value; } }
         public float clampXLeft { get { return _clampXLeft; } set { _clampXLeft = value; } }
         public float clampXRight { get { return _clampXRight; } set { _clampXRight = value; } }
         public float clampYTop { get { return _clampYTop; } set { _clampYTop = value; } }
         public float clampYBottom { get { return _clampYBottom; } set { _clampYBottom = value; } }
-        public string TextureFileName { get { return _textureFileName; } set { _textureFileName = value; } }
 
+        public string TextureFileName { get { return _textureFileName; } set { _textureFileName = value; } }
+        
+        public float stairsBottomX { get { return _stairsBottomX; } set { _stairsBottomX = value; } }
+        public float stairsBottomY { get { return _stairsBottomY; } set { _stairsBottomY = value; } }
+        public float stairsTopX { get { return _stairsTopX; } set { _stairsTopX = value; } }
+        public float stairsTopY { get { return _stairsTopY; } set { _stairsTopY = value; } }
 
         public int PositionX { get { return _positionX; } }
         public int PositionY { get { return _positionY; } }
@@ -467,7 +546,7 @@ namespace JSB_LevelEditor
                     break;
                 case "Enemy Move Vertical":
                     _objectTypeOutput = ENEMY_MOVING;
-                    break;
+                    break;               
                 case "Erase":
                     _objectTypeOutput = "@";
                     _textureNumber = 0;
@@ -515,7 +594,7 @@ namespace JSB_LevelEditor
                 return null;
             }
 
-            string output = 
+            string output =
                 "type:" + _objectTypeOutput +
                 System.Environment.NewLine +
                 "texture:" + _textureFileName +
@@ -535,6 +614,14 @@ namespace JSB_LevelEditor
                 "clampYTop:" + _clampYTop.ToString() +
                 System.Environment.NewLine +
                 "clampYBottom:" + _clampYBottom.ToString() +
+                System.Environment.NewLine +
+                "stbx:" + _stairsBottomX.ToString() +
+                System.Environment.NewLine +
+                "stby:" + _stairsBottomY.ToString() +
+                System.Environment.NewLine +
+                "sttx:" + _stairsTopX.ToString() +
+                System.Environment.NewLine +
+                "stty:" + _stairsTopY.ToString() +
                 System.Environment.NewLine +
                 "end:0.0";
             return output;

@@ -989,6 +989,23 @@
             this.idTextV_Box = new System.Windows.Forms.TextBox();
             this.pictureBox921 = new System.Windows.Forms.PictureBox();
             this.texturePreview = new System.Windows.Forms.PictureBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.stairListComboBox = new System.Windows.Forms.ComboBox();
+            this.EraseStairsButton = new System.Windows.Forms.Button();
+            this.createStairsButton = new System.Windows.Forms.Button();
+            this.StairBottomXInputBox = new System.Windows.Forms.TextBox();
+            this.StairBottomYInputBox = new System.Windows.Forms.TextBox();
+            this.StairTopXInputBox = new System.Windows.Forms.TextBox();
+            this.StairTopYInputBox = new System.Windows.Forms.TextBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox920)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox919)).BeginInit();
@@ -1913,6 +1930,11 @@
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox921)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.texturePreview)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            this.groupBox5.SuspendLayout();
+            this.groupBox6.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -10282,7 +10304,7 @@
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(1372, 39);
+            this.comboBox1.Location = new System.Drawing.Point(17, 19);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(155, 21);
             this.comboBox1.TabIndex = 2;
@@ -10291,7 +10313,7 @@
             // comboBox2
             // 
             this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(1372, 126);
+            this.comboBox2.Location = new System.Drawing.Point(17, 19);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(155, 21);
             this.comboBox2.TabIndex = 3;
@@ -10346,9 +10368,10 @@
             // button1
             // 
             this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button1.Location = new System.Drawing.Point(1372, 457);
+            this.button1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.button1.Location = new System.Drawing.Point(7, 253);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(152, 23);
+            this.button1.Size = new System.Drawing.Size(139, 23);
             this.button1.TabIndex = 9;
             this.button1.Text = "Update Speed";
             this.button1.UseVisualStyleBackColor = true;
@@ -10357,7 +10380,8 @@
             // button2
             // 
             this.button2.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button2.Location = new System.Drawing.Point(1372, 656);
+            this.button2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.button2.Location = new System.Drawing.Point(22, 141);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(155, 43);
             this.button2.TabIndex = 10;
@@ -10372,7 +10396,7 @@
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1587, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1774, 24);
             this.menuStrip1.TabIndex = 12;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -10425,7 +10449,7 @@
             // outputFileBox
             // 
             this.outputFileBox.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.outputFileBox.Location = new System.Drawing.Point(1459, 606);
+            this.outputFileBox.Location = new System.Drawing.Point(109, 91);
             this.outputFileBox.Name = "outputFileBox";
             this.outputFileBox.Size = new System.Drawing.Size(68, 20);
             this.outputFileBox.TabIndex = 13;
@@ -10435,7 +10459,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.ForeColor = System.Drawing.Color.Red;
-            this.label4.Location = new System.Drawing.Point(1369, 606);
+            this.label4.Location = new System.Drawing.Point(19, 91);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(81, 13);
             this.label4.TabIndex = 14;
@@ -10445,7 +10469,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.ForeColor = System.Drawing.Color.Red;
-            this.label5.Location = new System.Drawing.Point(1369, 546);
+            this.label5.Location = new System.Drawing.Point(19, 31);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(47, 13);
             this.label5.TabIndex = 15;
@@ -10454,7 +10478,7 @@
             // IdTextBox
             // 
             this.IdTextBox.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.IdTextBox.Location = new System.Drawing.Point(1459, 539);
+            this.IdTextBox.Location = new System.Drawing.Point(109, 24);
             this.IdTextBox.Name = "IdTextBox";
             this.IdTextBox.Size = new System.Drawing.Size(68, 20);
             this.IdTextBox.TabIndex = 16;
@@ -10479,7 +10503,7 @@
             // buttonItemExplore
             // 
             this.buttonItemExplore.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.buttonItemExplore.Location = new System.Drawing.Point(1382, 502);
+            this.buttonItemExplore.Location = new System.Drawing.Point(102, 740);
             this.buttonItemExplore.Name = "buttonItemExplore";
             this.buttonItemExplore.Size = new System.Drawing.Size(142, 23);
             this.buttonItemExplore.TabIndex = 18;
@@ -10562,7 +10586,8 @@
             // button3
             // 
             this.button3.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button3.Location = new System.Drawing.Point(1372, 717);
+            this.button3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.button3.Location = new System.Drawing.Point(22, 202);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(155, 48);
             this.button3.TabIndex = 27;
@@ -10576,7 +10601,7 @@
             this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
             this.label3.ForeColor = System.Drawing.Color.Red;
-            this.label3.Location = new System.Drawing.Point(792, 743);
+            this.label3.Location = new System.Drawing.Point(1137, 741);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(387, 22);
             this.label3.TabIndex = 28;
@@ -10586,7 +10611,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.ForeColor = System.Drawing.Color.Red;
-            this.label11.Location = new System.Drawing.Point(1369, 576);
+            this.label11.Location = new System.Drawing.Point(19, 61);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(81, 13);
             this.label11.TabIndex = 29;
@@ -10595,7 +10620,7 @@
             // idTextV_Box
             // 
             this.idTextV_Box.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.idTextV_Box.Location = new System.Drawing.Point(1459, 573);
+            this.idTextV_Box.Location = new System.Drawing.Point(109, 58);
             this.idTextV_Box.Name = "idTextV_Box";
             this.idTextV_Box.Size = new System.Drawing.Size(68, 20);
             this.idTextV_Box.TabIndex = 30;
@@ -10611,24 +10636,202 @@
             // 
             // texturePreview
             // 
-            this.texturePreview.Location = new System.Drawing.Point(13, 126);
+            this.texturePreview.Location = new System.Drawing.Point(1631, 86);
             this.texturePreview.Name = "texturePreview";
             this.texturePreview.Size = new System.Drawing.Size(64, 64);
             this.texturePreview.TabIndex = 32;
             this.texturePreview.TabStop = false;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.label12.Location = new System.Drawing.Point(1571, 246);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(71, 13);
+            this.label12.TabIndex = 33;
+            this.label12.Text = "StairBottomX:";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.label13.Location = new System.Drawing.Point(1571, 283);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(71, 13);
+            this.label13.TabIndex = 34;
+            this.label13.Text = "StairBottomY:";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.label14.Location = new System.Drawing.Point(1571, 317);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(57, 13);
+            this.label14.TabIndex = 35;
+            this.label14.Text = "StairTopX:";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.label15.Location = new System.Drawing.Point(19, 130);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(57, 13);
+            this.label15.TabIndex = 36;
+            this.label15.Text = "StairTopY:";
+            // 
+            // stairListComboBox
+            // 
+            this.stairListComboBox.FormattingEnabled = true;
+            this.stairListComboBox.Location = new System.Drawing.Point(1574, 429);
+            this.stairListComboBox.Name = "stairListComboBox";
+            this.stairListComboBox.Size = new System.Drawing.Size(141, 21);
+            this.stairListComboBox.TabIndex = 37;
+            this.stairListComboBox.Text = "Stair Index";
+            this.stairListComboBox.SelectedIndexChanged += new System.EventHandler(this.stairListComboBox_SelectedIndexChanged);
+            // 
+            // EraseStairsButton
+            // 
+            this.EraseStairsButton.Location = new System.Drawing.Point(1574, 467);
+            this.EraseStairsButton.Name = "EraseStairsButton";
+            this.EraseStairsButton.Size = new System.Drawing.Size(141, 23);
+            this.EraseStairsButton.TabIndex = 38;
+            this.EraseStairsButton.Text = "Erase Stairs";
+            this.EraseStairsButton.UseVisualStyleBackColor = true;
+            this.EraseStairsButton.Click += new System.EventHandler(this.EraseStairsButton_Click);
+            // 
+            // createStairsButton
+            // 
+            this.createStairsButton.Location = new System.Drawing.Point(1574, 386);
+            this.createStairsButton.Name = "createStairsButton";
+            this.createStairsButton.Size = new System.Drawing.Size(141, 23);
+            this.createStairsButton.TabIndex = 39;
+            this.createStairsButton.Text = "Create Stairs";
+            this.createStairsButton.UseVisualStyleBackColor = true;
+            this.createStairsButton.Click += new System.EventHandler(this.createStairsButton_Click);
+            // 
+            // StairBottomXInputBox
+            // 
+            this.StairBottomXInputBox.Location = new System.Drawing.Point(1649, 246);
+            this.StairBottomXInputBox.Name = "StairBottomXInputBox";
+            this.StairBottomXInputBox.Size = new System.Drawing.Size(66, 20);
+            this.StairBottomXInputBox.TabIndex = 40;
+            // 
+            // StairBottomYInputBox
+            // 
+            this.StairBottomYInputBox.Location = new System.Drawing.Point(1649, 283);
+            this.StairBottomYInputBox.Name = "StairBottomYInputBox";
+            this.StairBottomYInputBox.Size = new System.Drawing.Size(66, 20);
+            this.StairBottomYInputBox.TabIndex = 41;
+            // 
+            // StairTopXInputBox
+            // 
+            this.StairTopXInputBox.Location = new System.Drawing.Point(1649, 317);
+            this.StairTopXInputBox.Name = "StairTopXInputBox";
+            this.StairTopXInputBox.Size = new System.Drawing.Size(66, 20);
+            this.StairTopXInputBox.TabIndex = 42;
+            // 
+            // StairTopYInputBox
+            // 
+            this.StairTopYInputBox.Location = new System.Drawing.Point(1649, 347);
+            this.StairTopYInputBox.Name = "StairTopYInputBox";
+            this.StairTopYInputBox.Size = new System.Drawing.Size(66, 20);
+            this.StairTopYInputBox.TabIndex = 43;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.button1);
+            this.groupBox1.ForeColor = System.Drawing.Color.Lime;
+            this.groupBox1.Location = new System.Drawing.Point(1365, 214);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(159, 296);
+            this.groupBox1.TabIndex = 48;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Enemy Settings";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.label15);
+            this.groupBox2.ForeColor = System.Drawing.Color.Lime;
+            this.groupBox2.Location = new System.Drawing.Point(1552, 214);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(200, 296);
+            this.groupBox2.TabIndex = 49;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Stair Settings";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.label4);
+            this.groupBox3.Controls.Add(this.button2);
+            this.groupBox3.Controls.Add(this.outputFileBox);
+            this.groupBox3.Controls.Add(this.label5);
+            this.groupBox3.Controls.Add(this.IdTextBox);
+            this.groupBox3.Controls.Add(this.button3);
+            this.groupBox3.Controls.Add(this.label11);
+            this.groupBox3.Controls.Add(this.idTextV_Box);
+            this.groupBox3.ForeColor = System.Drawing.Color.Lime;
+            this.groupBox3.Location = new System.Drawing.Point(1552, 526);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(200, 261);
+            this.groupBox3.TabIndex = 50;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Level & Compile Settings";
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.5F);
+            this.groupBox4.ForeColor = System.Drawing.Color.Lime;
+            this.groupBox4.Location = new System.Drawing.Point(1618, 68);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(89, 102);
+            this.groupBox4.TabIndex = 51;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Texture Preview";
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.comboBox1);
+            this.groupBox5.ForeColor = System.Drawing.Color.Lime;
+            this.groupBox5.Location = new System.Drawing.Point(1365, 47);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(183, 49);
+            this.groupBox5.TabIndex = 52;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Object Type";
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.comboBox2);
+            this.groupBox6.ForeColor = System.Drawing.Color.Lime;
+            this.groupBox6.Location = new System.Drawing.Point(1365, 126);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(183, 54);
+            this.groupBox6.TabIndex = 53;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Selected Texture";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(31)))), ((int)(((byte)(31)))));
-            this.ClientSize = new System.Drawing.Size(1587, 803);
+            this.ClientSize = new System.Drawing.Size(1774, 803);
+            this.Controls.Add(this.StairTopYInputBox);
+            this.Controls.Add(this.StairTopXInputBox);
+            this.Controls.Add(this.StairBottomYInputBox);
+            this.Controls.Add(this.StairBottomXInputBox);
+            this.Controls.Add(this.createStairsButton);
+            this.Controls.Add(this.EraseStairsButton);
+            this.Controls.Add(this.stairListComboBox);
+            this.Controls.Add(this.label14);
+            this.Controls.Add(this.label13);
+            this.Controls.Add(this.label12);
             this.Controls.Add(this.texturePreview);
             this.Controls.Add(this.pictureBox921);
-            this.Controls.Add(this.idTextV_Box);
-            this.Controls.Add(this.label11);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.button3);
             this.Controls.Add(this.clampBottomBox);
             this.Controls.Add(this.clampTopBox);
             this.Controls.Add(this.clampRightBox);
@@ -10639,22 +10842,20 @@
             this.Controls.Add(this.label7);
             this.Controls.Add(this.buttonItemExplore);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.IdTextBox);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.outputFileBox);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.SpeedYBox);
             this.Controls.Add(this.SpeedXBox);
             this.Controls.Add(this.SpeedY);
             this.Controls.Add(this.SpeedX);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.comboBox2);
-            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.groupBox3);
+            this.Controls.Add(this.groupBox4);
+            this.Controls.Add(this.groupBox5);
+            this.Controls.Add(this.groupBox6);
             this.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
@@ -11584,6 +11785,13 @@
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox921)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.texturePreview)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox6.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -12552,6 +12760,23 @@
         private System.Windows.Forms.TextBox idTextV_Box;
         private System.Windows.Forms.PictureBox pictureBox921;
         private System.Windows.Forms.PictureBox texturePreview;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.ComboBox stairListComboBox;
+        private System.Windows.Forms.Button EraseStairsButton;
+        private System.Windows.Forms.Button createStairsButton;
+        private System.Windows.Forms.TextBox StairBottomXInputBox;
+        private System.Windows.Forms.TextBox StairBottomYInputBox;
+        private System.Windows.Forms.TextBox StairTopXInputBox;
+        private System.Windows.Forms.TextBox StairTopYInputBox;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.GroupBox groupBox6;
     }
 }
 
