@@ -199,7 +199,7 @@ namespace JSB_LevelEditor
             int stairListCount = stairList.Count() - 1;
 
             this.stairList[stairListCount].TextureNumber = 1;
-            this.stairList[stairListCount].TextureFileName = "0";
+            this.stairList[stairListCount].TextureFileName = "ground_01.png"; // random texture to work in game, this will of course not be rendered
             this.stairList[stairListCount].ObjectPositionNumber = stairListCount;
             this.stairList[stairListCount].ObjectType = "Static Stairs";
             this.stairList[stairListCount].SpeedX = 0;
@@ -427,7 +427,7 @@ namespace JSB_LevelEditor
                     resetEditor();
                     var binaryInput = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
                     this.itemList = (List<Item>)binaryInput.Deserialize(stream);
-                    this.stairList = (List<Item>)binaryInput.Deserialize(stream);
+                    this.stairList = (List<Item>)binaryInput.Deserialize(stream); // TODO: Comment out this line if using older files!
 
                     for (int i = 0; i < itemList.Count(); i++) {
                         pictureBoxList[itemList[i].ObjectPositionNumber].Image = Image.FromFile(textureList[itemList[i].TextureNumber]);
