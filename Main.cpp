@@ -45,7 +45,7 @@ int main() {
 		sf::Time time = clock.getElapsedTime();
 		clock.restart().asSeconds();
 		gameManager->update(time.asMilliseconds(), isGamePaused);	 
-		window.clear(sf::Color::Color::Black); // 217, 217, 217, 255		
+		window.clear(sf::Color(135, 206, 250)); // 217, 217, 217, 255		
 		gameManager->draw(&window);		
 		window.display();
 	}

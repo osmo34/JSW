@@ -7,8 +7,8 @@ void GameManager::initializeWorld()
 {
 	WorldFileMaster worldFile = readRoomFile();
 
-	for (int i = 0; i < 10; i++) {
-		for (int j = 0; j < 10; j++) {
+	for (int i = 0; i < WORLD_SIZE; i++) {
+		for (int j = 0; j < WORLD_SIZE; j++) {
 			std::string output = worldFile.worldFile[i][j].world;
 			levelObjects.world.fileNames[i][j] = output;
 		}
@@ -32,7 +32,7 @@ void GameManager::initializeTextures()
 	}
 	textureList.push_back(PLAYER_TEXTURE); // force player texture into element 0
 		
-	for (int i = 0; i < 8; i++) { // TODO: based on amount of textures
+	for (int i = 0; i < 20; i++) { // TODO: based on amount of textures
 		std::string output = textureFile.textureFile[i].texture;
 		textureList.push_back (output);
 	} 
@@ -87,7 +87,7 @@ void GameManager::initializeGame() {
 
 	// play music
 	gameSounds = std::unique_ptr<GameSounds>(new GameSounds(musicVolume, soundEffectVolume));
-	gameSounds->playMusic("Moonlight_Sonata.ogg");
+	//gameSounds->playMusic("Moonlight_Sonata.ogg"); // TODO: temp disabled music
 
 	// set up game updates
 	gameUpdates = std::unique_ptr<GameUpdates>(new GameUpdates(m_screenWidth, m_screenHeight));
@@ -105,7 +105,7 @@ void GameManager::update(float dt, bool isPaused) {
 			dt = 0;
 		}
 		gameUpdates->updateGame(dt, levelObjects, game);
-		gameSounds->checkPlayerSoundEffects(levelObjects);
+		//gameSounds->checkPlayerSoundEffects(levelObjects);
 	}
 }
 

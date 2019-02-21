@@ -15,8 +15,8 @@ void EnemyMoving::update(const float dt) {
 }
 
 void EnemyMoving::reverseDirection() {
-	// TODO: this is for testing only, this would be dependent on the length of the platform
 	
+	// reverse based on clamp
 	if (m_sprite.getPosition().x >= clampXRight) {
 		movementSpeed.x = -speedX;
 		flipSprite(true);

@@ -68,16 +68,20 @@ void GameUpdates::checkLevelChange(LevelObjects &levelObjects) {
 	switch (playerState) {
 	case LEFT:
 		changeLevel(currentRoomVertical, nextRoomLeft, levelObjects);
+		currentRoomHorizontal--;
 		break;
 	case RIGHT:
 		changeLevel(currentRoomVertical, nextRoomRight, levelObjects);
+		currentRoomHorizontal++;
 		break;
 	case DOWN:
 		changeLevel(nextRoomDown, currentRoomHorizontal, levelObjects);
+		currentRoomVertical--;
 		break;
 	case UP:
 		changeLevel(nextRoomUp, currentRoomHorizontal, levelObjects);
 		break;
+		currentRoomVertical++;
 	default:
 		break;
 	}
@@ -103,8 +107,8 @@ void GameUpdates::changeLevel(int nextRoomVertical, int nextRoomHorizontal, Leve
 	levelObjects.room = createRoom(levelObjects.world.fileNames[nextRoomVertical][nextRoomHorizontal], levelObjects);
 	nextRoomRight = levelObjects.room.roomId + 1;
 	nextRoomLeft = levelObjects.room.roomId - 1;
-	nextRoomUp = levelObjects.room.roomLevelVertical - 1;
-	nextRoomDown = levelObjects.room.roomLevelVertical + 1;
+	nextRoomUp = levelObjects.room.roomLevelVertical + 1;
+	nextRoomDown = levelObjects.room.roomLevelVertical - 1;
 	
 	firstLoopComplete = false;
 	inLevel = true;
@@ -126,8 +130,10 @@ void GameUpdates::updateGame(float dt, LevelObjects &levelObjects, Game &game) {
 			levelObjects.room = createRoom(levelObjects.world.fileNames[currentRoomVertical][currentRoomHorizontal], levelObjects);
 			nextRoomRight = levelObjects.room.roomId + 1;
 			nextRoomLeft = levelObjects.room.roomId - 1;
-			nextRoomUp = levelObjects.room.roomLevelVertical - 1;
-			nextRoomDown = levelObjects.room.roomLevelVertical + 1; 
+			nextRoomUp = levelObjects.room.roomLevelVertical + 1;
+			nextRoomDown = levelObjects.room.roomLevelVertical - 1; 
+			currentRoomHorizontal = WORLD_START;
+			currentRoomVertical = WORLD_START;
 			isFirstRun = false;
 		}
 

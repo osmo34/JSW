@@ -65,7 +65,7 @@ private:
 	bool isFalling = false;
 	void checkFall();
 
-	const float START_POSITION_X = 1000;
+	const float START_POSITION_X = 950;
 	const float START_POSITION_Y = 606;
 	float resetPositionX;
 	float resetPositionY;

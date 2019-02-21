@@ -15,7 +15,7 @@ void GameDraw::draw(sf::RenderWindow *window, LevelObjects &levelObjects, Game &
 		draw(levelObjects.levelStaticObjects, window);
 		draw(levelObjects.levelStaticPlatforms, window);
 		draw(levelObjects.travelators, window);
-		//draw(levelObjects.levelStaticStairs, window);
+		draw(levelObjects.levelStaticStairs, window);
 		draw(levelObjects.enemiesMoving, window);
 		draw(levelObjects.enemiesStatic, window);
 		draw(levelObjects.pickups, window);

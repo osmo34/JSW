@@ -24,6 +24,9 @@
 #include "MediaPlayer.h"
 #include "TitleScreen.h"
 
+#define WORLD_SIZE 20
+#define WORLD_START 10
+
 // struct to hold all game objects in one place
 struct LevelObjects {
 	std::vector<std::shared_ptr<StaticObject>> levelStaticObjects;
@@ -51,7 +54,7 @@ struct WorldFile {
 };
 
 struct WorldFileMaster {
-	WorldFile worldFile[10][10];  // vertical and then horizontals
+	WorldFile worldFile[20][20];  // vertical and then horizontals
 };
 
 // structs for loading textures
@@ -154,8 +157,8 @@ private:
 	bool firstLoopComplete;
 	int screenWidth;
 	int screenHeight;
-	unsigned int currentRoomHorizontal = 0;	// default 36	
-	unsigned int currentRoomVertical = 0;
+	unsigned int currentRoomHorizontal = WORLD_START;	
+	unsigned int currentRoomVertical = WORLD_START;
 	unsigned int nextRoomRight;
 	unsigned int nextRoomLeft;
 	unsigned int nextRoomUp;

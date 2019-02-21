@@ -1,6 +1,7 @@
 #pragma once
 #include "Sprite.h"
 #include "DataRoom.h"
+
 class Enemy : public Sprite
 {
 public:
