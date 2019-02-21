@@ -36,4 +36,4 @@ Latest screenshot having worked on content (graphics from https://opengameart.or
 added level editor screenshot
 
 ![alt text](screenshot_new.png)
-![alt text](levelEditor/screenshot_editor2.png)
+![alt text](levelEditor/3.png)
