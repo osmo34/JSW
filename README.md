@@ -1,6 +1,7 @@
 # JSW
 Platform game engine in the style of Jet Set Willy - SFML framework for rendering but game engine written from scratch.
 <p>
+<b> 28/03/2021 </b> - Forgot about this! Not working on it anymore spend most of my time working in Unreal. Feel free to use if you can make sense of any of it.
 <p>
 <b> 22/01/2018 </b> - Added some new screenshots of the game and editor
 <p> 
